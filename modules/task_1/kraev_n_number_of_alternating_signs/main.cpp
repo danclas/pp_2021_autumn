@@ -11,7 +11,7 @@ TEST(Sequential_Operations_MPI, Test_Sequential_Algorithm_1) {
     ASSERT_EQ(result, def);
 }
 
-TEST(Sequential_Operations_MPI, Test_Sequential_Algorithm) {
+TEST(Sequential_Operations_MPI, Test_Sequential_Algorithm_2) {
     std::vector<int> vec = {1, -1, 0, 2, 0};
     int result = 1;
     int def = findingNumberOfSignAlternations(vec);
