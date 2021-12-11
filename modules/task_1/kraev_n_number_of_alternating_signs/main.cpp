@@ -4,11 +4,11 @@
 #include "./number_of_alternating_signs.h"
 #include <gtest-mpi-listener.hpp>
 
-TEST(Parallel_Operations_MPI, Test_Generate_Random_Vector) {
-    int size = 5;
-    std::vector<int> vec(size);
-    vec = getRandomVector(size);
-    ASSERT_NO_THROW(vec);
+TEST(Sequential_Operations_MPI, Test_Sequential_Algorithm_1) {
+    std::vector<int> vec = { 1 };
+    int result = 0;
+    int def = findingNumberOfSignAlternations(vec);
+    ASSERT_EQ(result, def);
 }
 
 TEST(Sequential_Operations_MPI, Test_Sequential_Algorithm) {
