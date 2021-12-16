@@ -1,5 +1,5 @@
 // Copyright 2021 Ivina Anastasiya
-#include "alg_seidel.h"
+
 #include <mpi.h>
 #include <random>
 #include <vector>
@@ -29,7 +29,7 @@ std::vector<double> seqSeidel(std::vector<std::vector<double>> &a,
     for (int i = 0; i < n; i++) {
       double sum = 0;
       for (const auto e : a[i]) {
-        sum += abs(e);
+        sum += std::abs(e);
       }
       const auto diag = a[i][i];
       sum -= diag;
@@ -81,7 +81,7 @@ std::vector<double> parallSeidel(std::vector<std::vector<double>> &a,
     for (int i = 0; i < n; i++) {
       double sum = 0;
       for (const auto e : a[i]) {
-        sum += abs(e);
+        sum += std::abs(e);
       }
       const auto diag = a[i][i];
       sum -= diag;
