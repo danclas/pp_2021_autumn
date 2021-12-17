@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <gtest-mpi-listener.hpp>
-#include "./linefilter_block.h"
+#include "./linear_filtration_block.h"
 
 
 TEST(Parallel_Operation_MPI, Test_Image_50x50) {
