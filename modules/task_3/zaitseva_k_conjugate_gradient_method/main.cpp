@@ -9,7 +9,7 @@
 #include "conjugateGradientMethod.h"
 
 TEST(Parallel_MPI, Test_n3) {
-  int rank, size;
+  int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   double A[9] = {4, -1, 2, -1, 6, -2, 2, -2, 5};
   double b[3] = {-1, 9, -10};

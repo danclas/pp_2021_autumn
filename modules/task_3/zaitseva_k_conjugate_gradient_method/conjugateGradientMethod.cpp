@@ -3,7 +3,8 @@
 
 double ScalarMult(std::vector<double> x, std::vector<double> y) {
   double res = 0;
-  for (int i = 0; i < x.size(); i++) res += x[i] * y[i];
+  int n = x.size();
+  for (int i = 0; i < n; i++) res += x[i] * y[i];
   return res;
 }
 double ScalarMultParallel(double* x, double* y, int n, MPI_Comm COMM_NEW) {
@@ -60,10 +61,6 @@ std::vector<double> conjugateGradientMethodSerial(double* A, double* b, int n) {
   return x_k;
 }
 
-void RandomVec(int n, double* A) {
-  for (int i = 0; i < n; i++) A[i] = rand() % 20;
-}
-
 std::vector<double> conjugateGradientMethodParallel(double* A, double* b,
                                                     int n) {
   int size, rank;
@@ -118,7 +115,7 @@ std::vector<double> conjugateGradientMethodParallel(double* A, double* b,
       } else {
         end = n;
       }
-      for (int i = 0; i < res.size(); i++) {
+      for (int i = 0; i < (sendcounts[rank] / n); i++) {
         res[i] = 0.0;
         for (int k = 0; k < n; k++) res[i] += aa[i * n + k] * x_k_1[k];
       }
@@ -140,7 +137,7 @@ std::vector<double> conjugateGradientMethodParallel(double* A, double* b,
       } else {
         end = n;
       }
-      for (int i = 0; i < res.size(); i++) {
+      for (int i = 0; i < (sendcounts[rank] / n); i++) {
         res[i] = 0.0;
         for (int k = 0; k < n; k++) res[i] += aa[i * n + k] * g_k[k];
       }
@@ -159,7 +156,7 @@ std::vector<double> conjugateGradientMethodParallel(double* A, double* b,
         } else {
           end = n;
         }
-        for (int i = 0; i < res.size(); i++) {
+        for (int i = 0; i < (sendcounts[rank] / n); i++) {
           res[i] = 0.0;
           for (int k = 0; k < n; k++) res[i] += aa[i * n + k] * delta[k];
         }
@@ -201,9 +198,8 @@ std::vector<double> conjugateGradientMethodParallel(double* A, double* b,
       }
       MPI_Bcast(&p, 1, MPI_INT, 0, COMM_NEW);
     }
+    MPI_Comm_free(&COMM_NEW);
   }
-  if (COMM_NEW != MPI_COMM_NULL) MPI_Comm_free(&COMM_NEW);
 
-  MPI_Barrier(MPI_COMM_WORLD);
   return x_k;
 }
