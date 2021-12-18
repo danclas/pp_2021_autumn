@@ -9,7 +9,6 @@ double getFrequencyParallel(char s, std::string text) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   int n = text.length();
   int data_per_rank = n / tasks;
-  int data_last_rank = n % tasks;
   if (rank == tasks - 1) {
     for (int i = (rank - 1) * data_per_rank; i < n; ++i)
       if (text[i] == static_cast<char>(s) ||
