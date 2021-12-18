@@ -1,13 +1,11 @@
 // Copyright 2021 Krivosheev Miron
 
-
 #include <gtest/gtest.h>
 #include <iostream>
 #include <ctime>
 #include <random>
 #include "./symbol_frequency.h"
 #include <gtest-mpi-listener.hpp>
-
 
 std::string makeRandomString(int size = 10) {
   std::string S(size, '0');

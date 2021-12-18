@@ -1,6 +1,12 @@
 // Copyright 2021 Krivosheev Miron
 
-#include "G:/GitHubTasks/Paralell_programming/pp_2021_autumn/modules/task_1/krivosheev_m_symbol_frequency/symbol_frequency.h"
+#include <mpi.h>
+#include <random>
+#include <cctype>
+#include <iostream>
+#include <algorithm>
+#include "../../../modules/task_1/krivosheev_m_symbol_frequency/symbol_frequency.h"
+
 
 double getFrequencyParallel(char s, std::string text) {
   int rank, tasks, answ_count = 0, res_count = 0, count = 0;
