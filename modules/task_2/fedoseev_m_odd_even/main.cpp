@@ -1,8 +1,8 @@
 // Copyright 2021 Fedoseev Mikhail
 #include <gtest/gtest.h>
 
-#include <gtest-mpi-listener.hpp>
 #include <vector>
+#include <gtest-mpi-listener.hpp>
 
 #include "./odd_even.h"
 
