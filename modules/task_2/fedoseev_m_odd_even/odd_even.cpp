@@ -1,5 +1,5 @@
 // Copyright 2021 Fedoseev Mikhail
-#include "../../../modules/task_2/fedoseyev_m_odd_even/odd_even.h"
+#include "../../../modules/task_2/fedoseev_m_odd_even/odd_even.h"
 
 #include <mpi.h>
 
