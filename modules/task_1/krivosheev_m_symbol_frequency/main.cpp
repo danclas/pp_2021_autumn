@@ -33,8 +33,9 @@ TEST(Non_Parallel_Operation, non_parallel_test_func) {
   MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
   char symbol = 'c';
   double freq = getFrequencyNonParallel(symbol, s);
-  if (my_rank == 0)
+  if (my_rank == 0) {
     ASSERT_NEAR(freq, 0.045, 0.0000001);
+  }
 }
 
 TEST(Parallel_Operation, parallel_test_func) {
@@ -47,8 +48,9 @@ TEST(Parallel_Operation, parallel_test_func) {
   char symbol = 'c';
   double freq_expect = getFrequencyNonParallel(symbol, s);
   double freq_par = getFrequencyParallel(symbol, s);
-  if (my_rank == 0)
+  if (my_rank == 0) {
     ASSERT_NEAR(freq_expect, freq_par, 0.0000001);
+  }
 }
 
 TEST(Parallel_Operation, parallel_test_func_uppercase) {
@@ -61,8 +63,9 @@ TEST(Parallel_Operation, parallel_test_func_uppercase) {
   char symbol = 'c';
   double freq_expect = getFrequencyNonParallel(symbol, s);
   double freq_par = getFrequencyParallel(symbol, s);
-  if (my_rank == 0)
+  if (my_rank == 0) {
     ASSERT_NEAR(freq_expect, freq_par, 0.0000001);
+  }
 }
 
 TEST(Parallel_Operation, parallel_test_func_lowercase) {
@@ -75,8 +78,9 @@ TEST(Parallel_Operation, parallel_test_func_lowercase) {
   char symbol = 'c';
   double freq_expect = getFrequencyNonParallel(symbol, s);
   double freq_par = getFrequencyParallel(symbol, s);
-  if (my_rank == 0)
+  if (my_rank == 0) {
     ASSERT_NEAR(freq_expect, freq_par, 0.0000001);
+  }
 }
 
 TEST(Parallel_Operation, parallel_test_func_random) {
@@ -86,8 +90,9 @@ TEST(Parallel_Operation, parallel_test_func_random) {
   char symbol = 'c';
   double freq_expect = getFrequencyNonParallel(symbol, s);
   double freq_par = getFrequencyParallel(symbol, s);
-  if (my_rank == 0)
+  if (my_rank == 0) {
     ASSERT_NEAR(freq_expect, freq_par, 0.0000001);
+  }
 }
 
 
