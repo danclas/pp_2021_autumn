@@ -1,7 +1,8 @@
 // Copyright 2021 Ivina Anastasiya
-#include "alg_seidel.h"
-#include <gtest-mpi-listener.hpp>
 #include <gtest/gtest.h>
+#include <mpi.h>
+#include "./alg_seidel.h"
+#include <gtest-mpi-listener.hpp>
 
 
 TEST(MPI, constnum3) {

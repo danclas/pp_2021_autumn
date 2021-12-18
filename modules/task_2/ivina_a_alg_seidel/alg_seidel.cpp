@@ -1,8 +1,8 @@
 // Copyright 2021 Ivina Anastasiya
-
 #include <mpi.h>
-#include <random>
 #include <vector>
+#include <random>
+#include "../../../modules/task_2/ivina_a_alg_seidel/alg_seidel.h"
 
 
 double randomValue(int min, int max) {
@@ -12,8 +12,8 @@ double randomValue(int min, int max) {
   return range(rd);
 }
 
-std::vector<double> seqSeidel(std::vector<std::vector<double>> &a,
-                              std::vector<double> &b, double eps) {
+std::vector<double> seqSeidel(const std::vector<std::vector<double>> &a,
+                              const std::vector<double> &b, double eps) {
   int n;
   std::vector<double> x;
   std::vector<double> p;
@@ -61,8 +61,8 @@ std::vector<double> seqSeidel(std::vector<std::vector<double>> &a,
   return x;
 }
 
-std::vector<double> parallSeidel(std::vector<std::vector<double>> &a,
-                                 std::vector<double> &b, double eps) {
+std::vector<double> parallSeidel(const std::vector<std::vector<double>> &a,
+                                 const std::vector<double> &b, double eps) {
   int size, rank;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -109,7 +109,6 @@ std::vector<double> parallSeidel(std::vector<std::vector<double>> &a,
         norm += (x[i] - p[i]) * (x[i] - p[i]);
         if (rank == 0) {
           for (int j = 0; j < num; j++) {
-
             double buff[2];
             MPI_Recv(buff, 2, MPI_DOUBLE, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD,
                      MPI_STATUSES_IGNORE);
