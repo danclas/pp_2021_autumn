@@ -27,6 +27,7 @@ double getFrequencyParallel(char s, std::string text) {
     freq = static_cast<double>(answ_count) / n;
     return freq;
   }
+  return 0;
 }
 
 double getFrequencyNonParallel(char s, std::string text) {
