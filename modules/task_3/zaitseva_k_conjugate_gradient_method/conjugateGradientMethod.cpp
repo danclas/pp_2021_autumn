@@ -23,6 +23,7 @@ std::vector<double> conjugateGradientMethodSerial(double* A, double* b, int n) {
   std::vector<double> x_k(n, 0);
   std::vector<double> g_k(n, 0);
   std::vector<double> delta(n);
+
   for (int i = 0; i < n; i++) {
     x_k_1 = x_k;
 
@@ -77,8 +78,9 @@ std::vector<double> conjugateGradientMethodParallel(double* A, double* b,
   MPI_Comm COMM_NEW;
   MPI_Comm_create(MPI_COMM_WORLD, new_group, &COMM_NEW);
   std::vector<double> x_k(n);
-  if (rank == 0)
+  if (rank == 0) {
     for (int i = 0; i < n; i++) x_k[i] = 0.0;
+  }
   if (COMM_NEW != MPI_COMM_NULL) {
     MPI_Comm_size(COMM_NEW, &size);
     MPI_Comm_rank(COMM_NEW, &rank);
@@ -106,67 +108,47 @@ std::vector<double> conjugateGradientMethodParallel(double* A, double* b,
     for (int p = 0; p < n;) {
       if (rank == 0) {
         for (int i = 0; i < n; i++) x_k_1[i] = x_k[i];
-        // if (i == 0) x_k_1[0] = 1;
       }
       MPI_Bcast(x_k_1.data(), n, MPI_DOUBLE, 0, COMM_NEW);
-      int end;
-      if (rank < size - 1) {
-        end = static_cast<int>(n / size) * (rank + 1);
-      } else {
-        end = n;
-      }
       for (int i = 0; i < (sendcounts[rank] / n); i++) {
         res[i] = 0.0;
         for (int k = 0; k < n; k++) res[i] += aa[i * n + k] * x_k_1[k];
       }
       for (int i = 0; i < size; i++) {
-        recvcounts[i] = static_cast<int>(n / size) * (i + 1);
+        recvcounts[i] = sendcounts[i] / n;
         displs[i] = static_cast<int>(n / size) * i;
       }
-      recvcounts[size - 1] = n;
-      MPI_Gatherv(res.data(), end, MPI_DOUBLE, g_k.data(), recvcounts.data(),
-                  displs.data(), MPI_DOUBLE, 0, COMM_NEW);
+      MPI_Gatherv(res.data(), sendcounts[rank] / n, MPI_DOUBLE, g_k.data(),
+                  recvcounts.data(), displs.data(), MPI_DOUBLE, 0, COMM_NEW);
 
       if (rank == 0) {
         for (int j = 0; j < n; j++) g_k[j] -= b[j];
       }
 
       MPI_Bcast(g_k.data(), n, MPI_DOUBLE, 0, COMM_NEW);
-      if (rank < size - 1) {
-        end = static_cast<int>(n / size) * (rank + 1);
-      } else {
-        end = n;
-      }
       for (int i = 0; i < (sendcounts[rank] / n); i++) {
         res[i] = 0.0;
         for (int k = 0; k < n; k++) res[i] += aa[i * n + k] * g_k[k];
       }
       for (int i = 0; i < size; i++) {
-        recvcounts[i] = static_cast<int>(n / size) * (i + 1);
+        recvcounts[i] = sendcounts[i] / n;
         displs[i] = static_cast<int>(n / size) * i;
       }
-      recvcounts[size - 1] = n;
-      MPI_Gatherv(res.data(), end, MPI_DOUBLE, r1.data(), recvcounts.data(),
-                  displs.data(), MPI_DOUBLE, 0, COMM_NEW);
+      MPI_Gatherv(res.data(), sendcounts[rank] / n, MPI_DOUBLE, r1.data(),
+                  recvcounts.data(), displs.data(), MPI_DOUBLE, 0, COMM_NEW);
 
       if (p > 0) {
         MPI_Bcast(delta.data(), n, MPI_DOUBLE, 0, COMM_NEW);
-        if (rank < size - 1) {
-          end = static_cast<int>(n / size) * (rank + 1);
-        } else {
-          end = n;
-        }
         for (int i = 0; i < (sendcounts[rank] / n); i++) {
           res[i] = 0.0;
           for (int k = 0; k < n; k++) res[i] += aa[i * n + k] * delta[k];
         }
         for (int i = 0; i < size; i++) {
-          recvcounts[i] = static_cast<int>(n / size) * (i + 1);
+          recvcounts[i] = sendcounts[i] / n;
           displs[i] = static_cast<int>(n / size) * i;
         }
-        recvcounts[size - 1] = n;
-        MPI_Gatherv(res.data(), end, MPI_DOUBLE, r2.data(), recvcounts.data(),
-                    displs.data(), MPI_DOUBLE, 0, COMM_NEW);
+        MPI_Gatherv(res.data(), sendcounts[rank] / n, MPI_DOUBLE, r2.data(),
+                    recvcounts.data(), displs.data(), MPI_DOUBLE, 0, COMM_NEW);
 
         MPI_Bcast(g_k.data(), n, MPI_DOUBLE, 0, COMM_NEW);
         double r3 = ScalarMultParallel(g_k.data(), g_k.data(), n, COMM_NEW);
@@ -184,11 +166,11 @@ std::vector<double> conjugateGradientMethodParallel(double* A, double* b,
         }
       } else {
         MPI_Bcast(g_k.data(), n, MPI_DOUBLE, 0, COMM_NEW);
-        double r2 = ScalarMultParallel(g_k.data(), g_k.data(), n, COMM_NEW);
+        double r8 = ScalarMultParallel(g_k.data(), g_k.data(), n, COMM_NEW);
         MPI_Bcast(r1.data(), n, MPI_DOUBLE, 0, COMM_NEW);
-        double r3 = ScalarMultParallel(r1.data(), g_k.data(), n, COMM_NEW);
+        double r9 = ScalarMultParallel(r1.data(), g_k.data(), n, COMM_NEW);
         if (rank == 0) {
-          double B_k = -r2 / r3;
+          double B_k = -r8 / r9;
           for (int j = 0; j < n; j++) delta[j] = B_k * g_k[j];
         }
       }
@@ -200,6 +182,6 @@ std::vector<double> conjugateGradientMethodParallel(double* A, double* b,
     }
     MPI_Comm_free(&COMM_NEW);
   }
-
+  MPI_Bcast(x_k.data(), 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
   return x_k;
 }

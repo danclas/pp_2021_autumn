@@ -4,7 +4,6 @@
 
 #include <cmath>
 #include <gtest-mpi-listener.hpp>
-#include <iostream>
 
 #include "conjugateGradientMethod.h"
 
@@ -16,7 +15,6 @@ TEST(Parallel_MPI, Test_n3) {
   int n = 3;
   std::vector<double> res_seq;
   std::vector<double> res_par = conjugateGradientMethodParallel(A, b, n);
-  MPI_Barrier(MPI_COMM_WORLD);
   if (rank == 0) {
     res_seq = conjugateGradientMethodSerial(A, b, n);
     for (int i = 0; i < n; i++)
@@ -28,36 +26,36 @@ TEST(Parallel_MPI, Test_n3) {
 TEST(Parallel_MPI, Test_n4) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  double A[9] = {0, 2, -0.5, 0, 2, 2, -2, 1.5, -0.5};
-  double b[3] = {0, -3, 0.5};
-  int n = 3;
-  std::vector<double> res_seq;
+  double A[16] = {0, 2, -0.5, 0, 2, 2, -2, 1.5, -0.5, 1, 2, 0, 2, 5, -1, 0};
+  double b[4] = {0, -3, 0.5, 0};
+  int n = 4;
   std::vector<double> res_par = conjugateGradientMethodParallel(A, b, n);
   if (rank == 0) {
-    res_seq = conjugateGradientMethodSerial(A, b, n);
-    for (int i = 0; i < n; i++)
+    std::vector<double> res_seq = conjugateGradientMethodSerial(A, b, n);
+    for (int i = 0; i < n; i++) {
       EXPECT_NEAR(res_seq[i], res_par[i],
                   std::numeric_limits<double>::epsilon() * 16 * 1000);
+    }
   }
 }
 
-TEST(Parallel_MPI, Test_n5) {
+TEST(Parallel_MPI, Test_n4_2) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  double A[9] = {1, 2, 0, 2, 5, -1, 0, -1, 3};
-  double b[3] = {1, 5, 0};
-  int n = 3;
-  std::vector<double> res_seq;
+  double A[16] = {7, 0, 5, 1, -2, 2, 4, -5, -3, 1, 3, 6, 1, -6, 2, -4};
+  double b[4] = {1, 3, -1, 7};
+  int n = 4;
   std::vector<double> res_par = conjugateGradientMethodParallel(A, b, n);
   if (rank == 0) {
-    res_seq = conjugateGradientMethodSerial(A, b, n);
-    for (int i = 0; i < n; i++)
+    std::vector<double> res_seq = conjugateGradientMethodSerial(A, b, n);
+    for (int i = 0; i < n; i++) {
       EXPECT_NEAR(res_seq[i], res_par[i],
                   std::numeric_limits<double>::epsilon() * 16 * 1000);
+    }
   }
 }
 
-TEST(Parallel_MPI, Test_n9) {
+TEST(Parallel_MPI, Test_n2) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   double A[4] = {1, 2, 0, 5};
@@ -73,7 +71,7 @@ TEST(Parallel_MPI, Test_n9) {
   }
 }
 
-TEST(Parallel_MPI, Test_n10) {
+TEST(Parallel_MPI, Test_n2_2) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   double A[4] = {-11, 6, 6, -6};
