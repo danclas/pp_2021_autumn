@@ -4,7 +4,6 @@
 
 #include <cmath>
 #include <gtest-mpi-listener.hpp>
-
 #include "conjugateGradientMethod.h"
 
 TEST(Parallel_MPI, Test_n3) {
