@@ -25,27 +25,21 @@ std::string makeRandomString(int size = 10) {
 }
 
 TEST(Non_Parallel_Operation, non_parallel_test_func) {
-  std::string s = "The recvcount and recvtype parameters are ignored."
-    "The scattered vector is still considered to contain n segments,"
-    "where n is the group size; the segment that corresponds to the root"
-    "process is not moved";
+  std::string s = "aaabab";
   int my_rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
-  char symbol = 'c';
+  char symbol = 'a';
   double freq = getFrequencyNonParallel(symbol, s);
   if (my_rank == 0) {
-    ASSERT_NEAR(freq, 0.045, 0.0000001);
+    ASSERT_NEAR(freq, 0.66666666, 0.0000001);
   }
 }
 
 TEST(Parallel_Operation, parallel_test_func) {
-  std::string s = "The recvcount and recvtype parameters are ignored."
-    "The scattered vector is still considered to contain n segments,"
-    "where n is the group size; the segment that corresponds to the root"
-    "process is not moved";
+  std::string s = "bababa faslksaaaG GadaafxfAfaB";
   int my_rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
-  char symbol = 'c';
+  char symbol = 'a';
   double freq_expect = getFrequencyNonParallel(symbol, s);
   double freq_par = getFrequencyParallel(symbol, s);
   if (my_rank == 0) {
@@ -54,13 +48,10 @@ TEST(Parallel_Operation, parallel_test_func) {
 }
 
 TEST(Parallel_Operation, parallel_test_func_uppercase) {
-  std::string s = "THE RECVCOUNT AND RECVTYPE PARAMETERS ARE IGNORED."
-  "THE SCATTERED VECTOR IS STILL CONSIDERED TO CONTAIN N SEGMENTSL, WHERE"
-  "N IS THE GROUP SIZE; THE SEGMENT THAT CORRESPONDS TO THE ROOT PROCESS"
-  "IS NOT MOVED";
+  std::string s = "SJKDBGABBBGSFGASLLMBVOAGDTGWNGHEG";
   int my_rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
-  char symbol = 'c';
+  char symbol = 'b';
   double freq_expect = getFrequencyNonParallel(symbol, s);
   double freq_par = getFrequencyParallel(symbol, s);
   if (my_rank == 0) {
@@ -69,13 +60,10 @@ TEST(Parallel_Operation, parallel_test_func_uppercase) {
 }
 
 TEST(Parallel_Operation, parallel_test_func_lowercase) {
-  std::string s = "the recvcount and recvtype parameters are ignored."
-    "the scattered vector is still considered to contain n segments,"
-    "where n is the group size; the segment that corresponds to the root"
-    "process is not moved";
+  std::string s = "bvakjsalmklkpabybouigbigauyfgbaytdab";
   int my_rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
-  char symbol = 'c';
+  char symbol = 'a';
   double freq_expect = getFrequencyNonParallel(symbol, s);
   double freq_par = getFrequencyParallel(symbol, s);
   if (my_rank == 0) {
@@ -84,13 +72,14 @@ TEST(Parallel_Operation, parallel_test_func_lowercase) {
 }
 
 TEST(Parallel_Operation, parallel_test_func_random) {
-  std::string s = makeRandomString(30);
+  std::string s = makeRandomString(40);
   int my_rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
-  char symbol = 'c';
+  char symbol = 'a';
   double freq_expect = getFrequencyNonParallel(symbol, s);
   double freq_par = getFrequencyParallel(symbol, s);
   if (my_rank == 0) {
+
     ASSERT_NEAR(freq_expect, freq_par, 0.0000001);
   }
 }

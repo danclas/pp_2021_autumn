@@ -17,14 +17,12 @@ double getFrequencyParallel(char s, std::string text) {
   int data_per_rank = n / tasks;
   if (rank == tasks - 1) {
     for (int i = (rank - 1) * data_per_rank; i < n; ++i)
-      if (text[i] == static_cast<char>(s) ||
-        text[i] == static_cast<char>(s - 32))
+      if (text[i] == s || text[i] == s - 32)
         count++;
     res_count = count;
   } else if (rank != 0) {
     for (int i = (rank - 1) * data_per_rank; i < rank * data_per_rank; ++i)
-      if (text[i] == static_cast<char>(s) ||
-        text[i] == static_cast<char>(s - 32))
+      if (text[i] == s || text[i] == s - 32)
         count++;
     res_count = count;
   }
@@ -41,8 +39,7 @@ double getFrequencyNonParallel(char s, std::string text) {
   int count = 0;
   double freq;
   for (int i = 0; i < n; ++i)
-    if (text[i] == static_cast<char>(s)
-      || text[i] == static_cast<char>(s - 32))
+    if (text[i] == s || text[i] == s - 32)
       count++;
   freq = static_cast<double>(count) / n;
   return freq;
