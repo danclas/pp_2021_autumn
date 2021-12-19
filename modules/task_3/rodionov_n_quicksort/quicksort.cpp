@@ -9,7 +9,7 @@
 void RandomArray(int* arr, int length) {
     std::random_device dev;
     std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist(0, 10);
+    std::uniform_int_distribution<std::mt19937::result_type> dist(0, 10000);
     for (int i = 0; i < length; i++) {
         arr[i] = dist(rng);
     }
@@ -23,17 +23,33 @@ bool CheckOrdering(int* arr, int length) {
     return true;
 }
 
+void quickSort(int* arr, int size) {
+    int i = 0;
+    int j = size - 1;
+    int mid = arr[size / 2];
 
-void LinearSortSeq(int* arr, int size) {
-    int tmp = 0;
-    for (int i = 0; i < size; i++) {
-        for (int j = (size - 1); j >= (i + 1); j--) {
-            if (arr[j] < arr[j - 1]) {
-                tmp = arr[j];
-                arr[j] = arr[j - 1];
-                arr[j - 1] = tmp;
-            }
+    do {
+        while (arr[i] < mid) {
+            i++;
         }
+        while (arr[j] > mid) {
+            j--;
+        }
+        if (i <= j) {
+            int tmp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = tmp;
+
+            i++;
+            j--;
+        }
+    } while (i <= j);
+
+    if (j > 0) {
+        quickSort(arr, j + 1);
+    }
+    if (i < size) {
+        quickSort(&arr[i], size - i);
     }
 }
 
@@ -63,12 +79,11 @@ void QuickSortMpi(int* arr, int size) {
         buffer, block_size, MPI_INT,
         0, MPI_COMM_WORLD);
     // Sort part of array
-    LinearSortSeq(buffer, block_size);
+    quickSort(buffer, block_size);
 
     if (rank != 0) {
         MPI_Send(buffer, block_size, MPI_INT, 0, 0, MPI_COMM_WORLD);
     }
-
     if (rank == 0) {
         // Copy shift values
         memcpy(result, arr, shift * sizeof(int));
@@ -82,7 +97,7 @@ void QuickSortMpi(int* arr, int size) {
                 MPI_INT, i, 0, MPI_COMM_WORLD, &status);
         }
         // Sort result array
-        LinearSortSeq(result, size);
+        quickSort(result, size);
         memcpy(arr, result, size * sizeof(int));
         delete[] result;
     }

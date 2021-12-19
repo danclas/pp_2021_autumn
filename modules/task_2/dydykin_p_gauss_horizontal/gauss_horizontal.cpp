@@ -5,6 +5,18 @@
 #include <random>
 #include <vector>
 
+std::vector<double> getRandomMatrix(int m, int n) {
+    int size = m * n;
+    std::vector<double> matrix(size);
+    std::mt19937 gen;
+    gen.seed(static_cast<unsigned int>(time(0)));
+    std::uniform_int_distribution<unsigned int> uid(1, 100);
+    for (int i = 0; i < size; i++) {
+        matrix[i] = uid(gen);
+    }
+    return matrix;
+}
+
 std::vector<double> GaussNotParallel(const std::vector<double>& matrix,
     int rows, int cols) {
     if ((rows < 0) || (cols < 0))
@@ -35,11 +47,9 @@ std::vector<double> GaussParallel(const std::vector<double>& matrix,
     if ((rows < 0) || (cols < 0))
         throw "Correct the input data";
 
-    double t1, t2;
     int ProcNum, ProcRank;
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
-    t1 = MPI_Wtime();
 
     int size = rows / ProcNum;
     int remains = rows % ProcNum;
@@ -131,8 +141,6 @@ std::vector<double> GaussParallel(const std::vector<double>& matrix,
                 b -= res[i * cols + j] * x[j];
             x[i] = b / res[i * cols + i];
         }
-        t2 = MPI_Wtime();
-        std::cout << t2 - t1 << std::endl;
     }
 
     return x;

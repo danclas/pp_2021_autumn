@@ -51,24 +51,23 @@ TEST(Test_Gauss_Horizontal, Test3_GaussParallel_and_GaussNotParallel) {
     int ProcRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
     std::vector<double> matrix = {
-            2, 1, -1, 3, 20,
-            5, -1, 2, -1, 17,
-            -3, 2, -1, 2, 1,
-            1, -1, 4, -2, -4
+            1, 2, 3, 1,
+            2, -1, 2, 6,
+            1, 1, 5, -1
     };
 
-    const int rows = 4;
-    const int cols = 5;
+    const int rows = 3;
+    const int cols = 4;
 
     std::vector <double> result = GaussParallel(matrix, rows, cols);
 
     if (ProcRank == 0) {
-        std::vector <double> x = GaussNotParallel(matrix, rows, cols);
-        for (int i = 0; i < rows; i++)
-            ASSERT_NEAR(x[i], result[i], 0.000001);
+         std::vector <double> x = GaussNotParallel(matrix, rows, cols);
+         for (int i = 0; i < rows; i++) {
+             ASSERT_NEAR(x[i], result[i], 0.000001);
+         }
     }
 }
-
 TEST(Test_Gauss_Horizontal, Test4_GaussParallel_and_GaussNotParallel) {
     int ProcRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
@@ -109,23 +108,6 @@ TEST(Test_Gauss_Horizontal, Test5_GaussParallel_and_GaussNotParallel) {
         for (int i = 0; i < rows; i++)
             ASSERT_NEAR(x[i], result[i], 0.000001);
     }
-}
-
-TEST(Test_Gauss_Horizontal, Test6_Incorrect_values) {
-    int ProcRank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
-    std::vector<double> matrix = {
-            2, 1, -1, 3, 20,
-            5, -1, 2, -1, 17,
-            -3, 2, -1, 2, 1,
-            1, -1, 4, -2, -4
-    };
-
-    const int rows = -1;
-    const int cols = 5;
-
-    ASSERT_ANY_THROW(std::vector <double> result =
-        GaussParallel(matrix, rows, cols));
 }
 
 int main(int argc, char** argv) {

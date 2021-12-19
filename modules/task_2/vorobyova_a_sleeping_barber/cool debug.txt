@@ -1,0 +1,107 @@
+// Copyright 2021 Vorobyova Anna
+#include "../../../modules/task_2/lyutova_t_sleeping_barber/sleeping_barber.h"
+
+#include <mpi.h>
+
+#include <iostream>
+#include <queue>
+#include <random>
+
+
+double getRandomTime() {
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  return (10.0 + static_cast<double>(gen() % 20u)) / 100.0;
+}
+
+void wait(double s) {
+  double time = MPI_Wtime();
+  while (MPI_Wtime() - time < s) {
+  }
+}
+
+void print(int id, const char* message, double number) {
+  if (id == 0)
+    std::cout << "BARBER: " << message << ' ' << number << std::endl;
+  else
+    std::cout << "CUSTOMER#" << id << ": " << message << ' ' << number
+              << std::endl;
+}
+
+void print(int id, const char* message, int number) {
+  if (id == 0)
+    std::cout << "BARBER: " << message << ' ' << number << std::endl;
+  else
+    std::cout << "CUSTOMER#" << id << ": " << message << ' ' << number
+              << std::endl;
+}
+
+void Barber(int line_length, int to_serve) {
+  std::queue<int> line;
+  int served_customers = 0;
+
+  while (served_customers != to_serve) {
+    int got_customers = 0;
+    int free = 0;  // is barber free
+    MPI_Status status;
+    // ask "if anybody waiting?"
+    MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &got_customers,
+               &status); // записываем в got_customers 1 если есть входящие вызовы send
+    int customer_rank;
+    while (got_customers) {
+      MPI_Recv(&customer_rank, 1, MPI_INT, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD,
+               &status); // принимаем сообщение #1
+      print(0, "Hello, customer #", customer_rank);
+      if (static_cast<int>(line.size()) < line_length) {
+        line.push(customer_rank); // вставляем клиента в очередь
+        free = 1;
+        MPI_Send(&free, 1, MPI_INT, customer_rank, 0, MPI_COMM_WORLD); // отправляем сообщение #2 free = 1
+        std::cout << "SENT FREE, LINE SIZE = " << line.size() << std::endl;
+      } else {
+        free = 0;
+        MPI_Send(&free, 1, MPI_INT, customer_rank, 0, MPI_COMM_WORLD);  // отправляем сообщение #2 free = 0
+        std::cout << "SENT NOT FREE" << std::endl;
+      }
+      // ask "if anybody waiting?" again
+      MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &got_customers,
+                 &status); // записываем в got_customers 1 если есть входящие вызовы send
+      std::cout << "GOT = " << got_customers << std::endl;
+    } // выходим, когда клиентов вне очереди не осталось
+
+
+    if (!line.empty()) { // пока очередь не опустеет
+      customer_rank = line.front(); // записываем ранг клиента из очереди
+      line.pop(); // освобождаем клиента из очереди
+      print(0, "Start hair cutting for #", customer_rank);
+      int busy = 1;
+      MPI_Send(&busy, 1, MPI_INT, customer_rank, 0, MPI_COMM_WORLD); // отправляем сообщение #3
+      wait(0.01); // стрижем
+      print(0, "End hair cutting for #", customer_rank);
+      busy = 0;
+      MPI_Send(&busy, 1, MPI_INT, customer_rank, 0, MPI_COMM_WORLD); // посылаем сообщение #4
+      served_customers++; // ++ обслуженные клиенты
+    }
+  }
+}
+
+void Client(int id) {
+  wait(getRandomTime());
+  //print(id, "Waiting on start...", wait_time);
+
+  MPI_Status status;
+  int barber_busy = 1;
+  while (barber_busy != 0) {
+    MPI_Send(&id, 1, MPI_INT, 0, 0, MPI_COMM_WORLD); // отправляем сообщение #1
+    int barber_free = 0; // спрашиваем, свободен ли
+    MPI_Recv(&barber_free, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status); // принимаем сообщение #2
+
+    if (barber_free) {
+      MPI_Recv(&barber_free, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status); // принимаем сообщение #3
+      // стрижемся
+      MPI_Recv(&barber_busy, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status); // принимаем сообщение #4
+    } else {
+      wait(getRandomTime());
+      //print(id, "Waiting for a barber...", wait_time); // ждем
+    }
+  }
+}

@@ -9,7 +9,7 @@ MPI_Comm get_Bus_Comm(const MPI_Comm comm_old) {
     MPI_Comm_size(comm_old, &proc_count);
     MPI_Comm_rank(comm_old, &proc_rank);
 
-    int* index = new int[proc_count];
+    std::vector<int> index(proc_count);
     index[0] = index[proc_count - 1] = 1;
     for (int i = 1; i < proc_count - 1; i++) {
         index[i] = 2;
@@ -17,15 +17,17 @@ MPI_Comm get_Bus_Comm(const MPI_Comm comm_old) {
     for (int i = 1; i < proc_count; i++) {
         index[i] += index[i-1];
     }
-    int* edges = new int[(proc_count - 1) * 2];
+    std::vector<int> edges(proc_count == 1 ? 1 : (proc_count - 1) * 2);
     edges[0] = 1;
-    edges[(proc_count - 1) * 2 - 1] = proc_count - 2;
-    for (int i = 1, j = 1; i < proc_count - 1; i++, j += 2) {
-        edges[j] = i - 1;
-        edges[j + 1] = i + 1;
+    if (proc_count > 1) {
+        edges[(proc_count - 1) * 2 - 1] = proc_count - 2;
+        for (int i = 1, j = 1; i < proc_count - 1; i++, j += 2) {
+            edges[j] = i - 1;
+            edges[j + 1] = i + 1;
+        }
     }
 
-    MPI_Graph_create(comm_old, proc_count, index, edges, false, &bus_comm);
+    MPI_Graph_create(comm_old, proc_count, index.data(), edges.data(), false, &bus_comm);
 
     return bus_comm;
 }

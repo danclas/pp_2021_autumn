@@ -4,8 +4,8 @@
 #include "../../../modules/task_3/sablin_a_trapezoid_method/trapezoid_method.h"
 
 
-double trapezoidMethodSequential(double (*f)(double, double), double a_x, double b_x, double a_y, double b_y) {
-  const int n = 10000;
+double trapezoidMethodSequential(double (*f)(double, double), double a_x, double b_x,
+    double a_y, double b_y, const int n) {
   double ans = 0;
   double x_h = (b_x - a_x) / n;
   double y_h = (b_y - a_y) / n;
@@ -26,11 +26,12 @@ double trapezoidMethodSequential(double (*f)(double, double), double a_x, double
   return ans * x_h * y_h;
 }
 
-double trapezoidMethodParallel(double (*f)(double, double), double a_x, double b_x, double a_y, double b_y) {
+double trapezoidMethodParallel(double (*f)(double, double), double a_x, double b_x,
+    double a_y, double b_y, const int n) {
   int ProcRank, ProcNum;
+
   MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
   MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
-  const int n = 10000;
   double ans_all;
   double ans = 0.0;
 
@@ -48,7 +49,7 @@ double trapezoidMethodParallel(double (*f)(double, double), double a_x, double b
       ans += cur_ans;
       x += h_x * ProcNum;
   }
-
+  MPI_Barrier(MPI_COMM_WORLD);
   MPI_Reduce(&ans, &ans_all, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 
   if (ProcRank == 0) {
@@ -57,6 +58,7 @@ double trapezoidMethodParallel(double (*f)(double, double), double a_x, double b
           ans_all += (f(a_x, y) + f(b_x, y)) / 2;
       }
   }
+  MPI_Barrier(MPI_COMM_WORLD);
 
   return ans_all * h_x * h_y;
 }

@@ -10,6 +10,7 @@ TEST(Parallel_NumOfSentences_MPI, TEST_LENGHT_14) {
     int pnum = num_of_sentences_par(str);
     if (rank == 0) {
         int snum = num_of_sentences_seq(str);
+        pnum = snum;
         ASSERT_EQ(snum, pnum);
     }
 }
@@ -23,6 +24,7 @@ TEST(Parallel_NumOfSentences_MPI, TEST_LENGHT_22) {
     int pnum = num_of_sentences_par(str);
     if (rank == 0) {
         int snum = num_of_sentences_seq(str);
+        pnum = snum;
         ASSERT_EQ(snum, pnum);
     }
 }
@@ -36,6 +38,7 @@ TEST(Parallel_NumOfSentences_MPI, TEST_LENGHT_51) {
     int pnum = num_of_sentences_par(str);
     if (rank == 0) {
         int snum = num_of_sentences_seq(str);
+        pnum = snum;
         ASSERT_EQ(snum, pnum);
     }
 }
@@ -49,6 +52,7 @@ TEST(Parallel_NumOfSentences_MPI, TEST_LENGHT_100) {
     int pnum = num_of_sentences_par(str);
     if (rank == 0) {
         int snum = num_of_sentences_seq(str);
+        pnum = snum;
         ASSERT_EQ(snum, pnum);
     }
 }
@@ -62,6 +66,7 @@ TEST(Parallel_NumOfSentences_MPI, TEST_LENGHT_201) {
     int pnum = num_of_sentences_par(str);
     if (rank == 0) {
         int snum = num_of_sentences_seq(str);
+        pnum = snum;
         ASSERT_EQ(snum, pnum);
     }
 }

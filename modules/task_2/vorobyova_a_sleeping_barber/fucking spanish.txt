@@ -1,0 +1,349 @@
+// Copyright 2021 Vorobyova Anna
+#ifndef MODULES_TASK_1_VOROBYOVA_A_SLEEPING_BARBER_SLEEPING_BARBER_H_
+#define MODULES_TASK_1_VOROBYOVA_A_SLEEPING_BARBER_SLEEPING_BARBER_H_
+
+typedef struct Message_s {
+  int command;
+  int id_proc;
+} Message;
+
+struct Client {
+  int id_proc;
+  int id_line;
+  int id_barber;
+  int place_in_line;
+  explicit Client(int id_proc = -1, int id_line = 1, int id_barber = 0)
+      : id_proc(id_proc), id_line(id_line), id_barber(id_barber) {
+    place_in_line = 0;
+  }
+  void initiate();
+  void cut();
+  int getId_Proc() { return id_proc; }
+};
+
+void Line(int id_proc = 1, int length = 100, int id_barber = 0,
+          int num_proc_exec = 2);
+void Barber(int id_proc = 0, int id_line = 1);
+void execute(int length);
+
+#endif  // MODULES_TASK_1_VOROBYOVA_A_SLEEPING_BARBER_SLEEPING_BARBER_H_
+
+// Copyright 2021 Vorobyova Anna
+#include "../../../modules/task_2/vorobyova_a_sleeping_barber/sleeping_barber.h"
+
+#include <mpi.h>
+#if defined(WIN32)
+#include <windows.h>
+#elif defined(__unix__)
+#include <time.h>
+#include <unistd.h>
+#elif defined(__APPLE__)
+#include <unistd.h>
+#else
+#endif
+#include <iostream>
+
+int millisleep(unsigned ms) {
+#if defined(WIN32)
+  SetLastError(0);
+  Sleep(ms);
+  return GetLastError() ? -1 : 0;
+#elif _POSIX_C_SOURCE >= 199309L
+  const struct timespec ts = {
+      ms / 1000,                /* seconds */
+      (ms % 1000) * 1000 * 1000 /* nano seconds */
+  };
+  return nanosleep(&ts, NULL);
+#elif _BSD_SOURCE ||                                                     \
+    (_XOPEN_SOURCE >= 500 || _XOPEN_SOURCE && _XOPEN_SOURCE_EXTENDED) && \
+        !(_POSIX_C_SOURCE >= 200809L || _XOPEN_SOURCE >= 700)
+  return usleep(1000 * ms);
+#elif __APPLE__
+  return usleep(1000 * ms);
+#else
+#error("No millisecond sleep available for this platform!")
+  return -1;
+#endif
+}
+
+void Client::initiate() {
+  MPI_Status status;
+  Message message;
+  message.command = 1;
+  message.id_proc = id_proc;
+  printf("[C]-[%d] \n", id_proc);
+  fflush(stdout);
+  while (-2 != message.command) { // пока рабочий день не кончился
+    message.command = 1; // подключение к очереди
+    MPI_Send(&message, sizeof(Message), MPI_CHAR, id_line, 123, MPI_COMM_WORLD); // синхронизация с очередью
+    printf("[C]-[%d] requests [L]\n", id_proc);
+    fflush(stdout);
+    MPI_Recv(&message, sizeof(Message), MPI_CHAR, id_line, 123, MPI_COMM_WORLD,
+             &status);
+    printf("[C]-[%d] receives message %d from [L]\n", id_proc, message.command);
+    fflush(stdout);
+    switch (message.command) {
+      case -2: {
+        break;
+      }
+      case -1: {
+        millisleep(500);
+        break;
+      }
+      default: {
+        MPI_Send(this, sizeof(Client), MPI_CHAR, id_line, 123, MPI_COMM_WORLD);
+        printf("[C]-[%d] sends itself to [L]\n", id_proc);
+        fflush(stdout);
+        MPI_Recv(this, sizeof(Client), MPI_CHAR, id_barber, 10, MPI_COMM_WORLD,
+                 &status);
+        printf("[C]-[%d] receives itself %d from [B], gets a haircut\n", id_proc,
+               this->getId_Proc());
+        fflush(stdout);
+        //
+        MPI_Send(&message, sizeof(Message), MPI_CHAR, id_barber, 10,
+                 MPI_COMM_WORLD);
+        printf("[C]-[%d] sends message %d to [B]\n", id_proc, message.command);
+        fflush(stdout);
+      }
+    }
+  }
+  printf("[C]-[%d] goes home\n", id_proc);
+  fflush(stdout);
+}
+void Client::cut() {}
+
+void Line(int id_proc, int input_length, int id_barber,
+          int input_num_proc_exec) {
+  Client* ClientLine;
+  int clients_num;
+  int max_clients;
+  bool barber_sleeping;
+  int length;
+  int num_proc_exec;
+
+  if (input_length > 0) {
+    length = input_length;
+    num_proc_exec = input_num_proc_exec - 2;
+    ClientLine = new Client[length];
+    clients_num = 0;
+    max_clients = length / 2;
+    barber_sleeping = false;
+  } else {
+    throw "length must be > 0";
+  }
+
+  // 1.communication with the barber
+  // 2.main loop
+  printf(
+      "[L] starts with num_proc_exec = %d and max_clientes in the line = "
+      "%d\n",
+      num_proc_exec, max_clients);
+  fflush(stdout);
+
+  MPI_Status status;
+  Message message;
+  //
+  MPI_Recv(&message.command, 1, MPI_INT, id_barber, 1, MPI_COMM_WORLD, &status);
+  printf("[L] reveices command %d from [B]\n", message.command);
+  fflush(stdout);
+  MPI_Send(&message.command, 1, MPI_INT, id_barber, 1, MPI_COMM_WORLD);
+  printf("[L] sends command %d to [B]\n", message.command);
+  fflush(stdout);
+  //
+  while ((num_proc_exec > 0) || (!barber_sleeping)) {
+    MPI_Recv(&message, sizeof(Message), MPI_CHAR, MPI_ANY_SOURCE, 123,
+             MPI_COMM_WORLD, &status);
+    printf("[L] gets a request from %d proc with command = %d\n",
+           message.id_proc, message.command);
+    fflush(stdout);
+    // генерируем команды клиентам
+    switch (message.command) {
+      case 1: {
+        printf("---[L] sends command to client---\n");
+        fflush(stdout);
+        if (0 == length) {
+          message.command = -2;  // конец рабочего дня
+          printf("---[L] Command: end of workday---\n");
+          fflush(stdout);
+        } else if (0 == clients_num) {
+          message.command = 1;  // проверка парикмахера
+          printf("---[L] Command: check barber---\n");
+          fflush(stdout);
+        } else if (clients_num < max_clients) {
+          message.command = 0;  //  встать в очередь
+          printf("---[L] Command: stand in line---\n");
+          fflush(stdout);
+        } else if (clients_num >= max_clients) {
+          message.command = -1;  // ничего не делать
+          printf("---[L] Command: do nothing---\n");
+          fflush(stdout);
+        } else {
+          message.command = -1;
+          printf("---[L] Command: do nothing?---\n");
+          fflush(stdout);
+        }
+        if (-2 == message.command) {
+          num_proc_exec--;
+          printf("---[L] Decrease exec num---\n");
+          fflush(stdout);
+        }
+        MPI_Send(&message, sizeof(Message), MPI_CHAR, message.id_proc, 123,
+                 MPI_COMM_WORLD);
+        printf("[L] sends message %d to [C]-[%d]\n", message.command, message.id_proc);
+        fflush(stdout);
+        if (message.command >= 0) {
+          length--;
+          clients_num++;
+          printf("---[L] Line length: %d---\n", length);
+          fflush(stdout);
+          printf("---[L] Clients num: %d---\n", clients_num);
+          fflush(stdout);
+          MPI_Recv(&ClientLine[length], sizeof(Client), MPI_CHAR,
+                   message.id_proc, 123, MPI_COMM_WORLD, &status);
+          printf("[L] Received client from [C]-[%d]\n", message.id_proc);
+          fflush(stdout);
+          ClientLine[length].place_in_line = length;
+          printf("[L] with the proc id = %d in the %d place\n",
+                 ClientLine[length].getId_Proc(), length);
+          fflush(stdout);
+          if ((1 == message.command) && (barber_sleeping)) {
+            printf("[L] is going to wake up the barber\n");
+            fflush(stdout);
+            MPI_Send(&message.command, 1, MPI_INT, id_barber, 100,
+                     MPI_COMM_WORLD);
+            printf("[L] Sent message %d to [B]\n", message.command);
+            fflush(stdout);
+            MPI_Recv(&message.command, 1, MPI_INT, id_barber, 100,
+                     MPI_COMM_WORLD, &status);
+            printf("[L] Received message %d from [B]\n", message.command);
+            fflush(stdout);
+            barber_sleeping = false;
+          }
+        }
+        break;
+      }
+      case 2: {  // the barber's order is empty (query)
+        printf("---[L] sends command to barber---\n");
+        fflush(stdout);
+        message.command = clients_num;
+        MPI_Send(&message, sizeof(Message), MPI_CHAR, id_barber, 1,
+                 MPI_COMM_WORLD);
+        printf("[L] Sent message %d to [B]\n", message.command);
+        fflush(stdout);
+        if (message.command > 0) {
+          // get the barber's response
+          MPI_Send(&ClientLine[length + clients_num - 1], sizeof(Client),
+                   MPI_CHAR, id_barber, 2, MPI_COMM_WORLD);
+          printf("[L] Sent client %d to [B]\n",
+                 ClientLine[length + clients_num - 1].getId_Proc());
+          fflush(stdout);
+          //
+          MPI_Recv(&message, sizeof(Message), MPI_CHAR, id_barber, 1,
+                   MPI_COMM_WORLD, &status);
+          printf("[L] Received message %d from [B]\n", message.command);
+          fflush(stdout);
+          clients_num--;
+        } else {
+          barber_sleeping = true;
+        }
+        break;
+      }
+    }
+  }
+  if (barber_sleeping) {
+    printf("[L] is going to wake up the barber\n");
+    fflush(stdout);
+    message.command = -2;
+    MPI_Send(&message.command, 1, MPI_INT, id_barber, 100, MPI_COMM_WORLD);
+    printf("[L] Sent message %d to [B]\n", message.command);
+    fflush(stdout);
+    MPI_Recv(&message.command, 1, MPI_INT, id_barber, 100, MPI_COMM_WORLD,
+             &status);
+    printf("[L] Received message %d from [B]\n", message.command);
+    fflush(stdout);
+    printf("[L] wakes up the barber (%d)\n", message.command);
+    fflush(stdout);
+  }
+  delete[] ClientLine;
+  printf("[L] finished its work\n");
+  fflush(stdout);
+}
+void Barber(int id_proc, int id_line) {
+  Client CurrentClient;
+  MPI_Status status;
+  Message message;
+  message.command = 2; // подключение к очереди
+  message.id_proc = id_proc;
+  // подключение к очереди
+  MPI_Send(&message.command, 1, MPI_INT, id_line, 1, MPI_COMM_WORLD);
+  printf("[B] sent message %d to [L]\n", message.command);
+  fflush(stdout);
+  MPI_Recv(&message.command, 1, MPI_INT, id_line, 1, MPI_COMM_WORLD, &status);
+  printf("[B] Received message %d from [L]\n", message.command);
+  fflush(stdout);
+  while (message.command != -2) {
+    message.command = 2;
+    MPI_Send(&message, sizeof(Message), MPI_CHAR, id_line, 123, MPI_COMM_WORLD);
+    printf("[B] sent message %d to [L]\n", message.command);
+    fflush(stdout);
+    MPI_Recv(&message, sizeof(Message), MPI_CHAR, id_line, 1, MPI_COMM_WORLD,
+             &status);
+    printf("[B] Received message %d from [L]\n", message.command);
+    fflush(stdout);
+    if (message.command > 0) {
+      MPI_Recv(&CurrentClient, sizeof(Client), MPI_CHAR, id_line, 2,
+               MPI_COMM_WORLD, &status);
+      printf("[B] Received client %d from [L]\n", CurrentClient.getId_Proc());
+      fflush(stdout);
+      // for synchronization, a response is sent to the line
+      MPI_Send(&message, sizeof(Message), MPI_CHAR, id_line, 1, MPI_COMM_WORLD);
+      printf("[B] sent message %d to [L]\n", message.command);
+      fflush(stdout);
+      printf("[B] starts [%d] with the place = *%d*\n",
+             CurrentClient.getId_Proc(), CurrentClient.place_in_line);
+      fflush(stdout);
+      CurrentClient.cut();
+      MPI_Send(&CurrentClient, sizeof(Client), MPI_CHAR,
+               CurrentClient.getId_Proc(), 10, MPI_COMM_WORLD);
+      printf("[B] sent client %d to [C]-[%d]\n", CurrentClient.getId_Proc(),
+             CurrentClient.getId_Proc());
+      fflush(stdout);
+      // for synchronization, the response is received from the client
+      MPI_Recv(&message, sizeof(Message), MPI_CHAR, CurrentClient.getId_Proc(),
+               10, MPI_COMM_WORLD, &status);
+      printf("[B] Received message %d from [C]-[%d]\n", message.command,
+             CurrentClient.getId_Proc());
+      fflush(stdout);
+      message.id_proc = id_proc;
+    } else if (message.command != -2) {
+      printf("[B] went to sleep\n");
+      fflush(stdout);
+      MPI_Recv(&message.command, 1, MPI_INT, id_line, 100, MPI_COMM_WORLD,
+               &status);
+      printf("[B] Received message %d from [L]\n", message.command);
+      fflush(stdout);
+      printf("[B] woke up (%d)\n", message.command);
+      fflush(stdout);
+      MPI_Send(&message.command, 1, MPI_INT, id_line, 100, MPI_COMM_WORLD);
+      printf("[B] sent message %d to [L]\n", message.command);
+      fflush(stdout);
+    }
+  }
+  printf("[B] finished his work\n");
+  fflush(stdout);
+}
+void execute(int cuts) {
+  int num_proc, id_proc;
+  MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
+  MPI_Comm_rank(MPI_COMM_WORLD, &id_proc);
+  if (num_proc <= 2) {
+    throw "Not enough processes";
+  } else if (id_proc == 0) {
+    Barber(0, 1);
+  } else if (id_proc == 1) {
+    Line(1, cuts, 0, num_proc);
+  } else {
+    Client client(id_proc, 1, 0);
+    client.initiate();
+  }
+}
