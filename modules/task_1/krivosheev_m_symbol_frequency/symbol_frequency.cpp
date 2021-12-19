@@ -14,6 +14,9 @@ double getFrequencyParallel(char s, std::string text) {
   MPI_Comm_size(MPI_COMM_WORLD, &tasks);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   int n = text.length();
+  if (n < tasks) {
+    throw "There is less data than the number of processes!";
+  }
   int data_per_rank = n / tasks;
   if (rank == tasks - 1) {
     for (int i = (rank - 1) * data_per_rank; i < n; ++i)
