@@ -19,7 +19,7 @@ std::vector<int> getRandomVector(const int size) {
 int findingNumberOfSignAlternations(const std::vector<int>& vec) {
     int result = 0;
     int size = vec.size();
-    for (unsigned int i = 1; i < size; i++) {
+    for (int i = 1; i < size; i++) {
         if (vec[i - 1] * vec[i] < 0) {
             result++;
         } else if (vec[i] == 0) {
