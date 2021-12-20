@@ -1,7 +1,7 @@
 // Copyright 2021 Shurygina A
 
 #ifndef MODULES_TASK_3_SHURYGINA_A_LINEAR_FILTRATION_LINEAR_FILTRATION_BLOCK_H_
-#define MODULES_TASK_3_SHURYGINA_A_LINEAR_FILTRATION_BLOCK_LINEAR_FILTRATION_BLOCK_H_
+#define MODULES_TASK_3_SHURYGINA_A_LINEAR_FILTRATION_LINEAR_FILTRATION_BLOCK_H_
 
 #include <vector>
 
@@ -19,4 +19,4 @@ std::vector<double> createGaussianKernel(int size, double sigma);
 int findBoundaries(int data, int left, int right);
 void show(const std::vector<int> img, int height, int width);
 
-#endif  // MODULES_TASK_3_SHURYGINA_A_LINEAR_FILTRATION_LINEFILTER_BLOCK_H_
+#endif  // MODULES_TASK_3_SHURYGINA_A_LINEAR_FILTRATION_LINEAR_FILTRATION_BLOCK_H_
