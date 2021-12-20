@@ -28,7 +28,7 @@ double getFrequencyParallel(char s, std::string text) {
   }
   MPI_Reduce(&res_count, &answ_count, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
   if (rank == 0) {
-    freq = static_cast<double>(answ_count) / n;
+    freq = static_cast<double>(answ_count) / static_cast<double>(n);
   }
   return freq;
 }
