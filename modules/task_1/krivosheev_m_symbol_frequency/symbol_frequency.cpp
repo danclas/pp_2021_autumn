@@ -13,22 +13,24 @@ double getFrequencyParallel(char s, std::string text) {
   MPI_Comm_size(MPI_COMM_WORLD, &tasks);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   int n = text.length();
-  if (n < tasks) {
-    throw "There is less data than the number of processes!";
-  }
-  int data_per_rank = n / tasks;
-  if (rank == tasks - 1) {
-    for (int i = (rank - 1) * data_per_rank; i < n; ++i)
-      if (text[i] == s || text[i] == s - 32) count++;
-    res_count = count;
-  } else if (rank != 0) {
-    for (int i = (rank - 1) * data_per_rank; i < rank * data_per_rank; ++i)
-      if (text[i] == s || text[i] == s - 32) count++;
-    res_count = count;
-  }
-  MPI_Reduce(&res_count, &answ_count, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-  if (rank == 0) {
-    freq = static_cast<double>(answ_count) / static_cast<double>(n);
+  if (n < tasks && rank == 0) {
+    return getFrequencyNonParallel(s, text);
+  } else {
+    int data_per_rank = n / tasks;
+    if (rank == tasks - 1) {
+      for (int i = (rank - 1) * data_per_rank; i < n; ++i)
+        if (text[i] == s || text[i] == s - 32) count++;
+      res_count = count;
+    } else if (rank != 0) {
+      for (int i = (rank - 1) * data_per_rank; i < rank * data_per_rank; ++i)
+        if (text[i] == s || text[i] == s - 32) count++;
+      res_count = count;
+    }
+    MPI_Reduce(&res_count, &answ_count, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    if (rank == 0) {
+      freq = static_cast<double>(answ_count) / static_cast<double>(n;
+    }
+    return freq;
   }
   return freq;
 }
