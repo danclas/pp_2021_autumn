@@ -39,7 +39,7 @@ double* getSequentialOperations(double* _matrix, int width, int height) {
       b -= matrix[i * width + j] * res[j];
     res[i] = b / matrix[i * width + i];
   }
-  delete [] matrix;
+  delete[] matrix;
   return res;
 }
 
