@@ -15,7 +15,7 @@ Matrix getRandomMatrix(sizeType row_count, sizeType col_count) {
     return mtrx;
 }
 
-Matrix getSequential(const Matrix& mtrx1, const Matrix& mtrx2, 
+Matrix getSequential(const Matrix& mtrx1, const Matrix& mtrx2,
     sizeType row_mtrx1, sizeType col_mtrx1, sizeType col_mtrx2) {
 
     sizeType row_mtrx2 = col_mtrx1;
@@ -32,9 +32,9 @@ Matrix getSequential(const Matrix& mtrx1, const Matrix& mtrx2,
     return result;
 }
 
-Matrix getParallel(const Matrix& mtrx1, const Matrix& mtrx2, 
+Matrix getParallel(const Matrix& mtrx1, const Matrix& mtrx2,
     sizeType row_mtrx1, sizeType col_mtrx1) {
-    
+
     int proc_count, proc_rank;
     MPI_Comm_size(MPI_COMM_WORLD, &proc_count);
     MPI_Comm_rank(MPI_COMM_WORLD, &proc_rank);
