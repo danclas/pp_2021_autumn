@@ -18,7 +18,7 @@ double getFrequencyParallel(char s, std::string text) {
     last_task_num = n;
   }
   int data_per_rank = n / last_task_num;
-  if (rank == last_task_num) {
+  if (rank == last_task_num - 1) {
     for (int i = (rank - 1) * data_per_rank; i < n; ++i)
       if (text[i] == s || text[i] == s - 32) count++;
     res_count = count;
