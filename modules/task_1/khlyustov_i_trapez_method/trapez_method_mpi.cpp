@@ -24,6 +24,5 @@ double getParallel(double a, double b, int n, const std::function<double(double)
     double global_sum;
     double local_sum = getTrapez(a, (b - a) / n, n, f, proc_rank, proc_count);
     MPI_Reduce(&local_sum, &global_sum, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-
     return global_sum;
 }
