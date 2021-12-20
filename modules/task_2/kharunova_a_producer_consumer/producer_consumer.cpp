@@ -11,7 +11,6 @@
 int process(int numberOfEnterings) {
   int element, rank, emptyConsumer = -1;
   MPI_Status proc;
-  MPI_Request request;
 
   std::stack<int> buffer;
   while (numberOfEnterings != 0) {
