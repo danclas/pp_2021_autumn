@@ -79,11 +79,9 @@ TEST(Parallel_Operation, parallel_test_func_random) {
   double freq_expect = getFrequencyNonParallel(symbol, s);
   double freq_par = getFrequencyParallel(symbol, s);
   if (my_rank == 0) {
-
     ASSERT_NEAR(freq_expect, freq_par, 0.0000001);
   }
 }
-
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
