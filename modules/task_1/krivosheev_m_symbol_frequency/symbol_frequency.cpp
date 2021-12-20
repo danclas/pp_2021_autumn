@@ -8,29 +8,28 @@
 #include <random>
 
 double getFrequencyParallel(char s, std::string text) {
-  int rank, tasks, answ_count = 0, res_count = 0, count = 0;
+  int rank, tasks, answ_count = 0, res_count = 0, count = 0, last_task_num;
   double freq = 0.0;
   MPI_Comm_size(MPI_COMM_WORLD, &tasks);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  last_task_num = tasks;
   int n = text.length();
-  if (n < tasks && rank == 0) {
-    return getFrequencyNonParallel(s, text);
-  } else {
-    int data_per_rank = n / tasks;
-    if (rank == tasks - 1) {
-      for (int i = (rank - 1) * data_per_rank; i < n; ++i)
-        if (text[i] == s || text[i] == s - 32) count++;
-      res_count = count;
-    } else if (rank != 0) {
-      for (int i = (rank - 1) * data_per_rank; i < rank * data_per_rank; ++i)
-        if (text[i] == s || text[i] == s - 32) count++;
-      res_count = count;
-    }
-    MPI_Reduce(&res_count, &answ_count, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-    if (rank == 0) {
-      freq = static_cast<double>(answ_count) / static_cast<double>(n);
-    }
-    return freq;
+  if (n < tasks) {
+    last_task_num = n;
+  }
+  int data_per_rank = n / last_task_num;
+  if (rank == last_task_num) {
+    for (int i = (rank - 1) * data_per_rank; i < n; ++i)
+      if (text[i] == s || text[i] == s - 32) count++;
+    res_count = count;
+  } else if (rank != 0 && rank < n) {
+    for (int i = (rank - 1) * data_per_rank; i < rank * data_per_rank; ++i)
+      if (text[i] == s || text[i] == s - 32) count++;
+    res_count = count;
+  }
+  MPI_Reduce(&res_count, &answ_count, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+  if (rank == 0) {
+    freq = static_cast<double>(answ_count) / static_cast<double>(n);
   }
   return freq;
 }

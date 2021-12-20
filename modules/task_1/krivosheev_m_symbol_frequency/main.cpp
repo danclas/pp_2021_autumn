@@ -72,7 +72,7 @@ TEST(Parallel_Operation, parallel_test_func_lowercase) {
 }
 
 TEST(Parallel_Operation, parallel_test_func_random) {
-  std::string s = makeRandomString(40);
+  std::string s = makeRandomString(30);
   int my_rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
   char symbol = 'a';
