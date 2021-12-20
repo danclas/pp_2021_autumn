@@ -4,6 +4,7 @@
 
 #include <mpi.h>
 
+#include <algorithm>
 #include <random>
 
 double* getRandomMatrix(int width, int height) {
@@ -38,6 +39,7 @@ double* getSequentialOperations(double* _matrix, int width, int height) {
       b -= matrix[i * width + j] * res[j];
     res[i] = b / matrix[i * width + i];
   }
+  delete [] matrix;
   return res;
 }
 
