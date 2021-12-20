@@ -104,27 +104,6 @@ TEST(Parallel_Operations_MPI, test_7_sequential_and_parallel_other_values) {
   }
 }
 
-TEST(Parallel_Operations_MPI, test_8_sequential_and_parallel_random_values) {
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  double* res = 0;
-  const int h = 3;
-  const int w = 4;
-  double* matrix = 0;
-  double* x = 0;
-
-  if (rank == 0) {
-    matrix = getRandomMatrix(w, h);
-  }
-  res = getParallelOperations(matrix, w, h);
-  if (rank == 0) {
-    x = getSequentialOperations(matrix, w, h);
-    for (int i = 0; i < h; i++) {
-      ASSERT_NEAR(x[i], res[i], 0.000001);
-    }
-  }
-}
-
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   MPI_Init(&argc, &argv);
