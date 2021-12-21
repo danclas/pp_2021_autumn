@@ -8,7 +8,6 @@
 
 vectorF getKernel(float sigma = 3.f);
 vectorF getRandomImg(int w, int h);
-
 vectorF getSequential(const vectorF& kernel, const vectorF& img, int w, int h);
 vectorF getParallel(const vectorF& kernel, const vectorF& img, int w, int h);
 
