@@ -1,9 +1,9 @@
 // Copyright 2021 Khlyustov Ilya
+#define _USE_MATH_DEFINES  // for C++
+#include <cmath>
 #include <ctime>
 #include <random>
 #include "../../../modules/task_3/khlyustov_i_image_filter/line_vertical_image_filter.h"
-
-#define M_PI 3.14159265358979323846
 
 vectorF getKernel(float sigma) {
     float norm = 0;
