@@ -44,17 +44,6 @@ Matrix::Matrix(const Matrix& mat) {
   for (int i = 0; i < x * y; i++) m[i] = mat.m[i];
 }
 
-Matrix& Matrix::operator=(const Matrix& mat) {
-  if (x + y != 0) delete[] m;
-  m = new int[mat.x * mat.y];
-  x = mat.x;
-  y = mat.y;
-  for (int i = 0; i < x * y; i++) {
-    m[i] = mat.m[i];
-  }
-  return *this;
-}
-
 int Matrix::get(int a) { return m[a]; }
 
 int Matrix::Min_in_line(int nom_line) {
@@ -125,6 +114,7 @@ int Matrix::Min_in_matrix_mpi() {
       nom_l_letter = y;
     if (rank < nom_l_letter) MPI_Send(&r, 1, MPI_INT, 0, 1, MPI_COMM_WORLD);
   }
+  return 0;
 }
 
 int Matrix::Min_in_matrix_one() {
