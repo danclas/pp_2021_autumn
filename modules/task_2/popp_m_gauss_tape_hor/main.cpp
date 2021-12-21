@@ -6,8 +6,8 @@
 
 
 TEST(MATRIX_GENERATE, generate_random_sle) {
-    std::vector<double> matrix (10 * 10);
-    std::vector<double> vec (10);
+    std::vector<double> matrix(10 * 10);
+    std::vector<double> vec(10);
     ASSERT_NO_THROW(sleGenerate(&matrix, &vec, 10));
 }
 
