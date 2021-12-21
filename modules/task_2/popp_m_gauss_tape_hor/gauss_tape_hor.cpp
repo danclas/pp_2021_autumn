@@ -160,6 +160,7 @@ std::vector<double> parallel(const std::vector<double>& sle, const std::vector<d
     }
 
     std::vector<double> sln (num, 0);
+
     int sender = rank + 1;
     int receiver = rank - 1;
     int sln_tag = 2;
