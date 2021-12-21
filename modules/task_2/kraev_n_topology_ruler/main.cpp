@@ -1,6 +1,6 @@
 // Copyright 2021 Kraev Nikita
-#include "./topology_ruler.h"
 #include <gtest/gtest.h>
+#include "./topology_ruler.h"
 #include <gtest-mpi-listener.hpp>
 
 TEST(checking_the_ruler_topology, number_of_neighbors_first_process) {
@@ -71,45 +71,45 @@ TEST(checking_the_ruler_topology, checking_neighboring_process) {
 }
 
 TEST(checking_the_ruler_topology, transferring_data_to_the_last_process) {
-    int size, rank;
-    char result;
-    MPI_Status status;
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm ruler = create_topology_ruler(MPI_COMM_WORLD);
-    if (size < 4) {
-        ASSERT_TRUE(true);
-    } else {
-        if (rank == 0) {
-            result = 'a';
-            MPI_Send(&result, 1, MPI_CHAR, 3, 0, ruler);
-        }
-        if (rank == 3) {
-            MPI_Recv(&result, 1, MPI_CHAR, 0, 0, ruler, &status);
-            ASSERT_EQ('a', result);
-        }
-    }   
+  int size, rank;
+  char result;
+  MPI_Status status;
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm ruler = create_topology_ruler(MPI_COMM_WORLD);
+  if (size < 4) {
+    ASSERT_TRUE(true);
+  } else {
+    if (rank == 0) {
+      result = 'a';
+      MPI_Send(&result, 1, MPI_CHAR, 3, 0, ruler);
+    }
+    if (rank == 3) {
+      MPI_Recv(&result, 1, MPI_CHAR, 0, 0, ruler, &status);
+      ASSERT_EQ('a', result);
+    }
+  }
 }
 
 TEST(checking_the_ruler_topology, transferring_data_to_the_first_process) {
-    int size, rank;
-    int result;
-    MPI_Status status;
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm ruler = create_topology_ruler(MPI_COMM_WORLD);
-    if (size < 5) {
-        ASSERT_TRUE(true);
-    } else {
-        if (rank == 4) {
-            result = 5;
-            MPI_Send(&result, 1, MPI_INT, 0, 0, ruler);
-        }
-        if (rank == 0) {
-            MPI_Recv(&result, 1, MPI_INT, 4, 0, ruler, &status);
-            ASSERT_EQ(5, result);
-        }
+  int size, rank;
+  int result;
+  MPI_Status status;
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm ruler = create_topology_ruler(MPI_COMM_WORLD);
+  if (size < 5) {
+    ASSERT_TRUE(true);
+  } else {
+    if (rank == 4) {
+      result = 5;
+      MPI_Send(&result, 1, MPI_INT, 0, 0, ruler);
     }
+    if (rank == 0) {
+      MPI_Recv(&result, 1, MPI_INT, 4, 0, ruler, &status);
+      ASSERT_EQ(5, result);
+    }
+  }
 }
 
 int main(int argc, char** argv) {
