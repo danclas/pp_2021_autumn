@@ -20,6 +20,7 @@ class Matrix {
   Matrix(int xx, int yy);
   Matrix(const Matrix& mat);
   Matrix& operator=(const Matrix& mat) {
+    if (this == &mat) return *this;
     if (x + y != 0) delete[] m;
     m = new int[mat.x * mat.y];
     x = mat.x;
@@ -27,7 +28,7 @@ class Matrix {
     for (int i = 0; i < x * y; i++) {
       m[i] = mat.m[i];
     }
-    if (this == &mat) return *this;
+    return *this;
   }
   int get(int a);
   int Min_in_line(int nom_line);
