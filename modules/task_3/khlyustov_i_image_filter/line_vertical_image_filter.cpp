@@ -37,9 +37,6 @@ vectorF getRandomImg(int w, int h) {
 
 int clamp(int value, int max, int min) {
     return (value > max) ? max : ((value < min) ? min : value);
-    // if (value > max) return max;
-    // if (value < min) return min;
-    // return value;
 }
 
 int calcIdx(int x, int y, int w) {
