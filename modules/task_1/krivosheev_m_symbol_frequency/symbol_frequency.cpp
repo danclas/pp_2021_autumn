@@ -18,7 +18,7 @@ double getFrequencyParallel(char s, std::string text) {
   if (tasks == 1) {
     return getFrequencyNonParallel(s, text);
   }
-  if (n < tasks) {
+  if (n <= tasks) {
     last_task_num = n;
   }
   int data_per_rank = n / last_task_num;
