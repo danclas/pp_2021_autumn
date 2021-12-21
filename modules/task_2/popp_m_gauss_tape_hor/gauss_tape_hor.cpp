@@ -102,10 +102,8 @@ std::vector<double> parallel(const std::vector<double>& sle, const std::vector<d
                 local_m_sle[i * num + j] = sle[i * num + j];
             }
         }
-    }
-    else {
+    } else {
         MPI_Status status;
-
         MPI_Recv(local_m_sle.data(), static_cast<int>(size_local * num),
             MPI_DOUBLE, 0, m_tag, MPI_COMM_WORLD, &status);
         MPI_Recv(local_v_res.data(), static_cast<int>(size_local),
@@ -137,8 +135,7 @@ std::vector<double> parallel(const std::vector<double>& sle, const std::vector<d
                 MPI_Send(local_v_res.data(), static_cast<int>(local_v_res.size()),
                     MPI_DOUBLE, num_proc, v_tag, MPI_COMM_WORLD);
             }
-        }
-        else {
+        }  else {
             MPI_Status status;
             MPI_Recv(recivied_sle.data(), static_cast<int>(recivied_sle.size()),
                 MPI_DOUBLE, iter, m_tag, MPI_COMM_WORLD, &status);
@@ -166,7 +163,6 @@ std::vector<double> parallel(const std::vector<double>& sle, const std::vector<d
     int sender = rank + 1;
     int receiver = rank - 1;
     int sln_tag = 2;
-
     if (rank != size - 1) {
         MPI_Status status;
 
