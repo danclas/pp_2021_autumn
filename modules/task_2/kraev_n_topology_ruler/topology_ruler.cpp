@@ -4,7 +4,6 @@
 MPI_Comm create_topology_ruler(const MPI_Comm world) {
     int nnodes;
     int reorder = 0;
-
     MPI_Comm_size(MPI_COMM_WORLD, &nnodes);
     int size = (nnodes - 1) * 2;
     int* index = new int[nnodes];
