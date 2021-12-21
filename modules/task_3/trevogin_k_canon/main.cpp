@@ -2,8 +2,7 @@
 #include "./canon.h"
 
 
-TEST(cannons_mult_test, test_1)
-{
+TEST(cannons_mult_test, test_1) {
     const int size = 6;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -20,8 +19,7 @@ TEST(cannons_mult_test, test_1)
     }
 }
 
-TEST(cannons_mult_test, test_2)
-{
+TEST(cannons_mult_test, test_2) {
     const int size = 10;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -38,8 +36,7 @@ TEST(cannons_mult_test, test_2)
     }
 }
 
-TEST(cannons_mult_test, test_3)
-{
+TEST(cannons_mult_test, test_3) {
     const int size = 20;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -57,8 +54,7 @@ TEST(cannons_mult_test, test_3)
 }
 
 
-TEST(cannons_mult_test, test_4)
-{
+TEST(cannons_mult_test, test_4) {
     const int size = 40;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -75,8 +71,7 @@ TEST(cannons_mult_test, test_4)
     }
 }
 
-TEST(cannons_mult_test, test_5)
-{
+TEST(cannons_mult_test, test_5) {
     const int size = 100;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -92,8 +87,7 @@ TEST(cannons_mult_test, test_5)
         ASSERT_TRUE(mat_par == mat * mat1);
     }
 }
-TEST(cannons_mult_test, sravn_test)
-{
+TEST(cannons_mult_test, sravn_test) {
     const int size = 1000;
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -117,8 +111,7 @@ TEST(cannons_mult_test, sravn_test)
     }
 }
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     MPI_Init(&argc, &argv);
 

@@ -1,10 +1,10 @@
 // Copyright 2021 Trevogin Kirill
-#include <gtest-mpi-listener.hpp>
 #include <gtest/gtest.h>
 #include <iostream>
 #include <mpi.h>
 #include <random>
 #include <vector>
+#include <gtest-mpi-listener.hpp>
 #ifndef MODULES_TASK_3_TREVOGIN_K_CANON_CANON_H_
 #define MODULES_TASK_3_TREVOGIN_K_CANON_CANON_H_
 
