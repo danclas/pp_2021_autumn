@@ -10,11 +10,6 @@
 #include <string>
 #include <vector>
 
-std::vector<int> getRandomVector(int sz);
-int getParallelOperations(std::vector<int> global_vec, int count_size_vector,
-                          const std::string& ops);
-int getSequentialOperations(std::vector<int> vec, const std::string& ops);
-
 class Matrix {
  protected:
   int x, y;
@@ -32,7 +27,7 @@ class Matrix {
     for (int i = 0; i < x * y; i++) {
       m[i] = mat.m[i];
     }
-    return *this;
+    if (this == &mat) return *this;
   }
   int get(int a);
   int Min_in_line(int nom_line);
