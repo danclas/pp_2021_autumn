@@ -1,7 +1,6 @@
 // Copyright 2021 Trevogin Kirill
 #include "./canon.h"
 
-
 TEST(cannons_mult_test, test_1) {
     const int size = 6;
     int rank;
@@ -13,7 +12,7 @@ TEST(cannons_mult_test, test_1) {
         mat.fillMatrix(generateRngValue, 0, 15, 0);
         mat1.fillMatrix(generateRngValue, 0, 15, 0);
     }
-    matrix<double> mat_par  = cannonsMultiplication(&mat, &mat1);
+    matrix<double> mat_par = cannonsMultiplication(&mat, &mat1);
     if (rank == 0) {
         ASSERT_TRUE(mat_par == mat * mat1);
     }
@@ -52,7 +51,6 @@ TEST(cannons_mult_test, test_3) {
         ASSERT_TRUE(mat_par == mat * mat1);
     }
 }
-
 
 TEST(cannons_mult_test, test_4) {
     const int size = 40;
