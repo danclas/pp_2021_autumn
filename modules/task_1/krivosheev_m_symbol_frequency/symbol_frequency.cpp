@@ -7,6 +7,7 @@
 #include <iostream>
 #include <random>
 
+
 double getFrequencyParallel(char s, std::string text) {
   int rank, tasks, answ_count = 0, res_count = 0, count = 0, last_task_num;
   double freq = 0.0;
