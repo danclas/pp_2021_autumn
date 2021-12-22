@@ -1,4 +1,4 @@
-// Copyright 2021 Kurguzikov Kirill
+// Copyright 2021 Kurguzikov Kirill.
 #include <mpi.h>
 #include <random>
 #include <ctime>
