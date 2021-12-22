@@ -28,7 +28,7 @@ int getParallelAverage(std::vector<int> parall_vec, int size) {
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
 
     int delta = ProcNum - size % ProcNum;
-    for (int i = 0; i < delta; i++){
+    for (int i = 0; i < delta; i++) {
         parall_vec.push_back(0);
         size++;
     }
@@ -74,3 +74,4 @@ int getSequentialAverage(std::vector<int> sequent_vec) {
     Saverage = static_cast<double>(sum_all) / size;
     return Saverage;
 }
+
