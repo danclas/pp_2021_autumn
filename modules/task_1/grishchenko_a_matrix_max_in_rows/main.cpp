@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <vector>
 #include <gtest-mpi-listener.hpp>
-#include "./matrix_max_in_rows.h"
+#include "../../../modules/task_1/grishchenko_a_matrix_max_in_rows/matrix_max_in_rows.h"
 
 
 TEST(Parallel_Operations_MPI, Matrix_16x16) {

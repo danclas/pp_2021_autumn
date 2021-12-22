@@ -4,7 +4,7 @@
 #include <random>
 #include <ctime>
 #include <algorithm>
-#include "./matrix_max_in_rows.h"
+#include "../../../modules/task_1/grishchenko_a_matrix_max_in_rows/matrix_max_in_rows.h"
 
 std::vector<int> randomMatrix(int cols, int rows) {
     std::mt19937 gen;
