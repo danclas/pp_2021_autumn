@@ -1,6 +1,8 @@
 // Copyright 2021 Kraev Nikita
 #include <gtest/gtest.h>
+
 #include "./topology_ruler.h"
+
 #include <gtest-mpi-listener.hpp>
 
 TEST(checking_the_ruler_topology, number_of_neighbors_first_process) {
