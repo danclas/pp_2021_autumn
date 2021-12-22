@@ -50,7 +50,7 @@ int getParallelAverage(std::vector<int> parall_vec, int size) {
     }
 
     int sum = sum_all = 0;
-    for (int i = 0; i < partSize; i++) 
+    for (int i = 0; i < partSize; i++)
         sum += local_vec[i];
 
     MPI_Reduce(&sum, &sum_all, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
@@ -74,4 +74,3 @@ int getSequentialAverage(std::vector<int> sequent_vec) {
     Saverage = static_cast<double>(sum_all) / size;
     return Saverage;
 }
-
