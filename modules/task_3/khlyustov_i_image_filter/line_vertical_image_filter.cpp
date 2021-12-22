@@ -85,6 +85,7 @@ vectorF getParallel(const vectorF& kernel, const vectorF& img, int w, int h) {
         scnts[i] = w_proc;
         displs[i] = scnts[i - 1] + displs[i - 1];
     }
+
     std::vector<vectorF> buffer(h);
     vectorF part;
     for (int r = 0; r < h; r++) {
