@@ -28,6 +28,7 @@ vectorF getKernel(float sigma) {
 vectorF getRandomImg(int w, int h) {
     std::mt19937 gen(time(0));
     std::uniform_real_distribution<> urd(0, 1);
+
     vectorF img(w * h);
     for (int i = 0; i < (w * h); i++) {
         img[i] = urd(gen);
