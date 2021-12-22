@@ -42,7 +42,7 @@ std::vector<int> getParallelOperations(std::vector<int> global_mat, int cols, in
     std::vector<int> local_mat(rank == 0 ? (count + epsilon) * cols : count * cols);
     if (rank == 0) {
         local_mat = { global_mat.begin(), global_mat.begin() + (count + epsilon) * cols };
-    }else {
+    } else {
         MPI_Status status;
         MPI_Recv(local_mat.data(), count * cols, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
     }
@@ -55,7 +55,7 @@ std::vector<int> getParallelOperations(std::vector<int> global_mat, int cols, in
             MPI_Status status;
             MPI_Recv(result.data() + epsilon + count * proc, count, MPI_INT, proc, 0, MPI_COMM_WORLD, &status);
         }
-    }else {
+    } else {
         MPI_Send(local_result.data(), count, MPI_INT, 0, 0, MPI_COMM_WORLD);
     }
     return result;

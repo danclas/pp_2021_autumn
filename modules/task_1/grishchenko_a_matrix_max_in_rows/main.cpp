@@ -1,8 +1,9 @@
 ﻿  // Copyright 2021 Grishchenko Andrei
+#include "./matrix_max_in_rows.h"
 #include <gtest/gtest.h>
 #include <vector>
-#include "<gtest-mpi-listener.hpp>
-#include "./matrix_max_in_rows.h"
+#include <gtest-mpi-listener.hpp>
+
 
 TEST(Parallel_Operations_MPI, Matrix_16x16) {
     int rank;
