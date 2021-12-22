@@ -1,7 +1,7 @@
-﻿// Copyright 2021 Grishchenko Andrei
-#include <gtest-mpi-listener.hpp>
+﻿  // Copyright 2021 Grishchenko Andrei
 #include <gtest/gtest.h>
 #include <vector>
+#include "<gtest-mpi-listener.hpp>
 #include "./matrix_max_in_rows.h"
 
 TEST(Parallel_Operations_MPI, Matrix_16x16) {
@@ -17,6 +17,8 @@ TEST(Parallel_Operations_MPI, Matrix_16x16) {
     if (rank == 0) {
         std::vector<int> control_result = getSequentialOperations(global_vec, rows, cols);
         ASSERT_EQ(control_result, result);
+        control_result.clear();
+        result.clear();
     }
 }
 
