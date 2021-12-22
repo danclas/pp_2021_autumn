@@ -1,4 +1,4 @@
-﻿  // Copyright 2021 Grishchenko Andrei
+﻿   // Copyright 2021 Grishchenko Andrei
 #include <gtest/gtest.h>
 #include <vector>
 #include <gtest-mpi-listener.hpp>
