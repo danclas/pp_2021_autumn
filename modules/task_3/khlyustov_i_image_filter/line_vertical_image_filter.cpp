@@ -79,6 +79,7 @@ vectorF getParallel(const vectorF& kernel, const vectorF& img, int w, int h) {
 
     std::vector<int> displs(proc_count);
     std::vector<int> scnts(proc_count);
+
     scnts[0] = w_proc + remainder;
     displs[0] = 0;
     for (int i = 1; i < proc_count; i++) {
