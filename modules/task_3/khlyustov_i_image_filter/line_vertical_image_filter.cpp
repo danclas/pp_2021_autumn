@@ -96,6 +96,7 @@ vectorF getParallel(const vectorF& kernel, const vectorF& img, int w, int h) {
             part.push_back(buffer[r][c]);
         }
     }
+
     vectorF proc_res = getSequential(kernel, part, scnts[proc_rank], h);
     vectorF result;
     for (int r = 0; r < h; r++) {
