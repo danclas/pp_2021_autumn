@@ -68,7 +68,7 @@ vectorF getParallel(const vectorF& kernel, const vectorF& img, int w, int h) {
     int proc_count, proc_rank;
     MPI_Comm_size(MPI_COMM_WORLD, &proc_count);
     MPI_Comm_rank(MPI_COMM_WORLD, &proc_rank);
-    
+
     if (proc_count == 1) {
         return getSequential(kernel, img, w, h);
     }
