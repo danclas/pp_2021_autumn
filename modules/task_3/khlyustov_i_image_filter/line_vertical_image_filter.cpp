@@ -9,6 +9,7 @@ vectorF getKernel(float sigma) {
     float norm = 0;
     float _2sigma2 = 2 * sigma * sigma;
     vectorF kernel(9);
+
     for (int x = -1; x <= 1; x++) {
         for (int y = -1; y <= 1; y++) {
             int idx = (x + 1) * 3 + (y + 1);
