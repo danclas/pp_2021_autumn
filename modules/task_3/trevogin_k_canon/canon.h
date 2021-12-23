@@ -12,11 +12,11 @@
 
 template <class T>
 class matrix {
-private:
+ private:
     T* m;
     int numLine, numColums;
 
-public:
+ public:
     matrix();
     matrix(const matrix<T>& c);
     matrix(const int _numRows, const int _numColums);
@@ -53,7 +53,7 @@ matrix<T>::matrix(const matrix<T>& c) {
     if (numLine * numColums == 0) {
         m = nullptr;
     } else {
-        m = new T[static_cast<UINT64_T>(numLine) * numColums]; // C26451
+        m = new T[static_cast<UINT64_T>(numLine) * numColums];
         for (int i = 0; i < numLine * numColums; i++)
             m[i] = c.m[i];
     }
@@ -63,7 +63,7 @@ template <class T>
 matrix<T>::matrix(const int _numRows, const int _numColumns) {
     numLine = _numRows;
     numColums = _numColumns;
-    m = new T[static_cast<UINT64_T>(numLine) * numColums]; // C26451
+    m = new T[static_cast<UINT64_T>(numLine) * numColums];
     for (int i = 0; i < numLine * numColums; m[i++] = 0) { }
 }
 
