@@ -31,8 +31,6 @@ TEST(Cor_Tor, Cor_P) {
   int p_coords[2];
 
   MPI_Cart_coords(tor_comm, ProcRank, 2, p_coords);  // Poluchenie coordinat
-  int dummy1;  // std::cout << "RANK" << ProcRank << t_periods[0] << "  " << p_coords[0] << std::endl;
-  int dummy2;  // std::cout << "RANK" << ProcRank << t_periods[1] << "  " << p_coords[1] << std::endl;
   ASSERT_EQ(t_periods[0], p_coords[0]);
   ASSERT_EQ(t_periods[1], p_coords[1]);
 }
