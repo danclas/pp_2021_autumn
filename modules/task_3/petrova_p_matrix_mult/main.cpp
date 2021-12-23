@@ -11,7 +11,6 @@ TEST(mpi_Fox, test_0) {
     int lda = q * p;
     double* A = new double[lda * lda];
     double* B = new double[lda * lda];
-    double* Cseq = new double[lda * lda];
     double* Cpar = new double[lda * lda];
 
     double* pa = A;
@@ -30,7 +29,6 @@ TEST(mpi_Fox, test_1) {
     int lda = q * p;
     double* A = new double[lda * lda];
     double* B = new double[lda * lda];
-    double* Cseq = new double[lda * lda];
     double* Cpar = new double[lda * lda];
 
     double* pa = A;
@@ -46,7 +44,6 @@ TEST(mpi_Fox, test_1) {
 TEST(mpi_Fox, test_2) {
     int procRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
-    double eps = 0.0001;
     int q = 50;
     int p = 50;
     int lda = q * p;
@@ -77,7 +74,6 @@ TEST(mpi_Fox, test_2) {
 TEST(mpi_Fox, test_3) {
     int procRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
-    int eps = 0.0001;
     int q = 77;
     int p = 77;
     int lda = q * p;
@@ -108,8 +104,6 @@ TEST(mpi_Fox, test_3) {
 TEST(mpi_Fox, test_4) {
     int procRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
-
-    int eps = 0.0001;
     int q = 100;
     int p = 100;
     int lda = q * p;
@@ -140,7 +134,6 @@ TEST(mpi_Fox, test_4) {
 TEST(mpi_Fox, test_5) {
     int procRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
-    int eps = 0.0001;
     // double t1, t2, st1, st2;
     int q = 100;
     int p = 100;
@@ -167,7 +160,6 @@ TEST(mpi_Fox, test_5) {
         // std::cout << "seq time: " << st2 - st1 << std::endl;
         // std::cout << "parallel time: " << t2 - t1 << std::endl;
         ASSERT_DOUBLE_EQ(e, 0);
-        // ASSERT_NEAR(eps, 0, 0.0001);
     }
 
     delete[] A;
