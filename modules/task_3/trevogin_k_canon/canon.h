@@ -14,7 +14,7 @@ template <class T>
 class matrix {
 private:
     T* m;
-    int numRows, numColums;
+    int numLine, numColums;
 
 public:
     matrix();
@@ -33,7 +33,7 @@ public:
 
     void fillMatrix(int (*generateFunciton)(int, int, int*),
         int value1, int value2, int baseFeedbackValue);
-    int getNumRows() const { return numRows; }
+    int getNumRows() const { return numLine; }
     int getNumColums() const { return numColums; }
     T* data() { return m; }
     T* data() const { return  m ; }
@@ -43,33 +43,33 @@ public:
 template <class T>
 matrix<T>::matrix() {
     m = nullptr;
-    numRows = numColums = 0;
+    numLine = numColums = 0;
 }
 
 template <class T>
 matrix<T>::matrix(const matrix<T>& c) {
-    numRows = c.numRows;
+    numLine = c.numLine;
     numColums = c.numColums;
-    if (numRows * numColums == 0) {
+    if (numLine * numColums == 0) {
         m = nullptr;
     } else {
-        m = new T[static_cast<UINT64_T>(numRows) * numColums]; // C26451
-        for (int i = 0; i < numRows * numColums; i++)
+        m = new T[static_cast<UINT64_T>(numLine) * numColums]; // C26451
+        for (int i = 0; i < numLine * numColums; i++)
             m[i] = c.m[i];
     }
 }
 
 template <class T>
 matrix<T>::matrix(const int _numRows, const int _numColumns) {
-    numRows = _numRows;
+    numLine = _numRows;
     numColums = _numColumns;
-    m = new T[static_cast<UINT64_T>(numRows) * numColums]; // C26451
-    for (int i = 0; i < numRows * numColums; m[i++] = 0) { }
+    m = new T[static_cast<UINT64_T>(numLine) * numColums]; // C26451
+    for (int i = 0; i < numLine * numColums; m[i++] = 0) { }
 }
 
 template <class T>
 matrix<T>::~matrix() {
-    numRows = numColums = 0;
+    numLine = numColums = 0;
     if (m != nullptr) {
         delete[] m;
         m = nullptr;
@@ -77,8 +77,8 @@ matrix<T>::~matrix() {
 }
 template <class T>
 matrix<T> matrix<T>::operator*(const matrix<T>& c) {
-    matrix<T> res(numRows, c.numColums);
-    for (int i = 0; i < numRows; i++) {
+    matrix<T> res(numLine, c.numColums);
+    for (int i = 0; i < numLine; i++) {
         for (int j = 0; j < c.numColums; j++) {
             res[i][j] = 0;
             for (int k = 0; k < numColums; k++) {
@@ -91,10 +91,10 @@ matrix<T> matrix<T>::operator*(const matrix<T>& c) {
 
 template <class T>
 matrix<T> matrix<T>::operator+(const matrix<T>& c) {
-    matrix<T> res(numRows, numColums);
-    if (numRows != c.numRows || numColums != c.numColums)
+    matrix<T> res(numLine, numColums);
+    if (numLine != c.numLine || numColums != c.numColums)
         return res;
-    for (int i = 0; i < numRows; i++)
+    for (int i = 0; i < numLine; i++)
         for (int j = 0; j < numColums; j++)
             res[i][j] = (*this)[i][j] + c[i][j];
     return res;
@@ -116,19 +116,19 @@ matrix<T>& matrix<T>::operator=(const matrix<T>& c) {
         return *this;
     if (m != nullptr)
         delete[] m;
-    numRows = c.numRows;
+    numLine = c.numLine;
     numColums = c.numColums;
-    m = new T[static_cast<UINT64_T>(numRows) * numColums];
-    for (int i = 0; i < numRows * numColums; i++)
+    m = new T[static_cast<UINT64_T>(numLine) * numColums];
+    for (int i = 0; i < numLine * numColums; i++)
         m[i] = c.m[i];
     return *this;
 }
 
 template <class T>
 bool matrix<T>::operator==(const matrix<T>& c) {
-    if (numRows != c.numRows || numColums != c.numColums)
+    if (numLine != c.numLine || numColums != c.numColums)
         return false;
-    for (int i = 0; i < numRows * numColums; i++)
+    for (int i = 0; i < numLine * numColums; i++)
         if (m[i] != c.m[i])
             return false;
     return true;
@@ -148,7 +148,7 @@ std::ostream& operator<<(std::ostream& o, const matrix<T>& c) {
 template <class T>
 void matrix<T>::fillMatrix(int (*generateFunciton)(int, int, int*), int value1, int value2, int baseFeedbackValue) {
     int feedback = baseFeedbackValue;
-    for (int i = 0; i < numRows * numColums; i++)
+    for (int i = 0; i < numLine * numColums; i++)
         m[i] = static_cast<T>(generateFunciton(value1, value2, &feedback));
 }
 
@@ -157,9 +157,9 @@ void matrix<T>::prepareSpace(int _numRows, int _numColums) {
     if (m != nullptr)
         delete[] m;
     m = nullptr;
-    numRows = _numRows;
+    numLine = _numRows;
     numColums = _numColums;
-    m = new T[static_cast<UINT64_T>(numRows) * numColums];
+    m = new T[static_cast<UINT64_T>(numLine) * numColums];
 }
 
 int generateRngValue(int minValue, int maxValue, int* feedback);
