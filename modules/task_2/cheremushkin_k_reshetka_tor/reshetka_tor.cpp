@@ -7,7 +7,7 @@ MPI_Comm CreateTor(int width, int height) {  // Cozdanie reshetki tor
   if (height > 0 && width > 0 && (height * width > ProcNum)) {
     return MPI_COMM_NULL;
   }
-  MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);  // Poluchenie ranka 
+  MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);  // Poluchenie ranka
 
   int rSize[2] = {width, height};  // Razmernost
 
@@ -29,15 +29,15 @@ bool ExaminationTor(const MPI_Comm tor_comm, const int expd_count, const int* ex
   }
 
   int reald_count;
-  MPI_Cartdim_get(tor_comm, &reald_count); // Poluchenie razmernosti
+  MPI_Cartdim_get(tor_comm, &reald_count);  // Poluchenie razmernosti
   if (reald_count != expd_count) {
     return false;
   } else {
-    int* t_dims = new int[reald_count];  // Razmernost 
+    int* t_dims = new int[reald_count];  // Razmernost
     int* t_periods = new int[reald_count];  // Periodi
     int* p_coords = new int[reald_count];  // Coordinati
 
-    MPI_Cart_get(tor_comm, 2, t_dims, t_periods, p_coords); // Periodi, razmeri A on B
+    MPI_Cart_get(tor_comm, 2, t_dims, t_periods, p_coords);  // Periodi, razmeri A on B
 
     for (int i = 0; i < reald_count; i++) {
       if ((t_dims[i] != expd_vals[i]) ||

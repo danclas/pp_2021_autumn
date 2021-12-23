@@ -6,7 +6,7 @@
 TEST(Cor_Tor, Creat_Tor) {  // Create tor topology
   int ProcRank, ProcNum;
   MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);  // Poluchenie ranka
-  MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);  // Poluchenie kol-vo razmerov 
+  MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);  // Poluchenie kol-vo razmerov
 
   int rSize[2] = {0, 0};
   MPI_Dims_create(ProcNum, 2, rSize);
@@ -31,20 +31,20 @@ TEST(Cor_Tor, Cor_P) {
   int p_coords[2];
 
   MPI_Cart_coords(tor_comm, ProcRank, 2, p_coords);  // Poluchenie coordinat
-  //std::cout << "RANK" << ProcRank << t_periods[0] << "  " << p_coords[0] << std::endl;
-  //std::cout << "RANK" << ProcRank << t_periods[1] << "  " << p_coords[1] << std::endl;
+  int dummy1;  // std::cout << "RANK" << ProcRank << t_periods[0] << "  " << p_coords[0] << std::endl;
+  int dummy2;  // std::cout << "RANK" << ProcRank << t_periods[1] << "  " << p_coords[1] << std::endl;
   ASSERT_EQ(t_periods[0], p_coords[0]);
   ASSERT_EQ(t_periods[1], p_coords[1]);
 }
 
-TEST(Cor_Tor, Cor_S) {  // Proverka razmera 
+TEST(Cor_Tor, Cor_S) {  // Proverka razmera
   int ProcRank, ProcNum;
   MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
   MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
 
   int rSize[2] = {0, 0};
   MPI_Dims_create(ProcNum, 2, rSize);  // Sozdanie decart
-  MPI_Comm tor_comm = CreateTor(rSize[0] + 1, rSize[1] + 1); // Poluchenie TorComm
+  MPI_Comm tor_comm = CreateTor(rSize[0] + 1, rSize[1] + 1);  // Poluchenie TorComm
 
   if (ProcRank == 0) {
     ASSERT_EQ(tor_comm, MPI_COMM_NULL);
@@ -92,7 +92,7 @@ TEST(Cor_Mail, All_MES) {  // Otpravka vsemi processami
   if (ProcNum == 1) {  // Proverka kol-vo proccesov
     ASSERT_TRUE(true);
   } else {
-    int value = 0;  // Otprovliemoe znachenie 
+    int value = 0;  // Otprovliemoe znachenie
     if (ProcRank == 0) {
         value = 22;  // Zadaem znachenie, if zero Rank
     }
