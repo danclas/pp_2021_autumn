@@ -2,7 +2,7 @@
 #include "../../../modules/task_3/trevogin_k_canon/canon.h"
 // can generate in range [-maxValue, -minValue] && [minValue, maxValue] IN: minValue, maxValue > 0
 int generateRngValue(int minValue, int maxValue, int* feedback) {
-    (void)feedback; // to supress potential warnings
+    (void)feedback;
     std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type>
