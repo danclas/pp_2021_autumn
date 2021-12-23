@@ -1,7 +1,7 @@
 // Copyright 2021 Trevogin Kirill
 #include <gtest/gtest.h>
-#include <iostream>
 #include <mpi.h>
+#include <iostream>
 #include <random>
 #include <vector>
 #include <gtest-mpi-listener.hpp>
@@ -102,12 +102,12 @@ matrix<T> matrix<T>::operator+(const matrix<T>& c) {
 
 template <class T>
 const T* matrix<T>::operator[](const int i) const {
-    return reinterpret_cast<const T*>(m + static_cast<UINT64_T>(i) * numColums); // C26451
+    return reinterpret_cast<const T*>(m + static_cast<UINT64_T>(i) * numColums);
 }
 
 template <class T>
 T* matrix<T>::operator[](const int i) {
-    return m + static_cast<UINT64_T>(i) * numColums; // C26451
+    return m + static_cast<UINT64_T>(i) * numColums;
 }
 
 template <class T>
@@ -173,4 +173,4 @@ int generateJumpingValue(int v1, int v2, int* feedback);
 matrix<double> cannonsMultiplication(matrix<double>* A, matrix<double>* B);
 
 
-#endif // MODULES_TASK_3_TREVOGIN_K_CANON_CANON_H_
+#endif  // MODULES_TASK_3_TREVOGIN_K_CANON_CANON_H_
