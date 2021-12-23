@@ -1,4 +1,4 @@
-//  Copyright 2021 Elanskiy Akexandr
+  // Copyright 2021 Elanskiy Akexandr
 #include "../../../modules/task_1/elanskiy_a_max_values_in_rows/max_values_in_rows.h"
 
 std::vector<int> mat_gen(int rows, int cols) {

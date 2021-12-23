@@ -1,4 +1,4 @@
-﻿//  Copyright 2021 Elanskiy Akexandr
+﻿  // Copyright 2021 Elanskiy Akexandr
 #include "./max_values_in_rows.h"
 
 TEST(MPI_TEST, size_1x10) {
