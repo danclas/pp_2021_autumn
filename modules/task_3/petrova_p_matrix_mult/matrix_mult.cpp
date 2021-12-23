@@ -1,9 +1,13 @@
 ﻿
 //  Copyright 2021 Petrova Polina
 #include <mpi.h>
+#include <string.h>
 #include <algorithm>
+#include <string>
 #include <random>
 #include <ctime>
+#include <cstring>
+
 #include"../../../modules/task_3/petrova_p_matrix_mult/matrix_mult.h"
 
 void _daxpy(int N, double a, double* x, int incx, double* y, int incy) {
