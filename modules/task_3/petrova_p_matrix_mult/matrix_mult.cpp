@@ -2,7 +2,7 @@
 //  Copyright 2021 Petrova Polina
 #include <mpi.h>
 #include <string.h>
-#include <algorithm>Ф
+#include <algorithm>
 #include <string>
 #include <random>
 #include <ctime>
