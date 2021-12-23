@@ -129,7 +129,7 @@ TEST(mpi_Fox, test_4) {
         _daxpy(lda * lda, -1, Cpar, 1, Cseq, 1);
         double e = _dnrm2(lda * lda, Cseq, 1);
         ASSERT_DOUBLE_EQ(e, 0);
-        //ASSERT_NEAR(eps, 0, 0.0001);
+        // ASSERT_NEAR(eps, 0, 0.0001);
     }
 
     delete[] A;
