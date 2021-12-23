@@ -1,10 +1,9 @@
 // Copyright 2021 Petrova Polina
 
 #include <gtest/gtest.h>
+#include <iostream>
 #include"./matrix_mult.h"
 #include<gtest-mpi-listener.hpp>
-#include <iostream>
-
 
 TEST(mpi_Fox, test_0) {
     int q = 5;
