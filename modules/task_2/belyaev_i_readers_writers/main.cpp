@@ -91,7 +91,7 @@ TEST(r_w_MPI, two_w) {
   if (rank == 0) {
     storage(rank, size);
   } else {
-    if (rank == 2) {
+    if (rank == 2 || rank == 1) {
       writers(rank);
     } else {
       readers(rank);
@@ -129,7 +129,7 @@ TEST(r_w_MPI, two_r) {
   if (rank == 0) {
     storage(rank, size);
   } else {
-    if (rank == 2) {
+    if (rank == 2 || rank == 1) {
       readers(rank);
     } else {
       writers(rank);
@@ -139,12 +139,6 @@ TEST(r_w_MPI, two_r) {
 
   ASSERT_NO_THROW();
 }
-
-
-
-
-
-
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
@@ -162,4 +156,3 @@ int main(int argc, char** argv) {
   listeners.Append(new GTestMPIListener::MPIMinimalistPrinter);
   return RUN_ALL_TESTS();
 }
-

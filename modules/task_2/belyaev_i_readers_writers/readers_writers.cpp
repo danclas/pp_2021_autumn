@@ -39,8 +39,8 @@ void writers(int rank) {
   stop(rank);
 
   while (true) {
-    MPI_Send(outBuf, 1, MPI_INT, 0, Query, MPI_COMM_WORLD);
-    MPI_Recv(inBuf, 1, MPI_INT, 0, Answer, MPI_COMM_WORLD, &status);
+    MPI_Send(outBuf, 1, MPI_INT, 0, S_Query, MPI_COMM_WORLD);
+    MPI_Recv(inBuf, 1, MPI_INT, 0, S_Answer, MPI_COMM_WORLD, &status);
     if (inBuf[0] != -1)
       break;
     else
@@ -56,10 +56,10 @@ void writers(int rank) {
       stop(rank);
   }
 
-  MPI_Send(outBuf, 1, MPI_INT, 0, Free, MPI_COMM_WORLD);
+  MPI_Send(outBuf, 1, MPI_INT, 0, S_Free, MPI_COMM_WORLD);
   write_s();
   MPI_Send(outBuf, 1, MPI_INT, 0, A_Free, MPI_COMM_WORLD);
-  MPI_Send(outBuf, 1, MPI_INT, 0, END, MPI_COMM_WORLD);
+  MPI_Send(outBuf, 1, MPI_INT, 0, THE_END, MPI_COMM_WORLD);
   return;
 }
 
@@ -71,14 +71,14 @@ void readers(int rank) {
   stop(rank);
 
   while (true) {
-    MPI_Send(outBuf, 1, MPI_INT, 0, Query, MPI_COMM_WORLD);
-    MPI_Recv(inBuf, 1, MPI_INT, 0, Answer, MPI_COMM_WORLD, &status);
+    MPI_Send(outBuf, 1, MPI_INT, 0, S_Query, MPI_COMM_WORLD);
+    MPI_Recv(inBuf, 1, MPI_INT, 0, S_Answer, MPI_COMM_WORLD, &status);
     if (inBuf[0] != -1)
       break;
     else
       stop(rank);
   }
-  MPI_Send(outBuf, 1, MPI_INT, 0, Free, MPI_COMM_WORLD);
+  MPI_Send(outBuf, 1, MPI_INT, 0, S_Free, MPI_COMM_WORLD);
   while (true) {
     MPI_Send(outBuf, 1, MPI_INT, 0, R_Query, MPI_COMM_WORLD);
     MPI_Recv(inBuf, 1, MPI_INT, 0, R_Answer, MPI_COMM_WORLD, &status);
@@ -118,7 +118,7 @@ void readers(int rank) {
   }
   outBuf[0] = RC;
   MPI_Send(outBuf, 1, MPI_INT, 0, R_Free, MPI_COMM_WORLD);
-  MPI_Send(outBuf, 1, MPI_INT, 0, END, MPI_COMM_WORLD);
+  MPI_Send(outBuf, 1, MPI_INT, 0, THE_END, MPI_COMM_WORLD);
   return;
 }
 
@@ -145,17 +145,17 @@ void storage(int rank, int procs) {
       return;
     }
     RWnumber = status.MPI_SOURCE;
-    if (status.MPI_TAG == Query) {
+    if (status.MPI_TAG == S_Query) {
       if (S == true) {
         S = false;
         outBuf[0] = 1;
-        MPI_Send(outBuf, 1, MPI_INT, RWnumber, Answer, MPI_COMM_WORLD);
+        MPI_Send(outBuf, 1, MPI_INT, RWnumber, S_Answer, MPI_COMM_WORLD);
       } else {
         outBuf[0] = -1;
-        MPI_Send(outBuf, 1, MPI_INT, RWnumber, Answer, MPI_COMM_WORLD);
+        MPI_Send(outBuf, 1, MPI_INT, RWnumber, S_Answer, MPI_COMM_WORLD);
       }
     }
-    if (status.MPI_TAG == Free) {
+    if (status.MPI_TAG == S_Free) {
       if (S == false) {
         S = true;
       }
@@ -193,7 +193,7 @@ void storage(int rank, int procs) {
         Access = true;
       }
     }
-    if (status.MPI_TAG == END) {
+    if (status.MPI_TAG == THE_END) {
       runs[RWnumber - 1] += 1;
     }
     int runsCnt = 0;

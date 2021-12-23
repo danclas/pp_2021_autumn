@@ -7,9 +7,9 @@
 
 
 
-#define Query 1
-#define Answer 2
-#define Free 3
+#define S_Query 1
+#define S_Answer 2
+#define S_Free 3
 
 
 #define R_Query 4
@@ -21,7 +21,7 @@
 #define A_Query 7
 #define A_Answer 8
 #define A_Free 9
-#define END 10
+#define THE_END 10
 
 
 
