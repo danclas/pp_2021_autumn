@@ -127,7 +127,7 @@ TEST(mpi_Fox, test_4) {
     delete[] A;
     delete[] B;
     delete[] Cpar;
-    delete[] Cseq;
+    // delete[] Cseq;
 }
 TEST(mpi_Fox, test_5) {
     int procRank;
@@ -163,7 +163,7 @@ TEST(mpi_Fox, test_5) {
     delete[] A;
     delete[] B;
     delete[] Cpar;
-    delete[] Cseq;
+    // delete[] Cseq;
 }
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
