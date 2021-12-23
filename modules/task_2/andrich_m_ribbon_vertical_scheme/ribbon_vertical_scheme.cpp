@@ -22,7 +22,7 @@ int* getRandomMatrix(int rows, int cols) {
   for (int i = 0; i < rows * cols; i++) {
     matrix[i] = gen() % 20;
   }
-  return matrix0;
+  return matrix;
 }
 
 void SequentialMatrixMultiplication(const int* A, const int ARows,
