@@ -47,7 +47,7 @@ TEST(mpi_Fox, test_1) {
 TEST(mpi_Fox, test_2) {
     int procRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
-
+    double eps = 0.0001;
     int q = 50;
     int p = 50;
     int lda = q * p;
@@ -67,6 +67,7 @@ TEST(mpi_Fox, test_2) {
         _daxpy(lda * lda, -1, Cpar, 1, Cseq, 1);
         double e = _dnrm2(lda * lda, Cseq, 1);
         ASSERT_DOUBLE_EQ(e, 0);
+        // ASSERT_NEAR(eps, 0, 0.0001);
     }
 
     delete[] A;
@@ -77,7 +78,7 @@ TEST(mpi_Fox, test_2) {
 TEST(mpi_Fox, test_3) {
     int procRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
-
+    int eps = 0.0001;
     int q = 77;
     int p = 77;
     int lda = q * p;
@@ -97,6 +98,7 @@ TEST(mpi_Fox, test_3) {
         _daxpy(lda * lda, -1, Cpar, 1, Cseq, 1);
         double e = _dnrm2(lda * lda, Cseq, 1);
         ASSERT_DOUBLE_EQ(e, 0);
+        // ASSERT_NEAR(eps, 0, 0.0001);
     }
 
     delete[] A;
@@ -108,6 +110,7 @@ TEST(mpi_Fox, test_4) {
     int procRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
 
+    int eps = 0.0001;
     int q = 100;
     int p = 100;
     int lda = q * p;
@@ -127,6 +130,7 @@ TEST(mpi_Fox, test_4) {
         _daxpy(lda * lda, -1, Cpar, 1, Cseq, 1);
         double e = _dnrm2(lda * lda, Cseq, 1);
         ASSERT_DOUBLE_EQ(e, 0);
+        //ASSERT_NEAR(eps, 0, 0.0001);
     }
 
     delete[] A;
@@ -137,7 +141,7 @@ TEST(mpi_Fox, test_4) {
 TEST(mpi_Fox, test_5) {
     int procRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
-
+    int eps = 0.0001;
     // double t1, t2, st1, st2;
     int q = 100;
     int p = 100;
@@ -164,6 +168,7 @@ TEST(mpi_Fox, test_5) {
         // std::cout << "seq time: " << st2 - st1 << std::endl;
         // std::cout << "parallel time: " << t2 - t1 << std::endl;
         ASSERT_DOUBLE_EQ(e, 0);
+        // ASSERT_NEAR(eps, 0, 0.0001);
     }
 
     delete[] A;

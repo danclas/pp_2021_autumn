@@ -1,4 +1,5 @@
-﻿// Copyright 2021 Petrova Polina
+﻿
+//  Copyright 2021 Petrova Polina
 #include <mpi.h>
 #include <algorithm>
 #include <random>
@@ -12,7 +13,6 @@ void _daxpy(int N, double a, double* x, int incx, double* y, int incy) {
         pb[0] += a * pa[0];
     }
 }
-
 void _daxpby(int N, double a, double* x, int incx,
     double b, double* y, int incy) {
     double* pa = x;
@@ -22,11 +22,13 @@ void _daxpby(int N, double a, double* x, int incx,
     }
 }
 
-double _ddot(const int n, const double* x, const int incx,
-    const double* y, const int incy) {
+double _ddot(const int n, /*const*/ double* x, const int incx,
+    /*const*/ double* y, const int incy) {
     double a = 0.0;
-    double* px = (double*)x;
-    double* py = (double*)y;
+    double* px = x;
+    // double* px = reinterpret_cast<double*>(x);
+    double* py = y;
+    // double* py = reinterpret_cast<double*>(y);
     for (int i = 0; i < n; i++, px += incx, py += incy) {
         a += px[0] * py[0];
     }
@@ -45,9 +47,10 @@ void _dgemv(int n, int m, double alpha, double* pa, int lda,
     }
 }
 
-double _dnrm2(const int n, const double* x, const int incx) {
+double _dnrm2(const int n, /*const*/ double* x, const int incx) {
     double a = 0.0;
-    double* px = (double*)x;
+    double* px = x;
+    // double* px = reinterpret_cast<double*>(x);
     for (int i = 0; i < n; i++, px += incx) {
         a += px[0] * px[0];
     }

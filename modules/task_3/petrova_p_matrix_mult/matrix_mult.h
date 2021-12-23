@@ -9,11 +9,11 @@
 void _daxpy(int N, double a, double* x, int incx, double* y, int incy);
 void _daxpby(int N, double a, double* x, int incx,
     double b, double* y, int incy);
-double _ddot(const int n, const double* x, const int incx,
-    const double* y, const int incy);
+double _ddot(const int n, /*const*/ double* x, const int incx,
+    /*const*/ double* y, const int incy);
 void _dgemv(int n, int m, double alpha, double* pa, int lda, double* x,
     int incx, double beta, double* y, int incy);
-double _dnrm2(const int n, const double* x, const int incx);
+double _dnrm2(const int n, /*const*/ double* x, const int incx);
 
 void Fox_sequence(int N, int q, double* A, int lda, double* B,
     int ldb, double* C, int ldc);
