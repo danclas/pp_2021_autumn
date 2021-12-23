@@ -69,7 +69,6 @@ TEST(mpi_Fox, test_2) {
     delete[] A;
     delete[] B;
     delete[] Cpar;
-    delete[] Cseq;
 }
 TEST(mpi_Fox, test_3) {
     int procRank;
@@ -99,7 +98,6 @@ TEST(mpi_Fox, test_3) {
     delete[] A;
     delete[] B;
     delete[] Cpar;
-    delete[] Cseq;
 }
 TEST(mpi_Fox, test_4) {
     int procRank;
