@@ -5,6 +5,7 @@
 
 #include <mpi.h>
 #include <vector>
+#include <cmath>
 
 MPI_Comm linear_topology(MPI_Comm comm);
 bool is_linear_topology(MPI_Comm comm);
