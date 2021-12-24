@@ -1,4 +1,4 @@
-// Copyright [2021] <Borisov Maxim>
+// Copyright 2021 Borisov Maxim
 
 #include <gtest/gtest.h>
 #include <cmath>
