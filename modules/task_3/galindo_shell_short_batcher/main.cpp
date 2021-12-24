@@ -1,3 +1,4 @@
+// copyright 2021 Javier Galindo
 #include <gtest/gtest.h>
 #include <mpi.h>
 #include <iostream>

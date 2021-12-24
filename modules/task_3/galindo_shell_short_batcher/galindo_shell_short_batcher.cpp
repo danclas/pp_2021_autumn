@@ -1,3 +1,4 @@
+// copyright 2021 Javier Galindo
 #include <mpi.h>
 #include <cmath>
 #include <algorithm>
@@ -135,15 +136,13 @@ namespace BatcherMerge {
                     if (value < value_curr) {
                         part_temp[i_temp] = value;
                         i++;
-                    }
-                    else {
+                    } else {
                         part_temp[i_temp] = value_curr;
                         i_curr++;
                     }
                 }
                 std::swap(part, part_temp);
-            }
-            else if (rank == comp.second) {
+            } else if (rank == comp.second) {
                 MPI_Recv(part_curr.data(), part_size, MPI_INT, comp.first, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
                 MPI_Send(part.data(), part_size, MPI_INT, comp.first, 0, MPI_COMM_WORLD);
                 size_t i_start = part_size - 1;
@@ -153,8 +152,7 @@ namespace BatcherMerge {
                     if (value > value_curr) {
                         part_temp[i_temp - 1] = value;
                         i--;
-                    }
-                    else {
+                    } else {
                         part_temp[i_temp - 1] = value_curr;
                         i_curr--;
                     }
@@ -169,4 +167,5 @@ namespace BatcherMerge {
             check(&arr);
         return arr;
     }
-}
+} // namespace BatcherMerge
+
