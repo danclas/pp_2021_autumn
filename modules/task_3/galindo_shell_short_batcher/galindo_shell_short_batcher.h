@@ -10,6 +10,6 @@ Vector createRandomVector(int size);
 Vector shellSort(Vector arr);
 
 namespace BatcherMerge {
-	Vector parallelSort(Vector arr,std::function<Vector(Vector)> sort_func);
+     Vector parallelSort(Vector arr, std::function<Vector(Vector)> sort_func);
 }
 #endif  //  MODULES_TASK_3_GALINDO_SHELL_SHORT_BATCHER_GALINDO_SHELL_SHORT_BATCHER_H_

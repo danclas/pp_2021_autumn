@@ -167,5 +167,5 @@ namespace BatcherMerge {
             check(&arr);
         return arr;
     }
-} // namespace BatcherMerge
+}  // namespace BatcherMerge
 
