@@ -27,6 +27,7 @@ MPI_Comm linear_topology(MPI_Comm comm) {
     return line_comm;
 }
 
+
 bool is_linear_topology(MPI_Comm comm) {
     if (comm == MPI_COMM_WORLD) {
         return false;

@@ -17,6 +17,7 @@ TEST(Linear_Topology, Test_Topology_MPI_COMM_WORLD) {
     }
 }
 
+
 TEST(Linear_Topology, Test_Topology_Is_Not_MPI_COMM_WORLD) {
     int ProcRank, ProcNum;
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
