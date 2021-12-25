@@ -45,8 +45,7 @@ MPI_Comm creating_decart_topology(int num) {
         MPI_Comm decart_comm;
         MPI_Cart_create(MPI_COMM_WORLD, 2, dims, periods, false, &decart_comm);
         return decart_comm;
-    }
-    else {
+    } else {
         return MPI_COMM_NULL;
     }
 }
@@ -60,8 +59,7 @@ double* parallel_mult(int size, double* matr1, double* matr2) {
         (size % static_cast<int>(sqrt(ProcNum)) != 0)) {
         if (ProcRank == 0) {
             return sequantial_mult(size, matr1, matr2);
-        }
-        else {
+        } else {
             return creating_zero_matrix(size);
         }
     }
