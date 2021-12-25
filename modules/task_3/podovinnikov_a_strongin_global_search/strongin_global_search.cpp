@@ -17,7 +17,7 @@ double seqStrongin(double a, double b, double (*Q)(double)) {
   std::vector<double> Qx;  // вектор значений Q(xk)
 
   // Шаг 1.
-  // Задаем х1 = а Q1 = Q(х1) х2 = b Q2 = Q(х2)
+  // Задаем х1 = а Q1 = Q(х1) х2 = b Q2 = Q(х2).
   x.push_back(a);
   Qx.push_back(Q(a));
   x.push_back(b);
