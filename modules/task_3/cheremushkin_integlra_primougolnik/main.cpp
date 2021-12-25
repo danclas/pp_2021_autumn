@@ -9,12 +9,9 @@ TEST(RIEMANN_SUM_MPI, TEST_Function_1) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    double start, end, stime;
-
     std::vector<std::pair<double, double>> limits(2);
     limits = { {0, 2}, {0, 1} };
     double reference_result;
-
 
     if (rank == 0) {
         reference_result = linelintegral(limits);
