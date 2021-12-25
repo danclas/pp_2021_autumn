@@ -13,8 +13,9 @@ struct Point {
     Point(int _x, int _y) : x(_x), y(_y) {}
 };
 
-std::vector<Point> getRandomVec(int size);
+std::vector<Point> getRandomVec(std::vector<int>::size_type size);
 std::vector<Point> JarvisMarch_seq(const std::vector<Point>& vec);
-std::vector<Point> JarvisMarch_par(const std::vector<Point>& vec, int vec_size);
+std::vector<Point> JarvisMarch_par(const std::vector<Point>& vec,
+    std::vector<int>::size_type vec_size);
 
 #endif  // MODULES_TASK_3_SAMOILUK_A_JARVIS_JARVIS_H_

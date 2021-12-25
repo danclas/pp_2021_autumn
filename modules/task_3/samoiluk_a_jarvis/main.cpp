@@ -1,6 +1,6 @@
 // Copyright 2021 Samoiluk Anastasiya
 #include <gtest/gtest.h>
-#include "../../modules/task_3/samoiluk_a_jarvis/jarvis.h"
+#include "../../task_3/samoiluk_a_jarvis/jarvis.h"
 #include <gtest-mpi-listener.hpp>
 
 TEST(Parallel_Operations_MPI, Vector_size_100) {
@@ -156,64 +156,6 @@ TEST(Parallel_Operations_MPI, Vector_size_1000) {
 
     std::vector<Point> vec;
     int vec_size = 1000;
-
-    if (rank == 0) {
-        vec = getRandomVec(vec_size);
-    }
-
-    if (size > vec_size) {
-        EXPECT_ANY_THROW(JarvisMarch_par(vec, vec_size));
-    } else {
-        std::vector<Point> par_jm = JarvisMarch_par(vec, vec_size);
-        if (rank == 0) {
-            std::vector<Point> seq_jm = JarvisMarch_seq(vec);
-
-            ASSERT_EQ(par_jm.size(), seq_jm.size());
-            for (int i = 0; i < par_jm.size(); i++) {
-                ASSERT_EQ(par_jm[i].x, seq_jm[i].x);
-                ASSERT_EQ(par_jm[i].y, seq_jm[i].y);
-            }
-        }
-    }
-}
-
-TEST(Parallel_Operations_MPI, Vector_size_10000) {
-    int size;
-    int rank;
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-    std::vector<Point> vec;
-    int vec_size = 10000;
-
-    if (rank == 0) {
-        vec = getRandomVec(vec_size);
-    }
-
-    if (size > vec_size) {
-        EXPECT_ANY_THROW(JarvisMarch_par(vec, vec_size));
-    } else {
-        std::vector<Point> par_jm = JarvisMarch_par(vec, vec_size);
-        if (rank == 0) {
-            std::vector<Point> seq_jm = JarvisMarch_seq(vec);
-
-            ASSERT_EQ(par_jm.size(), seq_jm.size());
-            for (int i = 0; i < par_jm.size(); i++) {
-                ASSERT_EQ(par_jm[i].x, seq_jm[i].x);
-                ASSERT_EQ(par_jm[i].y, seq_jm[i].y);
-            }
-        }
-    }
-}
-
-TEST(Parallel_Operations_MPI, Vector_size_20000) {
-    int size;
-    int rank;
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-    std::vector<Point> vec;
-    int vec_size = 20000;
 
     if (rank == 0) {
         vec = getRandomVec(vec_size);
