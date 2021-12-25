@@ -14,7 +14,7 @@ std::vector<int> getRandomVector(int sz) {
     return vec;
 }
 
-int getSequentialOperations(std::vector<int>& vec, int size_vec) {
+int getSequentialOperations(std::vector<int> vec, int size_vec) {
     int local_average = 0;
     for (int i = 0; i < size_vec; i++) {
         local_average += vec[i];
@@ -22,7 +22,7 @@ int getSequentialOperations(std::vector<int>& vec, int size_vec) {
     return  static_cast<int>(local_average / size_vec);
 }
 
-int getParallelOperations(std::vector<int>& vec,
+int getParallelOperations(std::vector<int> vec,
     int size_vec) {
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -48,7 +48,7 @@ int getParallelOperations(std::vector<int>& vec,
         MPI_Recv(local_vec.data(), delta, MPI_INT,
             0, 0, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
     }
-    for (std::vector<int>::size_type i = 0; i < delta; i++) {
+    for (int i = 0; i < delta; i++) {
         local_sum += local_vec[i];
     }
 
@@ -60,7 +60,7 @@ int getParallelOperations(std::vector<int>& vec,
         if (tail) {
             subset_of_vec = std::vector<int>(vec.end() - tail, vec.end());
 
-            for (std::vector<int>::size_type i = 0; i < tail; i++) {
+            for (int i = 0; i < tail; i++) {
                 tail_average += subset_of_vec[i];
             }
 
