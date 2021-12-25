@@ -97,12 +97,12 @@ double Parallelintegral(const std::vector<std::pair<double, double>>& limits) {
     double x_min = limits[0].first;
     MPI_Comm_rank(MPI_COMM_WORLD, &process_id);
     MPI_Comm_size(MPI_COMM_WORLD, &process_num);
-    if (process_id == master) {
+    /*if (process_id == master) {
         if (process_num <= 1) {
             MPI_Finalize();
             exit(1);
         }
-    }
+    }*/
     if (process_id == master) {
         for (process = 1; process <= process_num - 1; process++) {
             target = process;
