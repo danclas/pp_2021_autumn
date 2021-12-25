@@ -57,7 +57,7 @@ double linelintegral(const std::vector<std::pair<double, double>>& limits) {
             y = (static_cast<double>(2 * m - 2 * i + 1) * xb[2]
             + static_cast<double>(2 * i - 1) * xb[3]) / static_cast<double>(2 * m);
             z = (static_cast<double>(2 * m - 2 * i + 1) * xb[4]
-            + static_cast<double>(2 * i - 1) * xb[5]) / (double)(2 * m);
+            + static_cast<double>(2 * i - 1) * xb[5]) / static_cast<double>(2 * m);
             mass[0] = x; mass[1] = y; mass[2] = z;
             q_local = q_local + fff(mass);
         }

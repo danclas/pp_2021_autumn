@@ -5,7 +5,7 @@
 #include "mpi.h"
 #include "vector"
 
-const double eps = 0.01;
+const double eps = 0.1;
 double linelintegral(const std::vector<std::pair<double, double>>& limits);
 double Parallelintegral(const std::vector<std::pair<double, double>>& limits);
 double f(double x);
