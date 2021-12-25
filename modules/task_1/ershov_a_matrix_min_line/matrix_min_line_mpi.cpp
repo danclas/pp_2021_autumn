@@ -1,115 +1,84 @@
 // Copyright 2021 Ershov Alexey
-#include <mpi.h>
-#include <vector>
-#include <climits>
-#include <random>
 #include "./matrix_min_line_mpi.h"
 
-Matrix getRandomMatrix(const size_t m, const size_t n) {
-    double* tmp = new double[m * n];
-    std::random_device dev;
-    std::mt19937 gen(dev());
-    for (size_t i = 0; i < m*n; ++i) {
-        tmp[i] = gen() % 100;
-    }
-    Matrix matrix(tmp, m, n);
-    delete[] tmp;
-    tmp = nullptr;
-    return matrix;
+#include <mpi.h>
+#include <algorithm>
+#include <climits>
+#include <random>
+#include <vector>
+
+std::vector<double> getRandomVector(const std::vector<int>::size_type h,
+                                    const std::vector<int>::size_type w) {
+  std::vector<double> tmp(h * w, 0);
+  std::random_device dev;
+  std::mt19937 gen(dev());
+  for (size_t i = 0; i < h * w; ++i) {
+    tmp[i] = gen() % 100;
+  }
+  return tmp;
 }
 
-std::vector<double> getSequentialMatrixMinLine(const Matrix& matrix) {
-    int min;
-    std::vector<double> result(matrix.height, 0);
-    for (size_t i = 0; i < matrix.height; ++i) {
-        min = INT_MAX;
+std::vector<double> getSequentialMatrixMinLine(
+    const std::vector<double>& matrix, std::vector<double>::size_type row_count,
+    std::vector<double>::size_type column_count) {
+  std::vector<double> result(row_count);
 
-        for (size_t j = 0; j < matrix.weight; ++j) {
-            if (matrix.data[i * matrix.weight + j] < min) {
-                min = matrix.data[i * matrix.weight + j];
-            }
-        }
-        result[i] = min;
+  for (std::vector<double>::size_type i = 0; i < row_count; i++) {
+    double local_min = matrix[i * column_count];
+    for (std::vector<double>::size_type j = 0; j < column_count; j++) {
+      local_min = std::min(local_min, matrix[i * column_count + j]);
     }
-    return result;
+    result[i] = local_min;
+  }
+  return result;
 }
 
-std::vector<double> getParallelMatrixMinLine(const Matrix& matrix) {
-    int min;
-    int world_size;
-    int world_rank;
-    MPI_Comm_size(MPI_COMM_WORLD, &world_size);
-    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-    size_t operation_per_process = matrix.height / world_size;
-    double* vec = new double[matrix.weight * operation_per_process];
-    double* res_vec = new double[matrix.height];
-    std::vector<double> min_value(matrix.height, 0);
-    MPI_Scatter(matrix.data, matrix.weight * operation_per_process, MPI_DOUBLE, vec,
-        matrix.weight * operation_per_process, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    double* local_min = new double[operation_per_process];
-    for (size_t i = 0; i < operation_per_process; ++i) {
-        min = INT_MAX;
-        for (size_t j = 0; j < matrix.weight; ++j) {
-            if (vec[i * matrix.weight + j] < min) {
-                min = vec[i * matrix.weight + j];
-            }
-        }
-        local_min[i] = min;
-    }
-    MPI_Gather(local_min, operation_per_process, MPI_DOUBLE, res_vec, operation_per_process,
-        MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    if (world_rank == 0) {
-        for (size_t i = world_size * operation_per_process; i < matrix.height; ++i) {
-            min = INT_MAX;
-            for (size_t j = 0; j < matrix.weight; ++j) {
-                if (matrix.data[i * matrix.weight + j] < min) {
-                    min = matrix.data[i * matrix.weight + j];
-                }
-            }
-            res_vec[i] = min;
-        }
-    }
-    for (size_t i = 0; i < (matrix.height); ++i) {
-        min_value[i] = res_vec[i];
-    }
-    delete[] local_min;
-    delete[] vec;
-    delete[] res_vec;
-    local_min = nullptr;
-    vec = nullptr;
-    res_vec = nullptr;
-    return min_value;
-}
+std::vector<double> getParallelMatrixMinLine(
+    const std::vector<double>& matrix, std::vector<double>::size_type row_count,
+    std::vector<double>::size_type column_count) {
+  int size, rank;
 
-Matrix::Matrix(double* data, size_t weight, size_t height) {
-    this->weight = weight;
-    this->height = height;
-    this->data = new double[this->height * this->weight];
-    for (size_t i = 0; i < (this->height * this->weight); ++i) {
-        this->data[i] = data[i];
-    }
-}
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-Matrix::Matrix(const Matrix& a) {
-    this->height = a.height;
-    this->weight = a.weight;
-    this->data = new double[this->height * this->weight];
-    for (size_t i = 0; i < (this->weight * this->height); ++i) {
-        this->data[i] = a.data[i];
-    }
-}
+  std::vector<double>::size_type local_size = row_count / size;
+  std::vector<double>::size_type remains = row_count % size;
 
-Matrix::~Matrix() {
-    delete[] this->data;
-    this->data = nullptr;
-}
-
-Matrix& Matrix::operator=(const Matrix& right) {
-    if (this == &right) {
-        return *this;
+  if (rank == 0) {
+    for (int proc = 1; proc < size; ++proc) {
+      int step = (local_size * proc + remains) * column_count;
+      MPI_Send(matrix.data() + step,
+               static_cast<double>(local_size * column_count), MPI_DOUBLE, proc,
+               1, MPI_COMM_WORLD);
     }
-    this->height = right.height;
-    this->weight = right.weight;
-    this->data = right.data;
-    return *this;
+  }
+
+  local_size = rank == 0 ? local_size + remains : local_size;
+  std::vector<double> local_matrix(local_size * column_count, 0);
+
+  if (rank == 0) {
+    for (size_t i = 0; i < local_size * column_count; i++)
+      local_matrix[i] = matrix[i];
+  } else {
+    MPI_Status status;
+    MPI_Recv(local_matrix.data(),
+             static_cast<double>(local_size * column_count), MPI_DOUBLE, 0, 1,
+             MPI_COMM_WORLD, &status);
+  }
+
+  std::vector<double> local_res(row_count, 0);
+  std::vector<double> global_res(row_count, 0);
+
+  auto minValuesPart =
+      getSequentialMatrixMinLine(local_matrix, local_size, column_count);
+  std::vector<double>::size_type startIndex =
+      rank == 0 ? 0 : rank * local_size + remains;
+  for (std::vector<double>::size_type i = 0; i < local_size; i++) {
+    local_res[startIndex + i] = minValuesPart[i];
+  }
+
+  MPI_Reduce(local_res.data(), global_res.data(), static_cast<int>(row_count),
+             MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+
+  return global_res;
 }

@@ -8,57 +8,60 @@ std::vector<int> fillVector(const int size_) {
     std::random_device dev;
     std::mt19937 mt(dev());
     for (int i = 0; i < size_; i++) {
-        vector[i] = -100 + mt() % 1000;
+        vector[i] = 0  + mt() % 100;
     }
     return vector;
 }
 
 int differElementsValue(const std::vector<int>& vector) {
     if (vector.size() > 1) {
-        int max = vector[0];
+        int max = -1;
         for (int i = 0; i < static_cast<int>(vector.size() - 1); i++) {
-            int val = abs(vector[i] - vector[i + 1]);
-            if (max < val) {
+            int val = abs(abs(vector[i]) - abs(vector[i + 1]));
+            if (max <= val) {
                 max = val;
             }
         }
         return max;
     }
-
-    return 0;
+    if (vector.size() == 1)
+        return vector[0];
+    else
+        return 0;
 }
 
 int paralleldifferElementsValue(const std::vector<int>& vector, const int size) {
-    int proc, rank;
-    MPI_Comm_size(MPI_COMM_WORLD, &proc);
+    int procCount, rank;
+    MPI_Comm_size(MPI_COMM_WORLD, &procCount);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    int block = size / proc;
-    int ostatok = size % proc;
+
+    int block = size / procCount;
+    int ostatok = size % procCount;
 
     if (rank < ostatok) {
         block++;
     }
 
-    int localMax = -2000000000;
-    int globalMax;
+    int localMax;
+    int globalMax = 0;
 
-    // if proc > size
-    if (ostatok > block) {
-        if (rank == 0) {
-            localMax = differElementsValue(vector);
-        }
+    // The block cannot be equal to 1
+    if (block == 1 || ostatok == 1) {
+        localMax = differElementsValue(vector);
         return localMax;
     }
 
-    std::vector<int> blockVector(proc);
-    std::vector<int> sdvig;
+    std::vector<int> blockVector(procCount);
+    std::vector<int> sdvig(procCount);
     std::vector<int> resultData(block);
     if (rank == 0) {
-        blockVector.assign(proc, vector.size() / proc);
-        sdvig.resize(proc);
-        for (int i = 0; i < proc; i++) {
-            blockVector[i] = vector.size() / proc;
-            if (i < proc - 1) {
+        for (int i = 0; i < procCount; i++) {
+            if (i < ostatok) {
+                blockVector[i] = vector.size() / procCount + 1;
+            } else {
+                blockVector[i] = vector.size() / procCount;
+            }
+            if (i < procCount - 1) {
                 sdvig[i + 1] = sdvig[i] + blockVector[i];
             }
         }

@@ -38,7 +38,7 @@ TEST(PARALLEL_OPERATIONS, can_run_parallel_operations) {
 TEST(PARALLEL_OPERATIONS, correct_work_on_vector_even_size_v1) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::vector<int>::size_type size = 100;
+    std::vector<int>::size_type size = 400;
     std::vector<int> vector(size, 0);
 
     if (rank == 0) {
@@ -56,7 +56,7 @@ TEST(PARALLEL_OPERATIONS, correct_work_on_vector_even_size_v1) {
 TEST(PARALLEL_OPERATIONS, correct_work_on_vector_even_size_v2) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::vector<int>::size_type size = 64;
+    std::vector<int>::size_type size = 34;
     std::vector<int> vector(size, 0);
 
     if (rank == 0) {
@@ -74,7 +74,7 @@ TEST(PARALLEL_OPERATIONS, correct_work_on_vector_even_size_v2) {
 TEST(PARALLEL_OPERATIONS, correct_work_on_vector_odd_size_v1) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::vector<int>::size_type size = 101;
+    std::vector<int>::size_type size = 41;
     std::vector<int> vector(size, 0);
 
     if (rank == 0) {
@@ -92,7 +92,7 @@ TEST(PARALLEL_OPERATIONS, correct_work_on_vector_odd_size_v1) {
 TEST(PARALLEL_OPERATIONS, correct_work_on_vector_odd_size_v2) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::vector<int>::size_type size = 63;
+    std::vector<int>::size_type size = 33;
     std::vector<int> vector(size, 0);
 
     if (rank == 0) {

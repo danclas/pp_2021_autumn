@@ -102,7 +102,7 @@ TEST(Parrallel_Operations_MPI, Test_sum_sqr_matrix_with_not_rand_sqr_matrix) {
         for (int sz = 0; sz < i; sz++) {
             matrix[sz].resize(j);
         }
-        matrix[0] = {1, 2, 3, 4};
+        matrix[0] = {3, 2, 3, 4};
         matrix[1] = {5, 6, 7, 8};
         matrix[2] = {3, 2, 1, 9};
         matrix[3] = {4, 4, 3, 7};

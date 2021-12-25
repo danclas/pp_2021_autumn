@@ -1,16 +1,15 @@
 // Copyright 2021 Pinezhanin Evgeny
 #include <mpi.h>
-#include <stdexcept>
 #include "../../../modules/task_1/pinezhanin_e_trapezoidal_rule/trapezoidal_rule.h"
 
-double getIntegralTrapezoidalRuleParallel(double (*f)(double), double a, double b, int n) {
+double getIntegralTrapezoidalRuleParallel(const std::function<double(double)>& f, double a, double b, int n) {
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     double res_sum = 0.0;
     double sum = 0.0;
+    const double h = (b - a) / n;
     if (n > 0) {
-        double h = (b - a) / n;
         for (int i = rank; i < n; i += size) {
             sum += (f(a + i * h) + f(a + (i + 1) * h)) * 0.5 * h;
         }
@@ -19,10 +18,10 @@ double getIntegralTrapezoidalRuleParallel(double (*f)(double), double a, double 
     return res_sum;
 }
 
-double getIntegralTrapezoidalRuleSequential(double (*f)(double), double a, double b, int n) {
+double getIntegralTrapezoidalRuleSequential(const std::function<double(double)>& f, double a, double b, int n) {
     double res_sum = 0.0;
+    const double h = (b - a) / n;
     if (n > 0) {
-        double h = (b - a) / n;
         for (int i = 0; i < n; i++) {
             res_sum += (f(a + i * h) + f(a + (i + 1) * h)) * 0.5 * h;
         }

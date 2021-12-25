@@ -1,13 +1,14 @@
 // Copyright 2021 Pinezhanin Evgeny
 #include <gtest/gtest.h>
-#include <math.h>
+#include <cmath>
+#include <functional>
 #include "./trapezoidal_rule.h"
 #include <gtest-mpi-listener.hpp>
 
 TEST(Trapezoidal_rule_test, x_square_a_less_b) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    auto f1 = [](double x) -> double { return x * x; };
+    const std::function<double(double)> f1 = [](double x) -> double { return x * x; };
     double a = 5.0, b = 10.0;
     int n = 100;
 
@@ -22,7 +23,7 @@ TEST(Trapezoidal_rule_test, x_square_a_less_b) {
 TEST(Trapezoidal_rule_test, x_square_a_more_b) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    auto f1 = [](double x) -> double { return x * x; };
+    const std::function<double(double)> f1 = [](double x) -> double { return x * x; };
     double a = 10.0, b = 5.0;
     int n = 100;
 
@@ -37,7 +38,7 @@ TEST(Trapezoidal_rule_test, x_square_a_more_b) {
 TEST(Trapezoidal_rule_test, x_cube) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    auto f2 = [](double x) -> double { return x * x * x; };
+    const std::function<double(double)> f2 = [](double x) -> double { return x * x * x; };
     double a = 0.0, b = 6.0;
     int n = 100;
 
@@ -52,7 +53,8 @@ TEST(Trapezoidal_rule_test, x_cube) {
 TEST(Trapezoidal_rule_test, polynomial) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    auto f3 = [](double x) -> double { return 5.0 * x * x * x * x + 10.0 * x * x * x + 3.0 * x * x; };
+    const std::function<double(double)> f3 =
+        [](double x) -> double { return 5.0 * x * x * x * x + 10.0 * x * x * x + 3.0 * x * x; };
     double a = 0.0, b = 5.0;
     int n = 1000;
 
@@ -67,7 +69,7 @@ TEST(Trapezoidal_rule_test, polynomial) {
 TEST(Trapezoidal_rule_test, null) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    auto f4 = [](double x) -> double { return 0.0; };
+    const std::function<double(double)> f4 = [](double x) -> double { return 0.0; };
     double a = -5.0, b = 5.0;
     int n = 1000;
 
@@ -82,7 +84,7 @@ TEST(Trapezoidal_rule_test, null) {
 TEST(Trapezoidal_rule_test, x_sinx) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    auto f5 = [](double x) -> double { return x * sin(x); };
+    const std::function<double(double)> f5 = [](double x) -> double { return x * sin(x); };
     double a = -5.0, b = 5.0;
     int n = 1000;
 
@@ -97,7 +99,7 @@ TEST(Trapezoidal_rule_test, x_sinx) {
 TEST(Trapezoidal_rule_test, line) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    auto f6 = [](double x) -> double { return x; };
+    const std::function<double(double)> f6 = [](double x) -> double { return x; };
     double a = 2.0, b = 7.0;
     int n = 1000;
 
@@ -112,7 +114,7 @@ TEST(Trapezoidal_rule_test, line) {
 TEST(Trapezoidal_rule_test, exp) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    auto f7 = [](double x) -> double { return exp(x); };
+    const std::function<double(double)> f7 = [](double x) -> double { return exp(x); };
     double a = -6.0, b = 6.0;
     int n = 1000;
 

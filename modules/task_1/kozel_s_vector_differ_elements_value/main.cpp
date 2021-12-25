@@ -4,41 +4,39 @@
 #include "../../../modules/task_1/kozel_s_vector_differ_elements_value/vector_differ_elements_value.h"
 #include <gtest-mpi-listener.hpp>
 
-TEST(Parallel_Operations_MPI, DEFAULT_FIND_DIFFER_ELEMENT_VALUES_VECTOR_SIZE_5_GET_VAL) {
+TEST(Parallel_Operations_MPI, DEFAULT_FIND_DIFFER_ELEMENT_VALUES_VECTOR_SIZE_6_GET_VAL) {
     int commRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &commRank);
-    std::vector<int> vector = { 0, 1, 5, 4, 5 };
+    std::vector<int> vector = { 0, 1, 5, 4, 100, 50 };
     if (commRank == 0) {
-        int max = differElementsValue(vector);
-        ASSERT_EQ(max, 4);
+        int maxDiffer = differElementsValue(vector);
+        ASSERT_EQ(maxDiffer, 96);
     }
 }
 
-TEST(Parallel_Operations_MPI, PARALLEL_FIND_DIFFER_ELEMENT_VALUES_VECTOR_SIZE_500_GET_VAL) {
+TEST(Parallel_Operations_MPI, PARALLEL_FIND_DIFFER_ELEMENT_VALUES_VECTOR_SIZE_3_PUT_NEGATIVE_AND_POSTITVE_GET_VAL) {
     int commRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &commRank);
-    std::vector<int> vector = fillVector(500);
-    int max1;
+    std::vector<int> vector = { 55, -5055, 1};
+    int maxDiffer1;
     if (commRank == 0) {
-        max1 = differElementsValue(vector);
+        maxDiffer1 = differElementsValue(vector);
     }
-    int max2 = paralleldifferElementsValue(vector, vector.size());
+
+    int maxDiffer2 = paralleldifferElementsValue(vector, vector.size());
     if (commRank == 0) {
-        ASSERT_EQ(max1, max2);
+        ASSERT_EQ(maxDiffer1, maxDiffer2);
     }
 }
 
 TEST(Parallel_Operations_MPI, PARALLEL_FIND_DIFFER_ELEMENT_VALUES_EQUAL_ELEMENTS_IN_VECTOR_GET_VAL) {
     int commRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &commRank);
-    std::vector<int> vector = {5, 5, 5, 5, 5, 5, 5, 5, 5};
-    int max1;
+    std::vector<int> vector = {5, 5, 5};
+
+    int maxDiffer1 = paralleldifferElementsValue(vector, vector.size());
     if (commRank == 0) {
-        max1 = differElementsValue(vector);
-    }
-    int max2 = paralleldifferElementsValue(vector, vector.size());
-    if (commRank == 0) {
-        ASSERT_EQ(max1, max2);
+        ASSERT_EQ(maxDiffer1, 0);
     }
 }
 
@@ -46,13 +44,13 @@ TEST(Parallel_Operations_MPI, PARALLEL_FIND_DIFFER_ELEMENT_VALUES_VECTOR_ERROR_S
     int commRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &commRank);
     std::vector<int> vector = fillVector(0);
-    int max1;
+    int maxDiffer1;
     if (commRank == 0) {
-        max1 = differElementsValue(vector);
+        maxDiffer1 = differElementsValue(vector);
     }
-    int max2 = paralleldifferElementsValue(vector, vector.size());
+    int maxDiffer2 = paralleldifferElementsValue(vector, vector.size());
     if (commRank == 0) {
-        ASSERT_EQ(max1, max2);
+        ASSERT_EQ(maxDiffer1, maxDiffer2);
     }
 }
 
@@ -60,13 +58,13 @@ TEST(Parallel_Operations_MPI, PARALLEL_FIND_DIFFER_ELEMENT_VALUES_VECTOR_LARGE_S
     int commRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &commRank);
     std::vector<int> vector = fillVector(100000);
-    int max1;
+    int maxDiffer1;
     if (commRank == 0) {
-        max1 = differElementsValue(vector);
+        maxDiffer1 = differElementsValue(vector);
     }
-    int max2 = paralleldifferElementsValue(vector, vector.size());
+    int maxDiffer2 = paralleldifferElementsValue(vector, vector.size());
     if (commRank == 0) {
-        ASSERT_EQ(max1, max2);
+        ASSERT_EQ(maxDiffer1, maxDiffer2);
     }
 }
 

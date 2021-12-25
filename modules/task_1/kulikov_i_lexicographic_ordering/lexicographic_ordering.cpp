@@ -6,8 +6,6 @@ const char abc[27] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 
 char* get_random_str(int sz) {
-    std::random_device dev;
-    std::mt19937 gen(dev());
     char* out_str = new char[sz + 1];
     for (int i = 0; i < sz; i++) { out_str[i] = abc[rand() % 26]; }
     out_str[sz] = '\0';

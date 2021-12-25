@@ -25,6 +25,7 @@ class matrix {
     T* operator[](const int i);
     const T* operator[](const int i) const;
     matrix<T> operator*(const matrix<T>& c);
+    matrix<T> operator*(const matrix<T>& c) const;
     matrix<T>& operator=(const matrix<T>& c);
     bool operator==(const matrix<T>& c);
     template<class T2> friend std::ostream& operator<< (std::ostream& o, const matrix<T2>& c);
@@ -111,6 +112,23 @@ matrix<T> matrix<T>::operator*(const matrix<T>& c) {
 }
 
 template<class T>
+matrix<T> matrix<T>::operator*(const matrix<T>& c) const {
+    if (numColums != c.numRows)
+        throw "Impossible to multiply";
+    matrix<T> res(numRows, c.numColums);
+    for (int i = 0; i < numRows; i++) {
+        for (int j = 0; j < c.numColums; j++) {
+            res[i][j] = 0;
+            for (int k = 0; k < numColums; k++) {
+                res[i][j] += (*this)[i][k] * c[k][j];
+            }
+        }
+    }
+    return res;
+}
+
+
+template<class T>
 matrix<T>& matrix<T>::operator=(const matrix<T>& c) {
     if (this == &c)
         return *this;
@@ -185,6 +203,10 @@ matrix<T> parallelMultiplication(const matrix<T>* A, const matrix<T>* B, MPI_Dat
     int procRank = 0, procCount = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
     MPI_Comm_size(MPI_COMM_WORLD, &procCount);
+    matrix<T> ans;
+
+    if (procCount == 1)
+        return (*A) * (*B);
 
     // Proc with rank 0 sends info about matrixes sizes
     int matrixSizes[4] = { 0, 0, 0, 0 };
@@ -198,15 +220,35 @@ matrix<T> parallelMultiplication(const matrix<T>* A, const matrix<T>* B, MPI_Dat
     }
     MPI_Bcast(reinterpret_cast<void*>(matrixSizes), 4, MPI_INT, 0, MPI_COMM_WORLD);
 
-    // Now all processes have info about matrixes sizes
-    // but !root processes have to prepare workspace for operations
-    matrix<T> a, b;  // empty matrixes, weight almost nothing
-    // first of matrix B which doesn't need to be separated
-    if (procRank) {  // if !root, then preparing memory. Root proc doesn't need another copy of B matrix
+    if (matrixSizes[0] == 1) {
+        if (procRank == 0)
+            return (*A) * (*B);
+        else
+            return ans;
+    }
+
+    // creating new communicator
+    int color;
+    if (matrixSizes[0] / procCount >= 1) {
+        color = 0;
+    } else {
+        if (procRank >= matrixSizes[0])
+            color = 1;
+        else
+            color = 0;
+    }
+    MPI_Comm NEW_COMM_WORLD;
+    MPI_Comm_split(MPI_COMM_WORLD, color, procRank, &NEW_COMM_WORLD);
+    if (color == 1) {
+        MPI_Comm_free(&NEW_COMM_WORLD);
+        return ans;
+    }
+    MPI_Comm_size(NEW_COMM_WORLD, &procCount);
+
+    matrix<T> a, b;
+    if (procRank) {
         b.prepareSpace(matrixSizes[2], matrixSizes[3]);
     }
-    // then matrix A, that should be separated by lines
-    // 3 lines 5 colums 4 proc. | 6 lines 5 colums 4 proc. <= matrix A
     int linesToProcess = matrixSizes[0] / procCount;  // [0,0,0,0] | [1,1,1,1]
     if (procRank < matrixSizes[0] % procCount)
         linesToProcess++;  // [0,0,0,0] -> [1,1,1,0] | [1,1,1,1] -> [2,2,1,1]
@@ -246,19 +288,19 @@ matrix<T> parallelMultiplication(const matrix<T>* A, const matrix<T>* B, MPI_Dat
     // sending scattered matrix A on prepared matrix a
     if (procRank == 0) {
         MPI_Scatterv(reinterpret_cast<const void*>(A->data()), sendcounts, displs,
-            matrixDatatype, a.data(), linesToProcess * matrixSizes[1], matrixDatatype, 0, MPI_COMM_WORLD);
+            matrixDatatype, a.data(), linesToProcess * matrixSizes[1], matrixDatatype, 0, NEW_COMM_WORLD);
     } else {
         MPI_Scatterv(nullptr, nullptr, nullptr, matrixDatatype, a.data(), linesToProcess * matrixSizes[1],
-            matrixDatatype, 0, MPI_COMM_WORLD);
+            matrixDatatype, 0, NEW_COMM_WORLD);
     }
 
     // sending matrix B
     if (procRank == 0)   // for root process
         MPI_Bcast(reinterpret_cast<void*>(B->data()),
-            matrixSizes[2] * matrixSizes[3], matrixDatatype, 0, MPI_COMM_WORLD);
+            matrixSizes[2] * matrixSizes[3], matrixDatatype, 0, NEW_COMM_WORLD);
     else  // for !root process
         MPI_Bcast(reinterpret_cast<void*>(b.data()),
-            matrixSizes[2] * matrixSizes[3], matrixDatatype, 0, MPI_COMM_WORLD);
+            matrixSizes[2] * matrixSizes[3], matrixDatatype, 0, NEW_COMM_WORLD);
 
     // Now root process have part of A matrix in matrix a and matrix B to operate (b empty)
     // !root processes have their own parts of A (but not everyone) in matrix a and matrix B in b
@@ -273,7 +315,6 @@ matrix<T> parallelMultiplication(const matrix<T>* A, const matrix<T>* B, MPI_Dat
     }
 
     // now the c matrixes needs to be merged
-    matrix<T> ans;
     if (procRank == 0) {
         ans.prepareSpace(matrixSizes[0], matrixSizes[3]);  // preparing memory to receive final matrix
         for (int i = 0; i < procCount; i++) {
@@ -286,16 +327,17 @@ matrix<T> parallelMultiplication(const matrix<T>* A, const matrix<T>* B, MPI_Dat
             if (sendcounts[i])  // [0,5,10,15] -> [0,2,4,6] | [0,10,20,25] -> [0,4,8,10]
                 displs[i] = displs[i - 1] + sendcounts[i - 1];
         MPI_Gatherv(reinterpret_cast<const void*>(c.data()), linesToProcess * matrixSizes[3], matrixDatatype,
-            reinterpret_cast<void*>(ans.data()), sendcounts, displs, matrixDatatype, 0, MPI_COMM_WORLD);
+            reinterpret_cast<void*>(ans.data()), sendcounts, displs, matrixDatatype, 0, NEW_COMM_WORLD);
     } else {
         MPI_Gatherv(reinterpret_cast<const void*>(c.data()), linesToProcess * matrixSizes[3], matrixDatatype,
-            nullptr, nullptr, nullptr, matrixDatatype, 0, MPI_COMM_WORLD);
+            nullptr, nullptr, nullptr, matrixDatatype, 0, NEW_COMM_WORLD);
     }
     // now on root we have final matrix in ans
     if (procRank == 0) {
         delete[] sendcounts;
         delete[] displs;
     }
+    MPI_Comm_free(&NEW_COMM_WORLD);
     return ans;
 }
 

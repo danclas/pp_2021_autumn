@@ -4,18 +4,13 @@
 
 #include <vector>
 
-struct Matrix {
-    double* data;
-    size_t weight;
-    size_t height;
-    Matrix(double* data, size_t weight, size_t height);
-    Matrix(const Matrix& a);
-    ~Matrix();
-    Matrix& operator=(const Matrix& right);
-};
-
-Matrix getRandomMatrix(const size_t m, const size_t n);
-std::vector<double> getSequentialMatrixMinLine(const Matrix& matrix);
-std::vector<double> getParallelMatrixMinLine(const Matrix& matrix);
+std::vector<double> getRandomVector(const std::vector<int>::size_type h,
+                                    const std::vector<int>::size_type w);
+std::vector<double> getSequentialMatrixMinLine(
+    const std::vector<double>& matrix, std::vector<double>::size_type row_count,
+    std::vector<double>::size_type column_count);
+std::vector<double> getParallelMatrixMinLine(
+    const std::vector<double>& matrix, std::vector<double>::size_type row_count,
+    std::vector<double>::size_type column_count);
 
 #endif  // MODULES_TASK_1_ERSHOV_A_MATRIX_MIN_LINE_MATRIX_MIN_LINE_MPI_H_

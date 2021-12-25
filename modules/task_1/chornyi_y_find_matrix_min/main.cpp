@@ -9,7 +9,7 @@ TEST(Parallel_Find_Minimum_In_Matrix, Rows_Equal_Columns) {
     int currentRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &currentRank);
 
-    std::vector<std::vector<int>> globalMatrix;
+    std::vector<int> globalMatrix;
     const int numberOfRows = 100, numberOfColumns = 100;
     int parallelMinimum, singleMinimum;
 
@@ -20,7 +20,7 @@ TEST(Parallel_Find_Minimum_In_Matrix, Rows_Equal_Columns) {
         singleMinimum = singleFindMinimum(globalMatrix);
     }
 
-    parallelMinimum = parallelFindMinimum(globalMatrix);
+    parallelMinimum = parallelFindMinimum(globalMatrix, numberOfRows, numberOfColumns);
 
     // Assert
     if (currentRank == 0) {
@@ -33,7 +33,7 @@ TEST(Parallel_Find_Minimum_In_Matrix, Rows_Greater_Columns) {
     int currentRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &currentRank);
 
-    std::vector<std::vector<int>> globalMatrix;
+    std::vector<int> globalMatrix;
     const int numberOfRows = 150, numberOfColumns = 100;
     int parallelMinimum, singleMinimum;
 
@@ -44,7 +44,7 @@ TEST(Parallel_Find_Minimum_In_Matrix, Rows_Greater_Columns) {
         singleMinimum = singleFindMinimum(globalMatrix);
     }
 
-    parallelMinimum = parallelFindMinimum(globalMatrix);
+    parallelMinimum = parallelFindMinimum(globalMatrix, numberOfRows, numberOfColumns);
 
     // Assert
     if (currentRank == 0) {
@@ -57,8 +57,8 @@ TEST(Parallel_Find_Minimum_In_Matrix, Rows_Less_Columns) {
     int currentRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &currentRank);
 
-    std::vector<std::vector<int>> globalMatrix;
-    const int numberOfRows = 100, numberOfColumns = 150;
+    std::vector<int> globalMatrix;
+    const int numberOfRows = 150, numberOfColumns = 150;
     int parallelMinimum, singleMinimum;
 
     // Act
@@ -68,7 +68,7 @@ TEST(Parallel_Find_Minimum_In_Matrix, Rows_Less_Columns) {
         singleMinimum = singleFindMinimum(globalMatrix);
     }
 
-    parallelMinimum = parallelFindMinimum(globalMatrix);
+    parallelMinimum = parallelFindMinimum(globalMatrix, numberOfRows, numberOfColumns);
 
     // Assert
     if (currentRank == 0) {
@@ -81,19 +81,19 @@ TEST(Parallel_Find_Minimum_In_Matrix, Minimum_At_The_Beginning_Of_The_Matrix) {
     int currentRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &currentRank);
 
-    std::vector<std::vector<int>> globalMatrix;
-    const int numberOfRows = 100, numberOfColumns = 100;
+    std::vector<int> globalMatrix;
+    const int numberOfRows = 150, numberOfColumns = 150;
     int parallelMinimum, singleMinimum;
 
     // Act
     if (currentRank == 0) {
         globalMatrix = fillMatrixWithRandom(numberOfRows, numberOfColumns);
-        globalMatrix[0][0] = -10000000;
+        globalMatrix[0] = -10000000;
 
         singleMinimum = singleFindMinimum(globalMatrix);
     }
 
-    parallelMinimum = parallelFindMinimum(globalMatrix);
+    parallelMinimum = parallelFindMinimum(globalMatrix, numberOfRows, numberOfColumns);
 
     // Assert
     if (currentRank == 0) {
@@ -106,19 +106,19 @@ TEST(Parallel_Find_Minimum_In_Matrix, Minimum_At_The_End_Of_The_Matrix) {
     int currentRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &currentRank);
 
-    std::vector<std::vector<int>> globalMatrix;
-    const int numberOfRows = 100, numberOfColumns = 100;
+    std::vector<int> globalMatrix;
+    const int numberOfRows = 150, numberOfColumns = 150;
     int parallelMinimum, singleMinimum;
 
     // Act
     if (currentRank == 0) {
         globalMatrix = fillMatrixWithRandom(numberOfRows, numberOfColumns);
-        globalMatrix[numberOfRows - 1][numberOfColumns - 1] = -10000000;
+        globalMatrix[numberOfRows * numberOfColumns - 1] = -10000000;
 
         singleMinimum = singleFindMinimum(globalMatrix);
     }
 
-    parallelMinimum = parallelFindMinimum(globalMatrix);
+    parallelMinimum = parallelFindMinimum(globalMatrix, numberOfRows, numberOfColumns);
 
     // Assert
     if (currentRank == 0) {

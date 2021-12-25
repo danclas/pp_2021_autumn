@@ -49,7 +49,7 @@ double trapezoidMethodParallel(double (*f)(double, double), double a_x, double b
       ans += cur_ans;
       x += h_x * ProcNum;
   }
-
+  MPI_Barrier(MPI_COMM_WORLD);
   MPI_Reduce(&ans, &ans_all, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 
   if (ProcRank == 0) {
@@ -58,6 +58,7 @@ double trapezoidMethodParallel(double (*f)(double, double), double a_x, double b
           ans_all += (f(a_x, y) + f(b_x, y)) / 2;
       }
   }
+  MPI_Barrier(MPI_COMM_WORLD);
 
   return ans_all * h_x * h_y;
 }
