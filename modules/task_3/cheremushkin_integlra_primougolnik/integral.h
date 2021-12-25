@@ -11,7 +11,6 @@
 #include <cmath>
 #include <functional>
 #include <utility>
-#include <vector>
 
 const double eps = 0.01;
 double linelintegral(const std::vector<std::pair<double, double>>& limits);
