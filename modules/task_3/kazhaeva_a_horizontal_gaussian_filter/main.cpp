@@ -6,8 +6,8 @@
 TEST(Parallel_Operations_MPI, Test_1) {
   int currentProcess;
   MPI_Comm_rank(MPI_COMM_WORLD, &currentProcess);
-  int height = 500;
-  int weight = 400;
+  int height = 100;
+  int weight = 100;
   std::vector<float> matrix;
   std::vector<float> img(height * weight);
   Kernell(&matrix, 3.0f);
