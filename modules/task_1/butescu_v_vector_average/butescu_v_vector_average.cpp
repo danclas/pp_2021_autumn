@@ -5,12 +5,6 @@
 #include <algorithm>
 #include"./butescu_v_vector_average.h"
 
-#include <mpi.h>
-#include <vector>
-#include <random>
-#include <algorithm>
-#include"./butescu_v_vector_average.h"
-
 std::vector<int> getRandomPositiveVector(int size) {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -51,8 +45,7 @@ int getParallelAverage(std::vector<int> parall_vec, int size) {
     std::vector<int> local_vec(partSize);
     if (ProcRank == 0) {
         local_vec = std::vector<int>(parall_vec.begin(), parall_vec.begin() + partSize);
-    }
-    else {
+    } else {
         MPI_Status status;
         MPI_Recv(local_vec.data(), partSize, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
     }
