@@ -1,3 +1,4 @@
+// Copyright 2021 Lbov Alexander
 #include <gtest/gtest.h>
 #include "./sum_element_matrix.h"
 #include <gtest-mpi-listener.hpp>
