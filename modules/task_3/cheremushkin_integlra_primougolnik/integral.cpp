@@ -40,7 +40,7 @@ double linelintegral(const std::vector<std::pair<double, double>>& limits) {
     }
     q_local = 0.0;
     m = 100;
-    double mass[3];
+    double mass[3] = { 0,0,0 };;
     for (i = 1; i <= m; i++) {
         if (xb.size() / 2 == 1) {
             x = (static_cast<double>(2 * m - 2 * i + 1) * xb[0]
@@ -160,7 +160,7 @@ double Parallelintegral(const std::vector<std::pair<double,
     MPI_Bcast(&m, 1, MPI_INT, source, MPI_COMM_WORLD);
     if (process_id != master) {
         q_local = 0.0;
-        double mass[3];
+        double mass[3] = {0,0,0};
         for (i = 1; i <= m; i++) {
             if (xb.size() / 2 == 1) {
                 x = (static_cast<double>(2 * m - 2 * i + 1) * xb[0]
