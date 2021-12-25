@@ -88,11 +88,11 @@ std::vector<int> SequentialMoores(std::vector<int> graph, int size) {
       }
     }
 
-    for (int i = 0; i < S.size(); i++) {
+    for (int i = 0; i < static_cast<int>(S.size()); i++) {
       int t = std::min(d_star[S[i]], (d_star[y] + graph[y * size + S[i]]));
       if (t < d_star[S[i]]) {
         bool ctrl = false;
-        for (int j = 0; j < prev.size(); j++) {
+        for (int j = 0; j < static_cast<int>(prev.size()); j++) {
           if (S[i] == prev[j]) {
             ctrl = true;
             break;
@@ -149,7 +149,7 @@ std::vector<int> SequentialMoores(std::vector<int> graph, int size) {
     }
 
 
-    for (int j = 0; j < S.size(); j++) {
+    for (int j = 0; j < static_cast<int>(S.size()); j++) {
       int t = d_star[S[j]] + graph[S[j] * size + p];
       if (t == d_star[p]) {
         moors.insert(moors.begin(), S[j]);
@@ -257,7 +257,7 @@ std::vector<int> ParallelMoores(std::vector<int> graph, int size_graph) {
         }
       }
 
-      for (int j = 0; j < S.size(); j++) {
+      for (int j = 0; j < static_cast<int>(S.size()); j++) {
         int t = d[S[j]] + graph[S[j] * size_graph + p];
         if (t == d[p]) {
           moors.insert(moors.begin(), S[j]);
