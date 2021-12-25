@@ -62,7 +62,7 @@ double _dnrm2(const int n, /*const*/ double* x, const int incx) {
 }
 void Fox_sequence(int N, int q, double* A, int lda, double* B, int ldb, double* C, int ldc) {
     std::div_t dv = std::div(N, q);
-    int p = dv.quot + (dv.rem ? 1 : 0);   // Количество блоков в строке/столбце
+    int p = dv.quot + (dv.rem ? 1 : 0);
     memset(C, 0, sizeof(double) * ldc * ldc);
     double* pa, * pb, * pc;
     for (int K = 0; K < p; K++) {
@@ -141,7 +141,7 @@ void Fox_mpi(int N, double* A, int lda, double* B, int ldb, double* C, int ldc) 
             MPI_Recv(A, N * N, MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
             MPI_Recv(B, N * N, MPI_DOUBLE, 0, tag, MPI_COMM_WORLD, &status);
         }
-        //  Узлы коммуникации
+    
         int Top = (rank / p) == ((rank - 1) / p) && (rank - 1) >= 0 ? rank - 1 : p * ((rank / p) + 1) - 1;
         int Bottom = (rank / p) == ((rank + 1) / p) ? rank + 1 : p * (rank / p);
         int Left = (rank - p) >= 0 ? rank - p : p * (p - 1) + (rank % p);
