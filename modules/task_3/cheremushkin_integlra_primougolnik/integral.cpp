@@ -148,7 +148,7 @@ double Parallelintegral(const std::vector<std::pair<double,
                       + static_cast<double>(process)*x_max) /
                           static_cast<double>(process_num - 1);
                     }
-                    MPI_Send(&xb[i], 2, MPI_DOUBLE, target,
+                    MPI_Send(&xb[i], 1, MPI_DOUBLE, target,
                         tag, MPI_COMM_WORLD);
                     c++;
                     i++;
@@ -159,7 +159,7 @@ double Parallelintegral(const std::vector<std::pair<double,
         source = master;
         tag = 1;
         for (size_t i = 0; i < xb.size(); i++) {
-             MPI_Recv(&xb[i], 2, MPI_DOUBLE, source,
+             MPI_Recv(&xb[i], 1, MPI_DOUBLE, source,
                  tag, MPI_COMM_WORLD, &status);
         }
     }
