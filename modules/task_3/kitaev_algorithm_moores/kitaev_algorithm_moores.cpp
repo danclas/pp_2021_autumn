@@ -101,7 +101,7 @@ std::vector<int> SequentialMoores(std::vector<int> graph, int size) {
 
         if (ctrl) {
           bool z = false;
-          for (std::deque<int>::iterator it = q.begin(); it < q.end(); it++) {
+          for (std::deque<int>::iterator it = q.begin(); it < q.end(); ++it) {
             if (*it == S[i]) {
               q.erase(it);
               q.push_front(S[i]);
@@ -117,7 +117,7 @@ std::vector<int> SequentialMoores(std::vector<int> graph, int size) {
           prev.push_back(S[i]);
         } else {
           bool z = false;
-          for (std::deque<int>::iterator it = q.begin(); it < q.end(); it++) {
+          for (std::deque<int>::iterator it = q.begin(); it < q.end(); ++it) {
             if (*it == S[i]) {
               q.erase(it);
               q.push_back(S[i]);
