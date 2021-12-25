@@ -7,7 +7,7 @@ std::vector<int> getRandMatrix(int cols, int rows) {
 
     const int m_size = cols * rows;
     std::vector<int> m(m_size);
-    for (int i = 0; i < m.size(); i++) { 
+    for (int i = 0; i < m_size; i++) {
         m[i] = gen() % 301 - 150;
     }
 
@@ -18,7 +18,7 @@ int minElemSequentialOperations(std::vector<int> m, int cols, int rows) {
     int min_el = m[0];
 
     for (int i = 1; i < (cols * rows); i++) {
-        min_el = std::min(m[i], min_el);  //поиск минимума из двух чисел
+        min_el = std::min(m[i], min_el);  //search min
     }
 
     return min_el;
@@ -33,17 +33,13 @@ int minElemParallelOperations(std::vector<int> m, int cols, int rows) {
     int whole = 0;  // whole division
     int rem = 0;  // remainder division
 
-    if (cols == NULL || rows == NULL) {
-        throw "incorrect matrix size";
-	} else {
-        m_size = cols * rows;
-        if (m_size < size) {
-            throw "number of proc exceeds number of array elem";
-		} else {
-            whole = m_size / size;
-            rem = m_size % size;
-		}
-	}
+    m_size = cols * rows;
+    if (m_size < size) {
+        throw "number of proc exceeds number of array elem";
+    } else {
+        whole = m_size / size;
+        rem = m_size % size;
+    }
 
     std::vector<int> loc_m(whole);
 
@@ -66,7 +62,7 @@ int minElemParallelOperations(std::vector<int> m, int cols, int rows) {
             MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
 
         min_el = minElemSequentialOperations(loc_m, 1, whole);
-	} else {
+    } else {
         for (int i = 0; i < (whole + rem); i++) {
             min_el = std::min(m[i], min_el);
         }
