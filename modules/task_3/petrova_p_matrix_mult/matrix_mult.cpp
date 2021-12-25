@@ -13,8 +13,7 @@
 std::vector<double> fillRandomVector(int len) {
     if (len < 0) {
         throw "error! lenght vector < 0!";
-    }
-    else {
+    } else {
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<> dist(1, 10);
@@ -28,8 +27,7 @@ std::vector<double> fillRandomVector(int len) {
 std::vector< std::vector<double>> fillRandomMatrix(int n) {
     if (n < 0) {
         throw "error! lenght vector < 0!";
-    }
-    else {
+    } else {
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<> dist(1, 10);  //  values 1-10
