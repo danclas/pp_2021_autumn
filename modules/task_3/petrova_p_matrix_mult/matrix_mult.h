@@ -6,6 +6,9 @@
 #include <iostream>
 #include <vector>
 
+std::vector<double> fillRandomVector(int len);
+std::vector< std::vector<double>> fillRandomMatrix(int n);
+
 void _daxpy(int N, double a, double* x, int incx, double* y, int incy);
 void _daxpby(int N, double a, double* x, int incx,
     double b, double* y, int incy);

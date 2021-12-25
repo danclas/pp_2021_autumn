@@ -10,6 +10,41 @@
 
 #include"../../../modules/task_3/petrova_p_matrix_mult/matrix_mult.h"
 
+std::vector<double> fillRandomVector(int len) {
+    if (len < 0) {
+        throw "error! lenght vector < 0!";
+    }
+    else {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dist(1, 10);
+        std::vector<double> v(len);
+        for (int i = 0; i < len; i++) {
+            v[i] = dist(gen);
+        }
+        return v;
+    }
+}
+std::vector< std::vector<double>> fillRandomMatrix(int n) {
+    if (n < 0) {
+        throw "error! lenght vector < 0!";
+    }
+    else {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dist(1, 10);  //  values 1-10
+        std::uniform_int_distribution<> dist1(10, 20);  //  for diagonal
+        std::vector<std::vector<double>> v(n);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == j)
+                    v[i].push_back(dist1(gen));
+                v[i].push_back(dist(gen));
+            }
+        }
+        return v;
+    }
+}
 void _daxpy(int N, double a, double* x, int incx, double* y, int incy) {
     double* pa = x;
     double* pb = y;
