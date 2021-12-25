@@ -1,7 +1,7 @@
 // Copyright 2021 Kazhaeva Anastasia
 #include <gtest/gtest.h>
 #include <vector>
-#include "./horizontal_gaussian_filter.h"
+#include "./horizontal_filter.h"
 #include <gtest-mpi-listener.hpp>
 
 TEST(Parallel_Operations_MPI, Test_1) {

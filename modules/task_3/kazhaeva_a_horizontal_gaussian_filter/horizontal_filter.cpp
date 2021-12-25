@@ -5,7 +5,7 @@
 #include <string>
 #include <random>
 #include <algorithm>
-#include "../../../modules/task_3/kazhaeva_a_horizontal_gaussian_filter/horizontal_gaussian_filter.h"
+#include "../../../modules/task_3/kazhaeva_a_horizontal_gaussian_filter/horizontal_filter.h"
 
 void Kernell(vector<float>* m, float sigma) {
   std::mt19937 gen(time(0));
