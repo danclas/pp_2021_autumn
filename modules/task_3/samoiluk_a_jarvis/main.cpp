@@ -24,7 +24,7 @@ TEST(Parallel_Operations_MPI, Vector_size_100) {
             std::vector<Point> seq_jm = JarvisMarch_seq(vec);
 
             ASSERT_EQ(par_jm.size(), seq_jm.size());
-            for (int i = 0; i < par_jm.size(); i++) {
+            for (std::vector<int>::size_type i = 0; i < par_jm.size(); i++) {
                 ASSERT_EQ(par_jm[i].x, seq_jm[i].x);
                 ASSERT_EQ(par_jm[i].y, seq_jm[i].y);
             }
@@ -53,7 +53,7 @@ TEST(Parallel_Operations_MPI, Vector_size_200) {
             std::vector<Point> seq_jm = JarvisMarch_seq(vec);
 
             ASSERT_EQ(par_jm.size(), seq_jm.size());
-            for (int i = 0; i < par_jm.size(); i++) {
+            for (std::vector<int>::size_type i = 0; i < par_jm.size(); i++) {
                 ASSERT_EQ(par_jm[i].x, seq_jm[i].x);
                 ASSERT_EQ(par_jm[i].y, seq_jm[i].y);
             }
@@ -82,7 +82,7 @@ TEST(Parallel_Operations_MPI, Vector_size_300) {
             std::vector<Point> seq_jm = JarvisMarch_seq(vec);
 
             ASSERT_EQ(par_jm.size(), seq_jm.size());
-            for (int i = 0; i < par_jm.size(); i++) {
+            for (std::vector<int>::size_type i = 0; i < par_jm.size(); i++) {
                 ASSERT_EQ(par_jm[i].x, seq_jm[i].x);
                 ASSERT_EQ(par_jm[i].y, seq_jm[i].y);
             }
@@ -111,7 +111,7 @@ TEST(Parallel_Operations_MPI, Vector_size_500) {
             std::vector<Point> seq_jm = JarvisMarch_seq(vec);
 
             ASSERT_EQ(par_jm.size(), seq_jm.size());
-            for (int i = 0; i < par_jm.size(); i++) {
+            for (std::vector<int>::size_type i = 0; i < par_jm.size(); i++) {
                 ASSERT_EQ(par_jm[i].x, seq_jm[i].x);
                 ASSERT_EQ(par_jm[i].y, seq_jm[i].y);
             }
@@ -140,7 +140,7 @@ TEST(Parallel_Operations_MPI, Vector_size_700) {
             std::vector<Point> seq_jm = JarvisMarch_seq(vec);
 
             ASSERT_EQ(par_jm.size(), seq_jm.size());
-            for (int i = 0; i < par_jm.size(); i++) {
+            for (std::vector<int>::size_type i = 0; i < par_jm.size(); i++) {
                 ASSERT_EQ(par_jm[i].x, seq_jm[i].x);
                 ASSERT_EQ(par_jm[i].y, seq_jm[i].y);
             }
@@ -169,7 +169,7 @@ TEST(Parallel_Operations_MPI, Vector_size_1000) {
             std::vector<Point> seq_jm = JarvisMarch_seq(vec);
 
             ASSERT_EQ(par_jm.size(), seq_jm.size());
-            for (int i = 0; i < par_jm.size(); i++) {
+            for (std::vector<int>::size_type i = 0; i < par_jm.size(); i++) {
                 ASSERT_EQ(par_jm[i].x, seq_jm[i].x);
                 ASSERT_EQ(par_jm[i].y, seq_jm[i].y);
             }
