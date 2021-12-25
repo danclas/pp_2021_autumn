@@ -44,7 +44,7 @@ double linelintegral(const std::vector<std::pair<double, double>>& limits) {
 
     q_local = 0.0;
     m = 100;
-    double mass[3] = { 0, 0, 0 };
+    double mass[3] = { 0, 0, 0 };  // This is comment
     for (i = 1; i <= m; i++) {
         if (xb.size() / 2 == 1) {
             x = (static_cast<double>(2 * m - 2 * i + 1) * xb[0]
