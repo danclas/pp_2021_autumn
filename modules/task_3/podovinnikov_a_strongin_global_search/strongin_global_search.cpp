@@ -14,7 +14,7 @@
 double seqStrongin(double a, double b, double (*Q)(double)) {
   double Rt, Ri;  // Перемененные для подсчета характеристики
   std::vector<double> x;   // вектор значений xk
-  std::vector<double> Qx;  // вектор значений Q(xk)
+  std::vector<double> Qx;  // вектор значений Q(xk).
 
   // Шаг 1.
   // Задаем х1 = а Q1 = Q(х1) х2 = b Q2 = Q(х2).
