@@ -6,7 +6,7 @@
 double linelintegral(const std::vector<std::pair<double, double>>& limits) {
     int i;
     int m = 0;
-    int process;
+    int process = 1;
     int process_num = 2;
     double q_global = 0.0;
     double q_local = 0.0;
@@ -19,30 +19,29 @@ double linelintegral(const std::vector<std::pair<double, double>>& limits) {
     }
     double x_max = limits[0].second;
     double x_min = limits[0].first;
-    for (process = 1; process <= process_num - 1; process++) {
-        int i = 0;
-        int c = 0;
-        for (size_t j = 0; j < limits.size(); j++) {
-            x_max = limits[j].second;
-            x_min = limits[j].first;
-            c = 0;
-            while (2 != c) {
-                if (i % 2 == 0) {
-                    xb[i] = (static_cast<double>(process_num - process)
-                        * x_min
-                    + static_cast<double>(process - 1) * x_max)
-                        / static_cast<double>(process_num - 1);
-                } else {
-                  xb[i] = (static_cast<double>(process_num - process - 1)
-                      * x_min
-                  + static_cast<double>(process)*x_max)
+    i = 0;
+    int c = 0;
+    for (size_t j = 0; j < limits.size(); j++) {
+        x_max = limits[j].second;
+        x_min = limits[j].first;
+        c = 0;
+        while (2 != c) {
+              if (i % 2 == 0) {
+                  xb[i] = (static_cast<double>(process_num - process)
+                  * x_min
+                  + static_cast<double>(process - 1) * x_max)
+                  / static_cast<double>(process_num - 1);
+              } else {
+                xb[i] = (static_cast<double>(process_num - process - 1)
+                * x_min
+                + static_cast<double>(process)*x_max)
                       / static_cast<double>(process_num - 1);
-                }
-                c++;
-                i++;
-            }
+              }
+              c++;
+              i++;
         }
     }
+
     q_local = 0.0;
     m = 100;
     double mass[3] = { 0, 0, 0 };
