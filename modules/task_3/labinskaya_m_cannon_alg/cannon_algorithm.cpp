@@ -1,7 +1,7 @@
 // Copyright 2021 Labinskaya Marina
 #include <random>
 #include <cmath>
-#include "../../../modules/task_3/labinskaya_m_mult_matr_cannon_algorithm/cannon_algorithm.h"
+#include "../../../modules/task_3/labinskaya_m_cannon_alg/cannon_algorithm.h"
 
 double* creating_zero_matrix(int size) {
     double* matr = new double[size * size];
