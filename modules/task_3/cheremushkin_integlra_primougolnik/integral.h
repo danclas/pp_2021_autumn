@@ -1,6 +1,7 @@
 // Copyright 2021 Cheremushkin Kirill
 #ifndef MODULES_TASK_3_CHEREMUSHKIN_INTEGLRA_PRIMOUGOLNIK_INTEGRAL_H_
 #define MODULES_TASK_3_CHEREMUSHKIN_INTEGLRA_PRIMOUGOLNIK_INTEGRAL_H_
+#include <iostream>
 #include <stdlib.h>
 #include <utility>
 #include <vector>
