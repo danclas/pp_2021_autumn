@@ -1,8 +1,6 @@
 // Copyright 2021 Gordey Maria
 #include <gtest/gtest.h>
-
 #include <gtest-mpi-listener.hpp>
-
 #include "./integral.h"
 
 TEST(INTEGRAL_MPI, TEST_1) {
