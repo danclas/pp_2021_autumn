@@ -17,10 +17,20 @@ double ParallelIntegral(std::function<double(const std::vector<double>)>
     std::vector<double> local_scope(dim);
     std::vector<std::pair<double, double >> ranges(dim);
     int num_elem;
+    int mrank;
 
     int numprocs, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    if (numprocs < 4) {
+        numprocs = 2 - numprocs % 2;
+        mrank = numprocs;
+    } else {
+        numprocs = 4;
+        mrank = 4;
+    }
+
+
     ranges = scope;
     num_rang = num;
     num_elem = pow(num_rang, dim - 1);
@@ -30,6 +40,7 @@ double ParallelIntegral(std::function<double(const std::vector<double>)>
         }
     }
 
+    MPI_Bcast(&mrank, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(&num_elem, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(&num_rang, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(&local_scope[0], dim, MPI_DOUBLE, 0, MPI_COMM_WORLD);
@@ -39,29 +50,31 @@ double ParallelIntegral(std::function<double(const std::vector<double>)>
     int count = num_elem / numprocs;
     std::vector<std::vector<double>> params(count);
     int tmp = 0;
-    if (rank < rem) {
-        count++;
-        tmp = rank * count;
-    } else {
-        tmp = rem * (count + 1) + (rank - rem) * count;
-    }
-
-    for (int i = 0; i < count; ++i) {
-        int number = tmp + i;
-        for (int j = 0; j < dim - 1; ++j) {
-            int cef = number % num_rang;
-            params[i].push_back(ranges[j].first
-                + cef * local_scope[j] + local_scope[j] / 2);
-            number /= num_rang;
-        }
-    }
     double sum = 0.0;
-    for (int i = 0; i < count; ++i) {
-        for (int j = 0; j < num_rang; ++j) {
-            params[i].push_back(ranges[dim - 1].first + j
-                * local_scope[dim - 1] + local_scope[dim - 1] / 2);
-            sum += func(params[i]);
-            params[i].pop_back();
+    if (rank < mrank) {
+        if (rank < rem) {
+            count++;
+            tmp = rank * count;
+        } else {
+            tmp = rem * (count + 1) + (rank - rem) * count;
+        }
+
+        for (int i = 0; i < count; ++i) {
+            int number = tmp + i;
+            for (int j = 0; j < dim - 1; ++j) {
+                int cef = number % num_rang;
+                params[i].push_back(ranges[j].first
+                    + cef * local_scope[j] + local_scope[j] / 2);
+                number /= num_rang;
+            }
+        }
+        for (int i = 0; i < count; ++i) {
+            for (int j = 0; j < num_rang; ++j) {
+                params[i].push_back(ranges[dim - 1].first + j
+                    * local_scope[dim - 1] + local_scope[dim - 1] / 2);
+                sum += func(params[i]);
+                params[i].pop_back();
+            }
         }
     }
 
