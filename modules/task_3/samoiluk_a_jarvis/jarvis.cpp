@@ -69,7 +69,8 @@ std::vector<Point> JarvisMarch_par(const std::vector<Point>& vec,
 
     int p_num;
     int extra_p;
-    if (size > vec_size) {
+    int v_size = vec_size;
+    if (size > v_size) {
         throw -1;
     } else {
         p_num = vec_size / size;
