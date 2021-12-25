@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <utility>
 #include <vector>
-
+#include <cmath>
 
 const double eps = 0.1;
 double linelintegral(const std::vector<std::pair<double, double>>& limits);
