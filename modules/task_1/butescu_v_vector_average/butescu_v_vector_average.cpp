@@ -5,6 +5,12 @@
 #include <algorithm>
 #include"./butescu_v_vector_average.h"
 
+#include <mpi.h>
+#include <vector>
+#include <random>
+#include <algorithm>
+#include"./butescu_v_vector_average.h"
+
 std::vector<int> getRandomPositiveVector(int size) {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -18,7 +24,7 @@ std::vector<int> getRandomPositiveVector(int size) {
 
 int getParallelAverage(std::vector<int> parall_vec, int size) {
     int ProcRank, ProcNum, sum_all;
-    double Paverage = 0;
+    double Paverage;
 
     if (size <= 0) {
         return 0;
@@ -27,8 +33,9 @@ int getParallelAverage(std::vector<int> parall_vec, int size) {
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
 
-    int delta = ProcNum - size % ProcNum;
-    for (int i = 0; i < delta; i++) {
+    int real_size = size;
+    int add = ProcNum - size % ProcNum;
+    for (int i = 0; i < add; i++) {
         parall_vec.push_back(0);
         size++;
     }
@@ -44,18 +51,20 @@ int getParallelAverage(std::vector<int> parall_vec, int size) {
     std::vector<int> local_vec(partSize);
     if (ProcRank == 0) {
         local_vec = std::vector<int>(parall_vec.begin(), parall_vec.begin() + partSize);
-    } else {
+    }
+    else {
         MPI_Status status;
         MPI_Recv(local_vec.data(), partSize, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
     }
 
     int sum = sum_all = 0;
-    for (int i = 0; i < partSize; i++)
+    for (int i = 0; i < partSize; i++) {
         sum += local_vec[i];
+    }
 
     MPI_Reduce(&sum, &sum_all, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-    Paverage = static_cast<double>(sum_all) / size;
 
+    Paverage = static_cast<double>(sum_all) / real_size;
     return Paverage;
 }
 

@@ -4,7 +4,6 @@
 #include "./butescu_v_vector_average.h"
 #include <gtest-mpi-listener.hpp>
 
-
 TEST(Parallel_Operations_MPI, Test_NEGATIVE_SIZE) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -14,10 +13,10 @@ TEST(Parallel_Operations_MPI, Test_NEGATIVE_SIZE) {
     if (rank == 0)
         global_vec = getRandomPositiveVector(count_size_vector);
 
-    float Savverage = getParallelAverage(global_vec, count_size_vector);
+    double Savverage = getParallelAverage(global_vec, count_size_vector);
 
     if (rank == 0) {
-        float Pavverage = getSequentialAverage(global_vec);
+        double Pavverage = getSequentialAverage(global_vec);
         ASSERT_EQ(Savverage, Pavverage);
     }
 }
@@ -31,10 +30,10 @@ TEST(Parallel_Operations_MPI, Test_0_Elements) {
     if (rank == 0)
         global_vec = getRandomPositiveVector(count_size_vector);
 
-    float Savverage = getParallelAverage(global_vec, count_size_vector);
+    double Savverage = getParallelAverage(global_vec, count_size_vector);
 
     if (rank == 0) {
-        float Pavverage = getSequentialAverage(global_vec);
+        double Pavverage = getSequentialAverage(global_vec);
         ASSERT_EQ(Savverage, Pavverage);
     }
 }
@@ -48,10 +47,10 @@ TEST(Parallel_Operations_MPI, Test_10_Elements) {
     if (rank == 0)
         global_vec = getRandomPositiveVector(count_size_vector);
 
-    float Savverage = getParallelAverage(global_vec, count_size_vector);
+    double Savverage = getParallelAverage(global_vec, count_size_vector);
 
     if (rank == 0) {
-        float Pavverage = getSequentialAverage(global_vec);
+        double Pavverage = getSequentialAverage(global_vec);
         ASSERT_EQ(Savverage, Pavverage);
     }
 }
@@ -65,10 +64,10 @@ TEST(Parallel_Operations_MPI, Test_12_Elements) {
     if (rank == 0)
         global_vec = getRandomPositiveVector(count_size_vector);
 
-    float Savverage = getParallelAverage(global_vec, count_size_vector);
+    double Savverage = getParallelAverage(global_vec, count_size_vector);
 
     if (rank == 0) {
-        float Pavverage = getSequentialAverage(global_vec);
+        double Pavverage = getSequentialAverage(global_vec);
         ASSERT_EQ(Savverage, Pavverage);
     }
 }
@@ -82,10 +81,10 @@ TEST(Parallel_Operations_MPI, Test_120_Elements) {
     if (rank == 0)
         global_vec = getRandomPositiveVector(count_size_vector);
 
-    float Savverage = getParallelAverage(global_vec, count_size_vector);
+    double Savverage = getParallelAverage(global_vec, count_size_vector);
 
     if (rank == 0) {
-        float Pavverage = getSequentialAverage(global_vec);
+        double Pavverage = getSequentialAverage(global_vec);
         ASSERT_EQ(Savverage, Pavverage);
     }
 }
