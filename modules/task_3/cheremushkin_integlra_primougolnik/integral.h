@@ -1,16 +1,9 @@
 /// Copyright 2021 Cheremushkin Kirill
 #ifndef MODULES_TASK_3_CHEREMUSHKIN_INTEGLRA_PRIMOUGOLNIK_INTEGRAL_H_
 #define MODULES_TASK_3_CHEREMUSHKIN_INTEGLRA_PRIMOUGOLNIK_INTEGRAL_H_
-# include <stdlib.h>
-# include <stdio.h>
-# include <math.h>
-# include <time.h>
-# include "mpi.h"
-# include <vector>
-# include <iostream>
-#include <cmath>
-#include <functional>
-#include <utility>
+#include <math.h>
+#include "mpi.h"
+#include "vector"
 
 const double eps = 0.01;
 double linelintegral(const std::vector<std::pair<double, double>>& limits);
