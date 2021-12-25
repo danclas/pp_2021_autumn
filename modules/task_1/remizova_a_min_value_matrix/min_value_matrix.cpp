@@ -18,7 +18,7 @@ int minElemSequentialOperations(std::vector<int> m, int cols, int rows) {
     int min_el = m[0];
 
     for (int i = 1; i < (cols * rows); i++) {
-        min_el = std::min(m[i], min_el);  //search min
+        min_el = std::min(m[i], min_el);  // search min
     }
 
     return min_el;
@@ -58,7 +58,7 @@ int minElemParallelOperations(std::vector<int> m, int cols, int rows) {
 
     if (rank != 0) {
         MPI_Status status;
-        MPI_Recv(&loc_m[start_acc], whole, 
+        MPI_Recv(&loc_m[start_acc], whole,
             MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
 
         min_el = minElemSequentialOperations(loc_m, 1, whole);
