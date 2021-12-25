@@ -38,31 +38,31 @@ double linelintegral(const std::vector<std::pair<double, double>>& limits)
 	double mass[3];
 	for (i = 1; i <= m; i++) {
 		if (xb.size() / 2 == 1) {
-			x = ((double)(2 * m - 2 * i + 1) * xb[0] + (double)(2 * i - 1) * xb[1]) / (double)(2 * m);
+			x = (static_cast<double>(2 * m - 2 * i + 1) * xb[0] + static_cast<double>(2 * i - 1) * xb[1]) / static_cast<double>(2 * m);
 			q_local = q_local + f(x);
 		}
 		if (xb.size() / 2 == 2) {
-			x = ((double)(2 * m - 2 * i + 1) * xb[0] + (double)(2 * i - 1) * xb[1]) / (double)(2 * m);
-			y = ((double)(2 * m - 2 * i + 1) * xb[2] + (double)(2 * i - 1) * xb[3]) / (double)(2 * m);
+			x = (static_cast<double>(2 * m - 2 * i + 1) * xb[0] + static_cast<double>(2 * i - 1) * xb[1]) / static_cast<double>(2 * m);
+			y = (static_cast<double>(2 * m - 2 * i + 1) * xb[2] + static_cast<double>(2 * i - 1) * xb[3]) / static_cast<double>(2 * m);
 			mass[0] = x; mass[1] = y;
 			q_local = q_local + ff(mass);
 		}
 		if (xb.size() / 2 == 3) {
-			x = ((double)(2 * m - 2 * i + 1) * xb[0] + (double)(2 * i - 1) * xb[1]) / (double)(2 * m);
-			y = ((double)(2 * m - 2 * i + 1) * xb[2] + (double)(2 * i - 1) * xb[3]) / (double)(2 * m);
-			z = ((double)(2 * m - 2 * i + 1) * xb[4] + (double)(2 * i - 1) * xb[5]) / (double)(2 * m);
+			x = (static_cast<double>(2 * m - 2 * i + 1) * xb[0] + static_cast<double>(2 * i - 1) * xb[1]) / static_cast<double>(2 * m);
+			y = (static_cast<double>(2 * m - 2 * i + 1) * xb[2] + static_cast<double>(2 * i - 1) * xb[3]) / static_cast<double>(2 * m);
+			z = (static_cast<double>(2 * m - 2 * i + 1) * xb[4] + static_cast<double>(2 * i - 1) * xb[5]) / (double)(2 * m);
 			mass[0] = x; mass[1] = y; mass[2] = z;
 			q_local = q_local + fff(mass);
 		}
 	}
 	if (xb.size() / 2 == 1) {
-		q_local = q_local * (xb[1] - xb[0]) / (double)(m);
+		q_local = q_local * (xb[1] - xb[0]) / static_cast<double>(m);
 	}
 	if (xb.size() / 2 == 2) {
-		q_local = q_local * (xb[1] - xb[0]) * (xb[3] - xb[2]) / (double)(m) / (double)(m);
+		q_local = q_local * (xb[1] - xb[0]) * (xb[3] - xb[2]) / static_cast<double>(m) / static_cast<double>(m);
 	}
 	if (xb.size() / 2 == 3) {
-		q_local = q_local * (xb[1] - xb[0]) / (double)(m) * (xb[3] - xb[2]) / (double)(m) * (xb[5] - xb[4]) / (double)(m);
+		q_local = q_local * (xb[1] - xb[0]) / static_cast<double>(m) * (xb[3] - xb[2]) / static_cast<double>(m) * (xb[5] - xb[4]) / static_cast<double>(m);
 	}
 	q_global = 0.0;
 	q_global = q_global + q_local;
@@ -106,9 +106,9 @@ double Parallelintegral(const std::vector<std::pair<double, double>>& limits) {
 				c = 0;
 				while (2 != c) {
 					if (i % 2 == 0) {
-						xb[i] = ((double)(process_num - process) * x_min + (double)(process - 1) * x_max) / (double)(process_num - 1);
+						xb[i] = (static_cast<double>(process_num - process) * x_min + static_cast<double>(process - 1) * x_max) / static_cast<double>(process_num - 1);
 					} else {
-						xb[i] = ((double)(process_num - process - 1) * x_min + (double)(process)*x_max) / (double)(process_num - 1);
+						xb[i] = (static_cast<double>(process_num - process - 1) * x_min + static_cast<double>(process)*x_max) / static_cast<double>(process_num - 1);
 					}
 					MPI_Send(&xb[i], 2, MPI_DOUBLE, target, tag, MPI_COMM_WORLD);
 					c++;
@@ -132,32 +132,32 @@ double Parallelintegral(const std::vector<std::pair<double, double>>& limits) {
 		double mass[3];
 		for (i = 1; i <= m; i++) {
 			if (xb.size() / 2 == 1) {
-				x = ((double)(2 * m - 2 * i + 1) * xb[0] + (double)(2 * i - 1) * xb[1]) / (double)(2 * m);
+				x = (static_cast<double>(2 * m - 2 * i + 1) * xb[0] + static_cast<double>(2 * i - 1) * xb[1]) / static_cast<double>(2 * m);
 				q_local = q_local + f(x);
 			}
 			if (xb.size() / 2 == 2) {
-				x = ((double)(2 * m - 2 * i + 1) * xb[0] + (double)(2 * i - 1) * xb[1]) / (double)(2 * m);
-				y = ((double)(2 * m - 2 * i + 1) * xb[2] + (double)(2 * i - 1) * xb[3]) / (double)(2 * m);
+				x = (static_cast<double>(2 * m - 2 * i + 1) * xb[0] + static_cast<double>(2 * i - 1) * xb[1]) / static_cast<double>(2 * m);
+				y = (static_cast<double>(2 * m - 2 * i + 1) * xb[2] + static_cast<double>(2 * i - 1) * xb[3]) / static_cast<double>(2 * m);
 				mass[0] = x; mass[1] = y;
 				q_local = q_local + ff(mass);
 			}
 			if (xb.size() / 2 == 3) {
-				x = ((double)(2 * m - 2 * i + 1) * xb[0] + (double)(2 * i - 1) * xb[1]) / (double)(2 * m);
-				y = ((double)(2 * m - 2 * i + 1) * xb[2] + (double)(2 * i - 1) * xb[3]) / (double)(2 * m);
-				z = ((double)(2 * m - 2 * i + 1) * xb[4] + (double)(2 * i - 1) * xb[5]) / (double)(2 * m);
+				x = (static_cast<double>(2 * m - 2 * i + 1) * xb[0] + static_cast<double>(2 * i - 1) * xb[1]) / static_cast<double>(2 * m);
+				y = (static_cast<double>(2 * m - 2 * i + 1) * xb[2] + static_cast<double>(2 * i - 1) * xb[3]) / static_cast<double>(2 * m);
+				z = (static_cast<double>(2 * m - 2 * i + 1) * xb[4] + static_cast<double>(2 * i - 1) * xb[5]) / static_cast<double>(2 * m);
 				mass[0] = x; mass[1] = y; mass[2] = z;
 				q_local = q_local + fff(mass);
 			}
 		}
 		if (xb.size() / 2 == 1) {
 
-			q_local = q_local * (xb[1] - xb[0]) / (double)(m);
+			q_local = q_local * (xb[1] - xb[0]) / static_cast<double>(m);
 		}
 		if (xb.size() / 2 == 2) {
-			q_local = q_local * (xb[1] - xb[0]) * (xb[3] - xb[2]) / (double)(m) / (double)(m);
+			q_local = q_local * (xb[1] - xb[0]) * (xb[3] - xb[2]) / static_cast<double>(m) / static_cast<double>(m);
 		}
 		if (xb.size() / 2 == 3) {
-			q_local = q_local * (xb[1] - xb[0]) / (double)(m) * (xb[3] - xb[2]) / (double)(m) * (xb[5] - xb[4]) / (double)(m);
+			q_local = q_local * (xb[1] - xb[0]) / static_cast<double>(m) * (xb[3] - xb[2]) / static_cast<double>(m) * (xb[5] - xb[4]) / static_cast<double>(m);
 		}
 		target = master;
 		tag = 2;

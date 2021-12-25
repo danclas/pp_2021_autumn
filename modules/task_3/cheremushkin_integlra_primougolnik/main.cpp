@@ -17,26 +17,10 @@ TEST(RIEMANN_SUM_MPI, TEST_Function_1) {
 
 
     if (rank == 0) {
-        start = MPI_Wtime();
         reference_result = linelintegral(limits);
-        end = MPI_Wtime();
-        stime = end - start;
-        std::cout << "Seqeuntial time: " << stime << std::endl;
-        std::cout << "Sequential result: " << reference_result << std::fixed
-            << std::endl;
-        start = MPI_Wtime();
     }
-
     double parallel_result = Parallelintegral(limits);
-
     if (rank == 0) {
-        end = MPI_Wtime();
-        double ptime = end - start;
-        std::cout << "Parallel time: " << ptime << std::endl;
-        std::cout << "Parallel result: " << parallel_result << std::fixed
-            << std::endl;
-        std::cout << "Speedup is " << stime / ptime << std::endl;
-
         ASSERT_NEAR(reference_result, parallel_result, eps);
     }
 }
