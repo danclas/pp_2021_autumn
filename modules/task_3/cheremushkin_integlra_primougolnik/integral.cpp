@@ -1,17 +1,22 @@
 // Copyright 2021 Cheremushkin Kirill
 #include <mpi.h>
+#include<iostream>
 #include <cmath>
 #include "../../../modules/task_3/cheremushkin_integlra_primougolnik/integral.h"
 double linelintegral(const std::vector<std::pair<double, double>>& limits) {
     int i;
     int m = 0;
     int process;
-    int process_num;
+    int process_num = 2;
     double q_global = 0.0;
     double q_local = 0.0;
-    MPI_Comm_size(MPI_COMM_WORLD, &process_num);
     double x, y, z;
     std::vector<double>xb(limits.size() * 2);
+    auto iter = xb.begin();
+    while (iter != xb.end()) {
+        *iter = 0;
+        ++iter;
+    }
     double x_max = limits[0].second;
     double x_min = limits[0].first;
     for (process = 1; process <= process_num - 1; process++) {
@@ -107,6 +112,11 @@ double Parallelintegral(const std::vector<std::pair<double,
     int target;
     double x, y, z;
     std::vector<double>xb(limits.size() * 2);
+    auto iter = xb.begin();
+    while (iter != xb.end()) {
+        *iter = 0;
+        ++iter;
+    }
     double x_max = limits[0].second;
     double x_min = limits[0].first;
     MPI_Comm_rank(MPI_COMM_WORLD, &process_id);
