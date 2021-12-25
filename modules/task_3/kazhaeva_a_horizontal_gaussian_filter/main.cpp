@@ -1,6 +1,5 @@
 // Copyright 2021 Kazhaeva Anastasia
 #include <gtest/gtest.h>
-#include <vector>
 #include "./horizontal_filter.h"
 #include <gtest-mpi-listener.hpp>
 

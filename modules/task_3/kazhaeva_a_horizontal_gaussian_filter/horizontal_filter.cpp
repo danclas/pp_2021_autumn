@@ -1,6 +1,5 @@
 // Copyright 2021 Kazhaeva Anastasia
 #include <mpi.h>
-#include <vector>
 #include <ctime>
 #include <string>
 #include <random>

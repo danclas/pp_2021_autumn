@@ -1,6 +1,6 @@
 // Copyright 2021 Kazhaeva Anastasia
-#ifndef MODULES_TASK_3_KAZHAEVA_A_HORIZONTAL_GAUSSIAN_FILTER_HORIZONTAL_GAUSSIAN_FILTER_H_
-#define MODULES_TASK_3_KAZHAEVA_A_HORIZONTAL_GAUSSIAN_FILTER_HORIZONTAL_GAUSSIAN_FILTER_H_
+#ifndef MODULES_TASK_3_KAZHAEVA_A_HORIZONTAL_GAUSSIAN_FILTER_HORIZONTAL_FILTER_H_
+#define MODULES_TASK_3_KAZHAEVA_A_HORIZONTAL_GAUSSIAN_FILTER_HORIZONTAL_FILTER_H_
 #include <vector>
 using std::vector;
 template <class T>
@@ -17,4 +17,4 @@ std::vector<float> Sequential(const std::vector<float>& matrix,
   const std::vector<float>& img, int weight, int height);
 std::vector<float> Parallel(const std::vector<float>& matrix,
   const std::vector<float>& img, int weight, int height);
-#endif  // MODULES_TASK_3_KAZHAEVA_A_HORIZONTAL_GAUSSIAN_FILTER_HORIZONTAL_GAUSSIAN_FILTER_H_
+#endif  // MODULES_TASK_3_KAZHAEVA_A_HORIZONTAL_GAUSSIAN_FILTER_HORIZONTAL_FILTER_H_
