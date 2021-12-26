@@ -6,7 +6,8 @@ int ProcRank;
 int pParallelPivotPos = 0;
 std::vector<int> pProcPivotIter;
 
-void out_mat(std::vector<double> mat, std::vector<double> vec) {
+void out_mat(std::vector<double> mat, std::vector<double> vec)
+{
     int line = vec.size();
     int column = mat.size() / line;
     int k = 0;
@@ -20,9 +21,9 @@ void out_mat(std::vector<double> mat, std::vector<double> vec) {
     std::cout << std::endl;
 }
 
-std::vector<double> triangulation(std::vector<double> mat, int line, std::vector<double>* vec) {
+std::vector<double> triangulation(std::vector<double> mat, int line, std::vector<double>& vec)
+{
     double numerator, denominator;
-    std::vector<double> vec1 = *vec;
     for (int i = 0; i < line - 1; i++) {
         for (int j = i + 1; j < line; j++) {
             denominator = mat[i * line + i];
@@ -30,14 +31,14 @@ std::vector<double> triangulation(std::vector<double> mat, int line, std::vector
             for (int k = 0; k < line; k++) {
                 mat[k + j * line] = mat[j * line + k] - (mat[k + i * line] * numerator / denominator);
             }
-            vec1[j] = vec1[j] - (vec1[i] * numerator / denominator);
+            vec[j] = vec[j] - (vec[i] * numerator / denominator);
         }
     }
-    *vec = vec1;
     return mat;
 }
 
-std::vector<double> triangulation_parall(std::vector<double> mat, int line, std::vector<double> vec) {
+std::vector<double> triangulation_parall(std::vector<double> mat, int line, std::vector<double>& vec)
+{
     double numerator, denominator;
     int size = pProcPivotIter.size();
     int rank1;
@@ -74,7 +75,9 @@ std::vector<double> triangulation_parall(std::vector<double> mat, int line, std:
     return mat;
 }
 
-std::vector<double> res_parall(std::vector<double> mat, int line, std::vector<double> vec, std::vector<double> vec1) {
+std::vector<double> res_parall(std::vector<double> mat, int line, std::vector<double> vec, std::vector<double> vec1)
+{
+
     int size = pProcPivotIter.size();
     int rank1;
     double g;
@@ -93,6 +96,7 @@ std::vector<double> res_parall(std::vector<double> mat, int line, std::vector<do
             MPI_MAXLOC, MPI_COMM_WORLD);
         MPI_Bcast(&g, 1, MPI_DOUBLE, rank1, MPI_COMM_WORLD);
         for (int j = size - pParallelPivotPos - 1; j >= 0; j--) {
+
             vec1[j] = vec1[j] - mat[j * line + i] * g;
         }
         vec[i] = g;
@@ -100,7 +104,8 @@ std::vector<double> res_parall(std::vector<double> mat, int line, std::vector<do
     return vec;
 }
 
-std::vector<double> getRandomVector(std::vector<double>* mat, int line) {
+std::vector<double> getRandomVector(std::vector<double>& mat, int line)
+{
     std::random_device rn;
     std::mt19937 gen(rn());
     std::uniform_int_distribution<> dist(1, 10);
@@ -109,20 +114,24 @@ std::vector<double> getRandomVector(std::vector<double>* mat, int line) {
     for (int i = 0; i < line * line; i++) {
         mat1[i] = dist(gen);
     }
-    *mat = mat1;
+    mat = mat1;
     for (int i = 0; i < line; i++) {
         vec1[i] = dist(gen);
     }
     return vec1;
 }
 
-std::vector<double> res(std::vector<double> mat, std::vector<double> vec) {
+std::vector<double> res(std::vector<double> mat, std::vector<double> vec)
+{
     int column = vec.size();
     int line = mat.size() / column;
     std::vector<double> vec1(line);
+
     int a = line - 1;
+    int k = 0;
     for (int i = line - 1; i >= 0; i--) {
         for (int j = column - 1; j >= a; j--) {
+
             if (j == a) {
                 vec[i] = vec[i] / mat[j + i * line];
             } else {
@@ -133,8 +142,11 @@ std::vector<double> res(std::vector<double> mat, std::vector<double> vec) {
     }
     return vec;
 }
-void DataDistribution(std::vector<double> mat, std::vector<double> vec, int line, std::vector<double> mat1) {
+void DataDistribution(std::vector<double>& mat, std::vector<double>& vec, int& line, std::vector<double>& mat1)
+{
+    int* pSendNum;
     int pSendInd;
+    int RestRows = line;
     int RowNum;
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Bcast(vec.data(), line, MPI_DOUBLE, 0, MPI_COMM_WORLD);
@@ -161,7 +173,8 @@ void DataDistribution(std::vector<double> mat, std::vector<double> vec, int line
     RowNum = line;
     mat1 = mat2;
 }
-std::vector<double> gaus_metod_parall(std::vector<double> mat, std::vector<double> vec) {
+std::vector<double> gaus_metod_parall(std::vector<double> mat, std::vector<double> vec)
+{
     int line = sqrt(mat.size());
     pParallelPivotPos = 0;
     int line1 = line;
@@ -175,18 +188,22 @@ std::vector<double> gaus_metod_parall(std::vector<double> mat, std::vector<doubl
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     DataDistribution(mat, vec1, line1, mat1);
     mat1 = triangulation_parall(mat1, line, vec1);
+
     MPI_Barrier(MPI_COMM_WORLD);
+
     vec = res_parall(mat1, line, vec, vec1);
+
     pProcPivotIter.clear();
     return vec;
 }
 
-std::vector<double> gaus_metod(std::vector<double> mat, std::vector<double> vec) {
+std::vector<double> gaus_metod(std::vector<double> mat, std::vector<double> vec)
+{
     int line = sqrt(mat.size());
     if (line == 0) {
         return vec;
     }
     std::vector<double> mat1;
-    mat1 = triangulation(mat, line, &vec);
+    mat1 = triangulation(mat, line, vec);
     return res(mat1, vec);
 }
