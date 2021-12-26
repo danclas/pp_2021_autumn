@@ -1,7 +1,6 @@
 // Copyright 2021 Utyugov Denis
 
 #include <gtest/gtest.h>
-#include <iostream>
 #include <vector>
 #include "./mures_algorithm.h"
 #include <gtest-mpi-listener.hpp>
