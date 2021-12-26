@@ -17,7 +17,7 @@ void get_random_matrix(int** matrix, const int row_count, const int column_count
 
 int linear_search_max_el(const int* sub_matrix, const int size) {
     if (size <= 0 )
-        return INT_MIN;
+        throw "Incorrect size of column(size=0)";
     int max_element = sub_matrix[0];
     for (int i = 0; i < size; i++) {
         if (sub_matrix[i] > max_element)
@@ -58,24 +58,15 @@ int parallel_search_max_el(int** matrix, int row_count, int column_count) {
         }
     }
     int size_recvbuf = col_for_proc * row_count;
-    if (size_recvbuf > 0) {
-        recvbuf = new int[size_recvbuf];
-    }
+    recvbuf = new int[size_recvbuf];
 
     MPI_Scatterv(reinterpret_cast<void*>(trans_matrix), sendcounts, displs,
         MPI_INT, recvbuf, col_for_proc * row_count, MPI_INT, 0, MPI_COMM_WORLD);
 
     int max_in_column = linear_search_max_el(recvbuf, size_recvbuf);
     int max_in_matrix = INT_MIN;
-    delete[] recvbuf;
-
     MPI_Reduce(reinterpret_cast<void*>(&max_in_column), reinterpret_cast<void*>(&max_in_matrix),
         1, MPI_INT, MPI_MAX, 0, MPI_COMM_WORLD);
 
-    if (proc_rank == 0) {
-        delete[] trans_matrix;
-        delete[] sendcounts;
-        delete[] displs;
-    }
     return max_in_matrix;
 }
