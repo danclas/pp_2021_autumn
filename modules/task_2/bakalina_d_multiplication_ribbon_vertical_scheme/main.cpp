@@ -50,8 +50,8 @@ TEST(Parallel_Operations_MPI, parallel_multiplication_in_matrix_with_size_10_x_1
 
 TEST(Parallel_Operations_MPI, parallel_multiplication_in_matrix_with_size_100_x_100) {
     int ProcRank = 0;
-    const int n = 25;
-    const int m = 25;
+    const int n = 20;
+    const int m = 20;
     int** mtrx = 0;
     int* v = 0;
     int* ph_res = 0;
@@ -95,8 +95,8 @@ TEST(Parallel_Operations_MPI, parallel_multiplication_in_matrix_with_size_100_x_
 
 TEST(Parallel_Operations_MPI, parallel_multiplication_in_matrix_with_size_1000_x_1000) {
     int ProcRank = 0;
-    const int n = 20;
-    const int m = 20;
+    const int n = 25;
+    const int m = 25;
     int** mtrx = 0;
     int* v = 0;
     int* ph_res = 0;
