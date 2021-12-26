@@ -77,7 +77,7 @@ TEST(Parallel_Operations_MPI, parallel_multiplication_in_matrix_with_size_100_x_
     ph_res = paral_multiply(mtrx, v, n, m);
     if (ProcRank == 0) {
         for (int i = 0; i < n; i++) {
-            if (ph_res[i] == 25)
+            if (ph_res[i] == 20)
                 flag = 1;
             else
                 flag = 0;
@@ -122,7 +122,7 @@ TEST(Parallel_Operations_MPI, parallel_multiplication_in_matrix_with_size_1000_x
     ph_res = paral_multiply(mtrx, v, n, m);
     if (ProcRank == 0) {
         for (int i = 0; i < n; i++) {
-            if (ph_res[i] == 20)
+            if (ph_res[i] == 25)
                 flag = 1;
             else
                 flag = 0;
