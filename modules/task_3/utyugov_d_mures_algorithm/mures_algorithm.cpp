@@ -6,6 +6,7 @@
 #include <queue>
 #include <string>
 #include <vector>
+#include <iostream>
 
 void add_edge(std::vector<edge>* e, int x, int y, int w) {
   edge e_n;
@@ -107,7 +108,6 @@ std::vector<std::vector<int>> mure(std::vector<edge> e, int v, int rootv) {
   }
   std::vector<std::vector<int>> roads(v, std::vector<int>());
   // roads.clear();
-
   if (rank == 0) {
     for (int i = 0; i < v; i++) {
       var = i;

@@ -1,5 +1,7 @@
 // Copyright 2021 Utyugov Denis
+
 #include <gtest/gtest.h>
+#include <iostream>
 #include <vector>
 #include "./mures_algorithm.h"
 #include <gtest-mpi-listener.hpp>
@@ -74,8 +76,11 @@ TEST(Parallel_Operations_MPI, Try_Wheel_graph) {
   for (int i = 6; i >= 0; i--) {
     b.push_back(i);
   }
+  // double start = MPI_Wtime();
   std::vector<std::vector<int>> a = mure(e, 10, 0);
+  // double end = MPI_Wtime();
   if (rank == 0) {
+    // std::cout << "TIME: " << end - start << std::endl;
     ASSERT_EQ(b, a[9]);
   }
 }
@@ -108,23 +113,19 @@ TEST(Parallel_Operations_MPI, Try_another_start) {
   }
 }
 
-TEST(Parallel_Operations_MPI, Try_graph_with_100_v) {
+TEST(Parallel_Operations_MPI, Try_graph_V_type) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   std::vector<edge> e;
-  for (int i = 0; i < 40; i++) {
+  // if (rank == 0) {
+  for (int i = 0; i < 7; i++) {
     add_edge(&e, i, i + 1, i + 1);
   }
-  std::vector<int> b;
-  for (int i = 38; i >= 0; i--) {
-    b.push_back(i);
-  }
-  std::vector<std::vector<int>> a = mure(e, 40, 0);
+
   if (rank == 0) {
-    ASSERT_EQ(b, a[39]);
+    ASSERT_NO_THROW(mure(e, 8, 0));
   }
 }
-
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   MPI_Init(&argc, &argv);
