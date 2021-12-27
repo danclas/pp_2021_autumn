@@ -7,10 +7,8 @@
 #include <utility>
 #include <vector>
 
-std::vector<double> getRandomVector(int sz);
-void oddEvenMerge(std::vector<double> *arr, int n, int lo = 0, int r = 1);
-std::vector<double> RadixSortParallel(std::vector<double> arr, int size);
-std::vector<double> merge(std::vector<std::vector<double>> vectorOfVal);
+double *getRandomVector(const int size);
+void RadixSortParallel(double **arr, int size);
 
 template <class T>
 void createCounters(T *data, uint64_t *counters, uint64_t N) {

@@ -3,82 +3,100 @@
 
 #include <mpi.h>
 
-#include <algorithm>
 #include <cmath>
 #include <ctime>
+#include <algorithm>
 #include <random>
 #include <utility>
 #include <vector>
 
-std::vector<double> getRandomVector(const int size) {
+double* getRandomVector(const int size) {
   std::mt19937 gen(time(0));
   std::uniform_real_distribution<> urd(0, 300);
-  std::vector<double> vector(size);
-  for (double& value : vector) value = urd(gen);
+  double* vec = new double[size];
+  for (int i = 0; i < size; i++) vec[i] = urd(gen);
 
-  return vector;
+  return vec;
 }
 
-void oddEvenMerge(std::vector<double>* arr, int n, int lo, int r) {
-  int m = r * 2;
+double* merge(double* vec1, double* vec2, int size1, int size2) {
+  int vec1_elem = 0, vec2_elem = 0, k = 0;
+  double* result = new double[size1 + size2];
 
-  if (m < n) {
-    oddEvenMerge(arr, n, lo, m);
-    oddEvenMerge(arr, n, lo + r, m);
-
-    for (int i = lo + r; i + r < lo + n; i += m) {
-      if ((*arr)[i] > (*arr)[i + r]) std::swap((*arr)[i], (*arr)[i + r]);
+  while (vec1_elem < size1 && vec2_elem < size2)
+    if (vec1[vec1_elem] < vec2[vec2_elem]) {
+      result[k] = vec1[vec1_elem];
+      vec1_elem++;
+      k++;
+    } else {
+      result[k] = vec2[vec2_elem];
+      vec2_elem++;
+      k++;
+    }
+  if (vec1_elem == size1) {
+    while (vec2_elem < size2) {
+      result[k] = vec2[vec2_elem];
+      vec2_elem++;
+      k++;
     }
   } else {
-    if ((*arr)[lo] > (*arr)[lo + r]) {
-      std::swap((*arr)[lo], (*arr)[lo + r]);
+    while (vec1_elem < size1) {
+      result[k] = vec1[vec1_elem];
+      vec1_elem++;
+      k++;
     }
   }
+  return result;
 }
 
-std::vector<double> merge(std::vector<std::vector<double>> vector_array) {
-  while (vector_array.size() != 1) {
-    for (int i = 0; i < static_cast<int>(vector_array.size() - 1); i++) {
-      auto temp = vector_array[i];
-      temp.insert(temp.end(), vector_array[i + 1].begin(),
-                  vector_array[i + 1].end());
-      oddEvenMerge(&temp, temp.size());
-      vector_array[i] = temp;
-      vector_array.erase(vector_array.begin() + i + 1);
-    }
-  }
-  return vector_array[0];
-}
+void RadixSortParallel(double** arr, int size_v) {
+  double* chunk;
+  double* other;
+  int m = size_v, n = size_v;
+  int rank, size;
+  int delta, step = 1;
 
-std::vector<double> RadixSortParallel(std::vector<double> vec, int size) {
-  int nproc, rank;
-  MPI_Comm_size(MPI_COMM_WORLD, &nproc);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-  int delta = size / nproc;
-  std::vector<double> local_vec, global_vec;
+  if (rank == 0) {
+    delta = n / size;
 
-  local_vec.resize(delta);
-
-  MPI_Scatter(vec.data(), delta, MPI_DOUBLE, local_vec.data(), delta,
-              MPI_DOUBLE, 0, MPI_COMM_WORLD);
-  double* data = local_vec.data();
-  floatRadixSort<double>(&data, delta);
-
-  if (rank != 0) {
-    MPI_Send(local_vec.data(), delta, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&delta, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    chunk = new double[delta];
+    MPI_Scatter(*arr, delta, MPI_DOUBLE, chunk, delta, MPI_DOUBLE, 0,
+                MPI_COMM_WORLD);
+    floatRadixSort<double>(&chunk, delta);
   } else {
-    std::vector<std::vector<double>> vec_array;
-    vec_array.push_back(local_vec);
-
-    for (int i = 1; i < nproc; ++i) {
-      MPI_Recv(local_vec.data(), delta, MPI_DOUBLE, i, 0, MPI_COMM_WORLD,
-               MPI_STATUSES_IGNORE);
-      vec_array.push_back(local_vec);
-    }
-
-    global_vec = merge(vec_array);
+    MPI_Bcast(&delta, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    chunk = new double[delta];
+    MPI_Scatter(*arr, delta, MPI_DOUBLE, chunk, delta, MPI_DOUBLE, 0,
+                MPI_COMM_WORLD);
+    floatRadixSort<double>(&chunk, delta);
   }
 
-  return global_vec;
+  while (step < size) {
+    int current_rank = rank % (2 * step);
+    if (current_rank == 0) {
+      if (rank + step < size) {
+        MPI_Recv(&m, 1, MPI_INT, rank + step, 0, MPI_COMM_WORLD,
+                 MPI_STATUSES_IGNORE);
+        other = new double[m];
+        MPI_Recv(other, m, MPI_DOUBLE, rank + step, 0, MPI_COMM_WORLD,
+                 MPI_STATUSES_IGNORE);
+        chunk = merge(chunk, other, delta, m);
+        delta = delta + m;
+        fflush(stdout);
+      }
+    } else {
+      int near = rank - step;
+      MPI_Send(&delta, 1, MPI_INT, near, 0, MPI_COMM_WORLD);
+      MPI_Send(chunk, delta, MPI_DOUBLE, near, 0, MPI_COMM_WORLD);
+      break;
+    }
+    step = step * 2;
+  }
+  if (rank == 0) {
+    *arr = chunk;
+  }
 }
