@@ -112,6 +112,28 @@ TEST(Parallel_Operations_MPI, Try_another_start) {
   }
 }
 
+TEST(Parallel_Operations_MPI, Try_one_more_graph) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  std::vector<edge> e;
+  // if (rank == 0) {
+  for (int i = 0; i < 7; i++) {
+    add_edge(&e, i, i + 1, i + 1);
+  }
+
+  add_edge(&e, 0, 7, 6);
+  add_edge(&e, 6, 7, 6);
+  add_edge(&e, 7, 3, 5);
+  std::vector<std::vector<int>> a = mure(e, 8, 0);
+
+  std::vector<int> b;
+  for (int i = 3; i >= 0; i--) {
+    b.push_back(i);
+  }
+  if (rank == 0) {
+    ASSERT_EQ(b, a[4]);
+  }
+}
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   MPI_Init(&argc, &argv);
