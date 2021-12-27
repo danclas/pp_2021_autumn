@@ -21,7 +21,7 @@ std::vector<double> RandomVector(int size) {
 }
 
 std::vector <double> Shell_sort(std::vector <double> data) {
-  size_t size = data.size();
+  int size = static_cast<int>(data.size());
   for (int d = size / 2; d > 0; d /= 2)
     for (int i = d; i < size; i++)
       for (int j = i; j >= d && data[j] < data[j - d]; j -= d)
@@ -30,7 +30,7 @@ std::vector <double> Shell_sort(std::vector <double> data) {
 }
 
 void build_network(std::vector<int> ranks) {
-  int size = ranks.size();
+  int size = static_cast<int>(ranks.size());
   if (size == 1)
     return;
 
@@ -43,7 +43,8 @@ void build_network(std::vector<int> ranks) {
 }
 
 void create_connection(std::vector<int> up_ranks, std::vector<int> down_ranks) {
-  int size = up_ranks.size() + down_ranks.size();
+  int size = static_cast<int>(up_ranks.size())
+    + static_cast<int>(down_ranks.size());
   std::vector<int> ranks(size);
 
   if (size == 1) {
@@ -56,7 +57,7 @@ void create_connection(std::vector<int> up_ranks, std::vector<int> down_ranks) {
   }
 
   std::vector<int> odd_up_ranks, even_up_ranks;
-  for (int i = 0; i < up_ranks.size(); i++) {
+  for (int i = 0; i < static_cast<int>(up_ranks.size()); i++) {
     if (i % 2 == 1)
       odd_up_ranks.push_back(up_ranks[i]);
     else
@@ -64,7 +65,7 @@ void create_connection(std::vector<int> up_ranks, std::vector<int> down_ranks) {
   }
 
   std::vector<int> odd_down_ranks, even_down_ranks;
-  for (int i = 0; i < down_ranks.size(); i++) {
+  for (int i = 0; i < static_cast<int>(down_ranks.size()); i++) {
     if (i % 2 == 1)
       odd_down_ranks.push_back(down_ranks[i]);
     else
@@ -85,7 +86,7 @@ const int Tag = 0;
 const int root = 0;
 
 std::vector<double> Parallel_sort(std::vector<double> data) {
-  int data_size = data.size();
+  int data_size = static_cast<int>(data.size());
 
   int rank, commSize;
   MPI_Comm_size(MPI_COMM_WORLD, &commSize);

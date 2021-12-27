@@ -16,7 +16,7 @@ TEST(shell_sort_batcher_merge, correctness_1) {
     std::vector <double> result = RandomVector(32);
     result = Shell_sort(result);
 
-    for (int i = 0; i < result.size() - 1; i++)
+    for (int i = 0; i < static_cast<int>(result.size()) - 1; i++)
       EXPECT_TRUE(result[i] <= result[i + 1]);
   }
 }
@@ -29,7 +29,7 @@ TEST(shell_sort_batcher_merge, correctness_2) {
   result = Parallel_sort(result);
 
   if (rank == 0) {
-    for (int i = 0; i < result.size() - 1; i++)
+    for (int i = 0; i < static_cast<int>(result.size()) - 1; i++)
       EXPECT_TRUE(result[i] <= result[i + 1]);
   }
 }
@@ -42,7 +42,7 @@ TEST(shell_sort_batcher_merge, correctness_3) {
   result = Parallel_sort(result);
 
   if (rank == 0) {
-    for (int i = 0; i < result.size() - 1; i++)
+    for (int i = 0; i < static_cast<int>(result.size()) - 1; i++)
       EXPECT_TRUE(result[i] <= result[i + 1]);
   }
 }
@@ -69,7 +69,7 @@ TEST(shell_sort_batcher_merge, time_1) {
   double seq_time = end - start;
 
   if (rank == 0) {
-    for (int i = 0; i < par_result.size(); i++)
+    for (int i = 0; i < static_cast<int>(par_result.size()); i++)
       EXPECT_DOUBLE_EQ(par_result[i], seq_result[i]);
 
     std::cout << "Parallel time: " << par_time << std::endl;
@@ -100,7 +100,7 @@ TEST(shell_sort_batcher_merge, time_2) {
   double seq_time = end - start;
 
   if (rank == 0) {
-    for (int i = 0; i < par_result.size(); i++)
+    for (int i = 0; i < static_cast<int>(par_result.size()); i++)
       EXPECT_DOUBLE_EQ(par_result[i], seq_result[i]);
 
     std::cout << "Parallel time: " << par_time << std::endl;
