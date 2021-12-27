@@ -112,19 +112,6 @@ TEST(Parallel_Operations_MPI, Try_another_start) {
   }
 }
 
-TEST(Parallel_Operations_MPI, Try_graph_V_type) {
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  std::vector<edge> e;
-  // if (rank == 0) {
-  for (int i = 0; i < 7; i++) {
-    add_edge(&e, i, i + 1, i + 1);
-  }
-
-  if (rank == 0) {
-    ASSERT_NO_THROW(mure(e, 8, 0));
-  }
-}
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   MPI_Init(&argc, &argv);
