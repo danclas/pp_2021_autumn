@@ -3,7 +3,6 @@
 #define MODULES_TASK_3_PICHUGIN_I_SPARSE_MATRIX_CCS_PICHUGIN_I_SPARSE_MATRIX_CCS_H_
 
 #include <mpi.h>
-
 #include <algorithm>
 #include <ctime>
 #include <iostream>
