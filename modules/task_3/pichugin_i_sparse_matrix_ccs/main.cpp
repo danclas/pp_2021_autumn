@@ -6,7 +6,7 @@
 #include "./pichugin_i_sparse_matrix_ccs.h"
 
 bool chech_eq(std::vector<double> v1, std::vector<double> v2) {
-  for (int i = 0; i < v1.size(); i++) {
+  for (size_t i = 0; i < v1.size(); i++) {
     if (abs(v1[i] - v2[i]) > 1e-9) {
       return false;
     }
@@ -24,6 +24,9 @@ bool test(int rows, int same, int cols) {
   if (proc_rank == 0) {
     A = gen_random_matrix(rows, same);
     B = gen_random_matrix(same, cols);
+  } else {
+    A = gen_random_matrix(1, 1);
+    B = gen_random_matrix(1, 1);
   }
 
   std::vector<double> par;
@@ -44,7 +47,7 @@ bool test(int rows, int same, int cols) {
 
     seq_time = end - start;
 
-    std::cout << "Parallel= " << par_time << "\nSequential= " << seq_time
+    std::cout << "Parallel: " << par_time << "\nSequential: " << seq_time
               << '\n';
 
     correct = chech_eq(par, seq);

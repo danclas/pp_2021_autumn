@@ -12,7 +12,7 @@ std::vector<double> gen_random_matrix_with_zeros(int r, int c) {
   for (int i = 0; i < size; i++) {
     double value = urd(gen);
 
-    if (abs(value) > 15) {
+    if (std::abs(value) > 15) {
       matrix[i] = 0;
     } else {
       matrix[i] = value;
