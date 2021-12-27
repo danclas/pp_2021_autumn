@@ -2,12 +2,10 @@
 
 #include <mpi.h>
 
-#include <iostream>
-#include <stdio.h>
+#include <math.h>
 #include <random>
 #include <vector>
 #include <ctime>
-#include "math.h"
 
 #include "../../../modules/task_3/kharunova_a_algorithm_of_strongin/algorithm_of_strongin.h"
 
@@ -59,13 +57,11 @@ double linAlgorithm(double x0, double x1, double eps) {
 }
 
 double paralAlgorithm(const double x0, const double x1, double epsilon) {
-
   double result;
   int size, rank;
   MPI_Status status;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
   if (rank == 0) {
     std::vector<double> x;
     x.push_back(x0);
@@ -74,8 +70,8 @@ double paralAlgorithm(const double x0, const double x1, double epsilon) {
     while (1) {
       std::sort(x.begin(), x.end());
 
-      int part = (int)(x.size() - 1) / size;
-      int remain = (int)(x.size() - 1) % size;
+      int part = static_cast<int>(x.size() - 1) / size;
+      int remain = static_cast<int>(x.size() - 1) % size;
 
       for (int i = 1; i < size; ++i) {
         MPI_Send(&x[0] + remain + i * part, 1, MPI_DOUBLE, i, 0,
@@ -106,7 +102,8 @@ double paralAlgorithm(const double x0, const double x1, double epsilon) {
       double tempR, R = 0;
       for (int i = 0; i < x.size() - 1; i++) {
         tempR = lipshm * (x[i + 1] - x[i]) +
-                 pow((funtion(x[i + 1]) - funtion(x[i])), 2) / (lipshm * (x[i + 1] - x[i])) -
+                 pow((funtion(x[i + 1]) -
+                 funtion(x[i])), 2) / (lipshm * (x[i + 1] - x[i])) -
                  2 * (funtion(x[i + 1]) + funtion(x[i]));
         if (tempR > R) {
           R = tempR;
@@ -121,7 +118,8 @@ double paralAlgorithm(const double x0, const double x1, double epsilon) {
       }
 
       double newX = (x[interval] + x[interval + 1]) / 2 -
-                    (funtion(x[interval + 1]) - funtion(x[interval])) / (2 * lipshm);
+                    (funtion(x[interval + 1]) -
+                    funtion(x[interval])) / (2 * lipshm);
       x.push_back(newX);
     }
   } else {
