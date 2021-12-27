@@ -44,7 +44,7 @@ bool test(int rows, int same, int cols) {
 
     seq_time = end - start;
 
-    std::cout << "Parallel: " << par_time << "\nSequential: " << seq_time
+    std::cout << "Parallel= " << par_time << "\nSequential= " << seq_time
               << '\n';
 
     correct = chech_eq(par, seq);
