@@ -1,22 +1,20 @@
 // Copyright 2021 Ivina Anastasiya
-#include "gtest-mpi-listener.hpp"
-#include "vector_out_of_order.h"
-#include "gtest/gtest.h"
-#include <mpi.h>
-
+#include <gtest/gtest.h>
+#include <vector>
+#include "./vector_out_of_order.h"
+#include <gtest-mpi-listener.hpp>
 
 TEST(out_of_order_count, vec_size_30) {
   int Rank;
   int len = 30;
-  std::vector<int> vec;
+  std::vector<int> vec(len);
   MPI_Comm_rank(MPI_COMM_WORLD, &Rank);
 
   if (Rank == 0) {
     vec = randomValues(len);
   }
-
+  MPI_Bcast(vec.data(), vec.size(), MPI_INT, 0, MPI_COMM_WORLD);
   int glCount = parallelCountViolation(vec);
-
   if (Rank == 0) {
     int count = countViolation(vec);
     ASSERT_EQ(count, glCount);
@@ -26,15 +24,14 @@ TEST(out_of_order_count, vec_size_30) {
 TEST(out_of_order_count, vec_size_3000) {
   int Rank;
   int len = 3000;
-  std::vector<int> vec;
+  std::vector<int> vec(len);
   MPI_Comm_rank(MPI_COMM_WORLD, &Rank);
 
   if (Rank == 0) {
     vec = randomValues(len);
   }
-
+  MPI_Bcast(vec.data(), vec.size(), MPI_INT, 0, MPI_COMM_WORLD);
   int glCount = parallelCountViolation(vec);
-
   if (Rank == 0) {
     int count = countViolation(vec);
     ASSERT_EQ(count, glCount);
@@ -44,15 +41,14 @@ TEST(out_of_order_count, vec_size_3000) {
 TEST(out_of_order_count, vec_size_2) {
   int Rank;
   int len = 2;
-  std::vector<int> vec;
+  std::vector<int> vec(len);
   MPI_Comm_rank(MPI_COMM_WORLD, &Rank);
 
   if (Rank == 0) {
     vec = randomValues(len);
   }
-
+  MPI_Bcast(vec.data(), vec.size(), MPI_INT, 0, MPI_COMM_WORLD);
   int glCount = parallelCountViolation(vec);
-
   if (Rank == 0) {
     int count = countViolation(vec);
     ASSERT_EQ(count, glCount);
@@ -62,17 +58,16 @@ TEST(out_of_order_count, vec_size_2) {
 TEST(out_of_order_count, vec_size_1) {
   int Rank;
   int len = 1;
-  std::vector<int> vec;
+  std::vector<int> vec(len);
   MPI_Comm_rank(MPI_COMM_WORLD, &Rank);
 
   if (Rank == 0) {
     vec = randomValues(len);
   }
-
+  MPI_Bcast(vec.data(), vec.size(), MPI_INT, 0, MPI_COMM_WORLD);
   int glCount = parallelCountViolation(vec);
-
   if (Rank == 0) {
-    int count = 0;
+    int count = countViolation(vec);
     ASSERT_EQ(count, glCount);
   }
 }
@@ -80,17 +75,16 @@ TEST(out_of_order_count, vec_size_1) {
 TEST(out_of_order_count, vec_size_0) {
   int Rank;
   int len = 0;
-  std::vector<int> vec;
+  std::vector<int> vec(len);
   MPI_Comm_rank(MPI_COMM_WORLD, &Rank);
 
   if (Rank == 0) {
     vec = randomValues(len);
   }
-
+  MPI_Bcast(vec.data(), vec.size(), MPI_INT, 0, MPI_COMM_WORLD);
   int glCount = parallelCountViolation(vec);
-
   if (Rank == 0) {
-    int count = 0;
+    int count = countViolation(vec);
     ASSERT_EQ(count, glCount);
   }
 }
@@ -98,7 +92,7 @@ TEST(out_of_order_count, vec_size_0) {
 TEST(equivalense_of_sequential_count, negative_vec) {
   int Rank;
   int len = 20;
-  std::vector<int> vec;
+  std::vector<int> vec(len);
   MPI_Comm_rank(MPI_COMM_WORLD, &Rank);
 
   if (Rank == 0) {
@@ -107,9 +101,8 @@ TEST(equivalense_of_sequential_count, negative_vec) {
       vec[i] = -vec[i];
     }
   }
-
+  MPI_Bcast(vec.data(), vec.size(), MPI_INT, 0, MPI_COMM_WORLD);
   int glCount = parallelCountViolation(vec);
-
   if (Rank == 0) {
     int count = countViolation(vec);
     ASSERT_EQ(count, glCount);

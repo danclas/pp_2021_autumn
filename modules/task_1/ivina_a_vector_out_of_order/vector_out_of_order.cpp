@@ -1,10 +1,8 @@
 // Copyright 2021 Ivina Anastasiya
-
-#include "vector_out_of_order.h"
 #include <mpi.h>
-#include <random>
-#include <stdio.h>
 #include <vector>
+#include <random>
+#include "../../../modules/task_1/ivina_a_vector_out_of_order/vector_out_of_order.h"
 
 
 std::vector<int> randomValues(int len) {
@@ -34,7 +32,7 @@ int countViolation(const std::vector<int> &vec) {
 
 int parallelCountViolation(const std::vector<int> &vec) {
   int Size = 0, Rank = 0;
-  int count = 0, glcount = 0;
+  int count = 0;
 
   MPI_Comm_size(MPI_COMM_WORLD, &Size);
   MPI_Comm_rank(MPI_COMM_WORLD, &Rank);
@@ -70,8 +68,8 @@ int parallelCountViolation(const std::vector<int> &vec) {
                dataReceived.data(), block, MPI_INT, 0, MPI_COMM_WORLD);
 
   count = countViolation(dataReceived);
-
-  MPI_Reduce(&count, &glcount, 1, MPI_INT, MPI_MIN, 0, MPI_COMM_WORLD);
+  int glcount = 0;
+  MPI_Reduce(&count, &glcount, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
   return glcount;
 }
