@@ -6,6 +6,7 @@
 #include <random>
 #include <vector>
 #include <ctime>
+#include <algorithm>
 
 #include "../../../modules/task_3/kharunova_a_algorithm_of_strongin/algorithm_of_strongin.h"
 
