@@ -26,10 +26,10 @@ double linAlgorithm(double x0, double x1, double eps) {
   }
 
   while (1) {
-    for (int i = 0; i < x.size(); i++) {
+    for (int i = 0; i < static_cast<int>(x.size()); i++) {
       y.push_back(funtion(x[i]));
     }
-    for (int i = 0; i < x.size() - 1; i++) {
+    for (int i = 0; i < static_cast<int>(x.size()) - 1; i++) {
       double lipsh = std::abs((y[i + 1] - y[i]) / (x[i + 1] - x[i]));
       if (lipsh > lipshM) {
         lipshM = lipsh;
@@ -51,13 +51,12 @@ double linAlgorithm(double x0, double x1, double eps) {
     newX = (x[interval + 1] - x[interval]) / 2 + x[interval]
                      + (y[interval + 1] - y[interval]) / (2 * lipshm);
     x.push_back(newX);
-    std::sort(x.begin(), x.end());
+    sort(x.begin(), x.end());
     y.clear();
   }
 }
 
-double paralAlgorithm(const double x0, const double x1, double epsilon) {
-  double result;
+double paralAlgorithm(const double x0, const double x1, double eps) {
   int size, rank;
   MPI_Status status;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -68,7 +67,7 @@ double paralAlgorithm(const double x0, const double x1, double epsilon) {
     x.push_back(x1);
 
     while (1) {
-      std::sort(x.begin(), x.end());
+      sort(x.begin(), x.end());
 
       int part = static_cast<int>(x.size() - 1) / size;
       int remain = static_cast<int>(x.size() - 1) % size;
@@ -100,7 +99,7 @@ double paralAlgorithm(const double x0, const double x1, double epsilon) {
 
       int interval = 0;
       double tempR, R = 0;
-      for (int i = 0; i < x.size() - 1; i++) {
+      for (int i = 0; i < static_cast<int>(x.size()) - 1; i++) {
         tempR = lipshm * (x[i + 1] - x[i]) +
                  pow((funtion(x[i + 1]) -
                  funtion(x[i])), 2) / (lipshm * (x[i + 1] - x[i])) -
@@ -111,7 +110,7 @@ double paralAlgorithm(const double x0, const double x1, double epsilon) {
         }
       }
 
-      if (x[interval + 1] - x[interval] <= epsilon) {
+      if (x[interval + 1] - x[interval] <= eps) {
         for (int i = 1; i < size; ++i)
           MPI_Send(&x[0], 1, MPI_DOUBLE, i, 1, MPI_COMM_WORLD);
         return x[interval + 1];
@@ -128,16 +127,16 @@ double paralAlgorithm(const double x0, const double x1, double epsilon) {
       MPI_Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
       MPI_Get_count(&status, MPI_DOUBLE, &part);
 
-      std::vector<double> X(part + 1);
-      MPI_Recv(&X[0], 1, MPI_DOUBLE, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+      std::vector<double> x(part + 1);
+      MPI_Recv(&x[0], 1, MPI_DOUBLE, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
 
       if (status.MPI_TAG == 1) return 0;
 
       double lipshM = 0, lipshm = 1.0, lipsh;
       if (part != 0) {
-        for (int i = 0; i < static_cast<int>(X.size()) - 1; ++i) {
-          lipsh = (std::abs(funtion(X.at(i + 1)) - funtion(X.at(i)))) /
-                        (X.at(i + 1) - X.at(i));
+        for (int i = 0; i < static_cast<int>(x.size()) - 1; ++i) {
+          lipsh = (std::abs(funtion(x[i + 1]) - funtion(x[i]))) /
+                        (x[i + 1] - x[i]);
           if (lipsh > lipshM) {
             lipshM = lipsh;
             lipshm = 2 * lipshM;
