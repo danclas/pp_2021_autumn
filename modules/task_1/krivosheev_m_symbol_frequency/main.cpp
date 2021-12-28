@@ -24,7 +24,6 @@ std::string makeRandomString(int size = 10) {
   return S;
 }
 
-
 TEST(Non_Parallel_Operation, non_parallel_test_func) {
   std::string s = "aaabab";
   int my_rank;
