@@ -56,10 +56,8 @@ int Gather(void* sbuf, int scount, MPI_Datatype stype,
                     rtype, i, 0, comm, &status);
             }
         }
-    }
-    else {
+    } else {
         MPI_Send(sbuf, scount, stype, root, 0, comm);
     }
     return MPI_SUCCESS;
 }
-
