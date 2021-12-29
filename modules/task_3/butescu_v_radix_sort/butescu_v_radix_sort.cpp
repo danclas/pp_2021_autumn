@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <limits>
 #include <utility>
-#include "../../../modules/task_3/butescu_v_radix_sort.h"
+#include "../../../modules/task_3/butescu_v_radix_sort/butescu_v_radix_sort.h"
 
 std::vector<double> Get_Random_Vector(int size) {
     std::random_device rd;
