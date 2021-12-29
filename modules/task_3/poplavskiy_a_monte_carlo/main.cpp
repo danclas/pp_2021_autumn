@@ -28,7 +28,7 @@ double f4(vector<double> vec) {
   double x = vec[0];
   double y = vec[1];
   double z = vec[2];
-  return tan(x * x * x) - y * y + sin(y)-z;
+  return tan(x * x * x) - y * y + sin(y) - z;
 }
 
 double f5(vector<double> vec) {
