@@ -29,16 +29,11 @@ TEST(reduse_test, test_BIG_FLOAT_MAX) {
 
   double end = MPI_Wtime();
 
-  /*std::cout << "Time of reduce work: " << (end - start) << " sec " << std::endl;*/
-
   double start2 = MPI_Wtime();
 
   MPI_Reduce(data, res, n, MPI_FLOAT, MPI_MAX, 0, MPI_COMM_WORLD);
 
   double end2 = MPI_Wtime();
-
-  /*std::cout << "Time of MPI_reduce work : " << (end2 - start2) << " sec "
-            << std::endl;*/
 
   if (rank == 0) {
     for (size_t i = 0; i < n; ++i) {
