@@ -7,7 +7,7 @@
 
 std::vector<double> getRandomVector(int sz);
 
-std::vector<double> ParallelRadixSort(std::vector<double> global_vec,
+std::vector<double> ParallelRadixSort(const std::vector<double> global_vec,
               const std::vector<double>::size_type count_size_vector);
 std::vector<double> SequentialRadixSort(const std::vector<double>& vec);
 

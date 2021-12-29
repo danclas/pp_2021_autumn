@@ -44,7 +44,7 @@ std::vector<double> SequentialRadixSort(const std::vector<double>& vec) {
             vect_queue[calcValueByRank(*it, i)].push(*it);
         }
         int currentQueue = 0;
-        for (int j = 0; j < resultVec.size();) {
+        for (std::vector<double>::size_type j = 0; j < resultVec.size();) {
             while (!vect_queue[currentQueue].empty()) {
                 resultVec[j] = vect_queue[currentQueue].front();
                 vect_queue[currentQueue].pop();
@@ -74,10 +74,14 @@ std::vector<double> simpleMerge(const std::vector<double>& first_vec,
     }
 
     while (firstIt < first_vec.size()) {
-        result_vec[resultIt++] = first_vec[firstIt++];
+        result_vec[resultIt] = first_vec[firstIt];
+        resultIt++;
+        firstIt++;
     }
     while (secondIt < second_vec.size()) {
-        result_vec[resultIt++] = second_vec[secondIt++];
+        result_vec[resultIt] = second_vec[secondIt];
+        resultIt++;
+        secondIt++;
     }
 
     return result_vec;
