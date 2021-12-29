@@ -66,7 +66,7 @@ TEST(Monte_Carlo_MPI, Test_Function_2) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   std::vector<array<double, 2>> a_b = {{0.0, 4.0}, {1.5, 2.5}};
-  int points = 10000;
+  int points = 100000;
 
   double start = MPI_Wtime();
   double parallel_result = getParallelIntegral(a_b, points, f2);
@@ -90,7 +90,7 @@ TEST(Monte_Carlo_MPI, Test_Function_3) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   std::vector<array<double, 2>> a_b = {{0.0, 4.0}, {1.5, 2.5}, {1.0, 5.0}};
-  int points = 10000;
+  int points = 100000;
 
   double start = MPI_Wtime();
   double parallel_result = getParallelIntegral(a_b, points, f3);
@@ -114,7 +114,7 @@ TEST(Monte_Carlo_MPI, Test_Function_4) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   std::vector<array<double, 2>> a_b = {{0.0, 4.0}, {1.5, 2.5}, {1.0, 5.0}};
-  int points = 10000;
+  int points = 100000;
 
   double start = MPI_Wtime();
   double parallel_result = getParallelIntegral(a_b, points, f4);
