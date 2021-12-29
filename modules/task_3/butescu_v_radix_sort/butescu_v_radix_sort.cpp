@@ -30,16 +30,13 @@ std::vector<double> mergeVectors(std::vector<double> vec1, std::vector<double> v
     for (int r = 0; r < static_cast<int>(res.size()); r++) {
         if (i > static_cast<int>(vec1.size()) - 1) {
             res[r] = vec2[j++];
-        }
-        else {
+        } else {
             if (j > static_cast<int>(vec2.size()) - 1) {
                 res[r] = vec1[i++];
-            }
-            else {
+            } else {
                 if (vec1[i] < vec2[j]) {
                     res[r] = vec1[i++];
-                }
-                else {
+                } else {
                     res[r] = vec2[j++];
                 }
             }
@@ -151,8 +148,7 @@ std::vector<double> Parallel_Radix_Sort(const std::vector<double>& vec) {
 
     if (ProcRank != 0) {
         MPI_Send(recvbuf.data(), count, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
-    }
-    else {
+    } else {
         result = recvbuf;
         MPI_Status status;
         for (int i = 1; i < ProcNum; i++) {
