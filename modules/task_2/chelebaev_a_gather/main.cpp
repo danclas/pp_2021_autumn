@@ -21,10 +21,10 @@ TEST(Parallel_Operations_MPI, Test_Gather_INT) {
         std::random_device dev;
         std::mt19937 gen(dev());
         root = gen() % tasks;
-        for (int i = 0; i < 20; i++) {
+        /*for (int i = 0; i < 20; i++) {
             std::cout << input_vec[i] << " ";
         }
-        std::cout << std::endl;
+        std::cout << std::endl;*/
     }
     MPI_Bcast(&root, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Scatter(input_vec.data(), range, MPI_INT, local.data(), range, MPI_INT, 0, MPI_COMM_WORLD);
@@ -69,10 +69,10 @@ TEST(Parallel_Operations_MPI, Test_Gather_FLOAT) {
         std::random_device dev;
         std::mt19937 gen(dev());
         root = gen() % tasks;
-        for (int i = 0; i < 20; i++) {
+        /*for (int i = 0; i < 20; i++) {
             std::cout << input_vec[i] << " ";
         }
-        std::cout << std::endl;
+        std::cout << std::endl;*/
     }
     MPI_Bcast(&root, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Scatter(input_vec.data(), range, MPI_FLOAT, local.data(), range, MPI_FLOAT, 0, MPI_COMM_WORLD);
@@ -117,10 +117,10 @@ TEST(Parallel_Operations_MPI, Test_Gather_DOUBLE) {
         std::random_device dev;
         std::mt19937 gen(dev());
         root = gen() % tasks;
-        for (int i = 0; i < 20; i++) {
+        /*for (int i = 0; i < 20; i++) {
             std::cout << input_vec[i] << " ";
         }
-        std::cout << std::endl;
+        std::cout << std::endl;*/
     }
     MPI_Bcast(&root, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Scatter(input_vec.data(), range, MPI_DOUBLE, local.data(), range, MPI_DOUBLE, 0, MPI_COMM_WORLD);
@@ -166,10 +166,10 @@ TEST(Parallel_Operations_MPI, Test_Gather_CHAR) {
         std::random_device dev;
         std::mt19937 gen(dev());
         root = gen() % tasks;
-        for (int i = 0; i < 20; i++) {
+        /*for (int i = 0; i < 20; i++) {
             std::cout << input_vec[i] << " ";
         }
-        std::cout << std::endl;
+        std::cout << std::endl;*/
     }
     MPI_Bcast(&root, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Scatter(input_vec.data(), range, MPI_CHAR, local.data(), range, MPI_CHAR, 0, MPI_COMM_WORLD);
@@ -214,10 +214,10 @@ TEST(Parallel_Operations_MPI, Big_Data_Test) {
         std::random_device dev;
         std::mt19937 gen(dev());
         root = gen() % tasks;
-        for (int i = 0; i < datasize * tasks; i++) {
+        /*for (int i = 0; i < datasize * tasks; i++) {
             std::cout << vec[i] << " ";
         }
-        std::cout << std::endl;
+        std::cout << std::endl;*/
     }
     MPI_Bcast(&root, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Scatter(vec.data(), datasize, MPI_INT, local.data(), datasize, MPI_INT, 0, MPI_COMM_WORLD);
