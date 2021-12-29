@@ -23,17 +23,9 @@ TEST(reduse_test, test_BIG_FLOAT_MAX) {
     myRes = new float[n];
   }
 
-  double start = MPI_Wtime();
-
   reduce(data, myRes, n, MPI_FLOAT, MPI_MAX, 0, MPI_COMM_WORLD);
 
-  double end = MPI_Wtime();
-
-  double start2 = MPI_Wtime();
-
   MPI_Reduce(data, res, n, MPI_FLOAT, MPI_MAX, 0, MPI_COMM_WORLD);
-
-  double end2 = MPI_Wtime();
 
   if (rank == 0) {
     for (size_t i = 0; i < n; ++i) {
