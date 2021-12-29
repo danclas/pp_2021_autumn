@@ -96,7 +96,7 @@ std::vector<double> parallSeidel(const std::vector<std::vector<double>> &a,
     do {
       p = x;
       double norm = 0;
-      if (rank != 0) {
+      if ((size == 1) || (rank != 0)) {
         for (int i = 0; i < n; i++) {
           double sum = 0;
           for (int j = 0; j < n; j++) {
@@ -106,10 +106,12 @@ std::vector<double> parallSeidel(const std::vector<std::vector<double>> &a,
           }
           x[i] = (b[i] - sum) / a[i][i];
           norm += (x[i] - p[i]) * (x[i] - p[i]);
-          double buff[2];
-          buff[0] = i;
-          buff[1] = x[i];
-          MPI_Send(buff, 2, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
+          if (rank != 0) {
+            double buff[2];
+            buff[0] = i;
+            buff[1] = x[i];
+            MPI_Send(buff, 2, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
+		      }
         }
       } else {
         for (int j = 0; j < n * (size - 1); j++) {
