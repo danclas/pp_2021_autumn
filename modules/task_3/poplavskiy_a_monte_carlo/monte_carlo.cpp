@@ -24,7 +24,6 @@ double getSequentialIntegral(vector<array<double, 2>> a_b, int points,
   result /= points;
   return result;
 }
-
 double getParallelIntegral(vector<array<double, 2>> a_b, int points_num,
                            function<double(vector<double>)> f) {
   int rank;
