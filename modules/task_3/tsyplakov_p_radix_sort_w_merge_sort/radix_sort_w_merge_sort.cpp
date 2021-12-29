@@ -2,9 +2,7 @@
 #include <mpi.h>
 #include <vector>
 #include <random>
-#include <algorithm>
 #include <queue>
-#include <iostream>
 #include <cmath>
 #include "../../../modules/task_3/tsyplakov_p_radix_sort_w_merge_sort/radix_sort_w_merge_sort.h"
 
@@ -87,7 +85,7 @@ std::vector<double> simpleMerge(const std::vector<double>& first_vec,
     return result_vec;
 }
 
-std::vector<double> ParallelRadixSort(const std::vector<double> global_vec,
+std::vector<double> ParallelRadixSort(const std::vector<double>& global_vec,
               const std::vector<double>::size_type count_size_vector) {
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
