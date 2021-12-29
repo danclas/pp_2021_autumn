@@ -1,4 +1,4 @@
-﻿// Copyright 2021 Butescu Vladimir
+﻿  // Copyright 2021 Butescu Vladimir
 #include <gtest/gtest.h>
 #include <random>
 #include <ctime>
