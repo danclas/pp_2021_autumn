@@ -7,7 +7,8 @@
 #include <random>
 #include <set>
 
-threeRes calc(double a, double b, double x, double (*function)(double x, double y), double eps, int iterations_max, double r) {
+threeRes calc(double a, double b, double x, double (*function)(double x, double y),
+    double eps, int iterations_max, double r) {
     bool flag = false;
     std::set<oneElemDim> set;
     threeRes result;
