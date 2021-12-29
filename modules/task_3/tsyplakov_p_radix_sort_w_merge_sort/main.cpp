@@ -13,7 +13,8 @@ TEST(Parallel_Operations_MPI, Test_Sort_1) {
     if (rank == 0) {
         global_vec = getRandomVector(count_size_vector);
     }
-    std::vector<double> global_vecc = ParallelRadixSort(global_vec, count_size_vector);
+    std::vector<double> global_vecc = ParallelRadixSort(global_vec,
+                                                count_size_vector);
 
     if (rank == 0) {
         std::vector<double> reference_vec = SequentialRadixSort(global_vec);
@@ -30,7 +31,8 @@ TEST(Parallel_Operations_MPI, Test_Sort_2) {
     if (rank == 0) {
         global_vec = getRandomVector(count_size_vector);
     }
-    std::vector<double> global_vecc = ParallelRadixSort(global_vec, count_size_vector);
+    std::vector<double> global_vecc = ParallelRadixSort(global_vec,
+                                                count_size_vector);
 
     if (rank == 0) {
         std::vector<double> reference_vec = SequentialRadixSort(global_vec);
@@ -47,7 +49,8 @@ TEST(Parallel_Operations_MPI, Test_Sort_3) {
     if (rank == 0) {
         global_vec = getRandomVector(count_size_vector);
     }
-    std::vector<double> global_vecc = ParallelRadixSort(global_vec, count_size_vector);
+    std::vector<double> global_vecc = ParallelRadixSort(global_vec,
+                                                count_size_vector);
 
     if (rank == 0) {
         std::vector<double> reference_vec = SequentialRadixSort(global_vec);
@@ -64,7 +67,8 @@ TEST(Parallel_Operations_MPI, Test_Sort_4) {
     if (rank == 0) {
         global_vec = getRandomVector(count_size_vector);
     }
-    std::vector<double> global_vecc = ParallelRadixSort(global_vec, count_size_vector);
+    std::vector<double> global_vecc = ParallelRadixSort(global_vec,
+                                                count_size_vector);
 
     if (rank == 0) {
         std::vector<double> reference_vec = SequentialRadixSort(global_vec);
@@ -81,7 +85,8 @@ TEST(Parallel_Operations_MPI, Test_Sort_5) {
     if (rank == 0) {
         global_vec = getRandomVector(count_size_vector);
     }
-    std::vector<double> global_vecc = ParallelRadixSort(global_vec, count_size_vector);
+    std::vector<double> global_vecc = ParallelRadixSort(global_vec,
+                                                count_size_vector);
 
     if (rank == 0) {
         std::vector<double> reference_vec = SequentialRadixSort(global_vec);
