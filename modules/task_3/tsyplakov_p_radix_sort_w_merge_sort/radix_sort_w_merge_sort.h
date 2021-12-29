@@ -2,6 +2,8 @@
 #ifndef MODULES_TASK_3_TSYPLAKOV_P_RADIX_SORT_W_MERGE_SORT_RADIX_SORT_W_MERGE_SORT_H_
 #define MODULES_TASK_3_TSYPLAKOV_P_RADIX_SORT_W_MERGE_SORT_RADIX_SORT_W_MERGE_SORT_H_
 
+#include <vector>
+
 std::vector<double> getRandomVector(int sz);
 
 std::vector<double> ParallelRadixSort(const std::vector<double>& global_vec,

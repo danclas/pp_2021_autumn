@@ -2,6 +2,7 @@
 #include <mpi.h>
 #include <vector>
 #include <random>
+#include <algorithm>
 #include <queue>
 #include <cmath>
 #include "../../../modules/task_3/tsyplakov_p_radix_sort_w_merge_sort/radix_sort_w_merge_sort.h"
