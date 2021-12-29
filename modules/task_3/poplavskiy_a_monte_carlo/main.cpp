@@ -58,7 +58,7 @@ TEST(Monte_Carlo_MPI, Test_Function_1) {
 
     std::cout << "S: " << stime << " P: " << ptime
               << " Speedup: " << stime / ptime << std::endl;
-    ASSERT_NEAR(reference_result, parallel_result, 1);
+    ASSERT_NEAR(reference_result, parallel_result, 10);
   }
 }
 
@@ -82,7 +82,7 @@ TEST(Monte_Carlo_MPI, Test_Function_2) {
 
     std::cout << "S: " << stime << " P: " << ptime
               << " Speedup: " << stime / ptime << std::endl;
-    ASSERT_NEAR(reference_result, parallel_result, 1);
+    ASSERT_NEAR(reference_result, parallel_result, 10);
   }
 }
 
@@ -106,7 +106,7 @@ TEST(Monte_Carlo_MPI, Test_Function_3) {
 
     std::cout << "S: " << stime << " P: " << ptime
               << " Speedup: " << stime / ptime << std::endl;
-    ASSERT_NEAR(reference_result, parallel_result, 1);
+    ASSERT_NEAR(reference_result, parallel_result, 10);
   }
 }
 
@@ -130,7 +130,7 @@ TEST(Monte_Carlo_MPI, Test_Function_4) {
 
     std::cout << "S: " << stime << " P: " << ptime
               << " Speedup: " << stime / ptime << std::endl;
-    ASSERT_NEAR(reference_result, parallel_result, 1);
+    ASSERT_NEAR(reference_result, parallel_result, 10);
   }
 }
 
@@ -154,7 +154,7 @@ TEST(Monte_Carlo_MPI, Test_Function_5) {
 
     std::cout << "S: " << stime << " P: " << ptime
               << " Speedup: " << stime / ptime << std::endl;
-    ASSERT_NEAR(reference_result, parallel_result, 1);
+    ASSERT_NEAR(reference_result, parallel_result, 10);
   }
 }
 
