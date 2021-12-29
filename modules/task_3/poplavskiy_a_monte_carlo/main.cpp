@@ -28,7 +28,7 @@ double f4(vector<double> vec) {
   double x = vec[0];
   double y = vec[1];
   double z = vec[2];
-  return tan(x * x * x) - y * y + sin(y);
+  return tan(x * x * x) - y * y + sin(y)-z;
 }
 
 double f5(vector<double> vec) {
@@ -58,6 +58,7 @@ TEST(Monte_Carlo_MPI, Test_Function_1) {
 
     std::cout << "S: " << stime << " P: " << ptime
               << " Speedup: " << stime / ptime << std::endl;
+    ASSERT_NEAR(reference_result, parallel_result, 0.01);
   }
 }
 
@@ -81,6 +82,7 @@ TEST(Monte_Carlo_MPI, Test_Function_2) {
 
     std::cout << "S: " << stime << " P: " << ptime
               << " Speedup: " << stime / ptime << std::endl;
+    ASSERT_NEAR(reference_result, parallel_result, 0.01);
   }
 }
 
@@ -104,6 +106,7 @@ TEST(Monte_Carlo_MPI, Test_Function_3) {
 
     std::cout << "S: " << stime << " P: " << ptime
               << " Speedup: " << stime / ptime << std::endl;
+    ASSERT_NEAR(reference_result, parallel_result, 0.01);
   }
 }
 
@@ -127,6 +130,7 @@ TEST(Monte_Carlo_MPI, Test_Function_4) {
 
     std::cout << "S: " << stime << " P: " << ptime
               << " Speedup: " << stime / ptime << std::endl;
+    ASSERT_NEAR(reference_result, parallel_result, 0.01);
   }
 }
 
@@ -134,7 +138,7 @@ TEST(Monte_Carlo_MPI, Test_Function_5) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   std::vector<array<double, 2>> a_b = {{0.0, 4.0}, {1.5, 2.5}, {1.0, 5.0}};
-  int points = 10000;
+  int points = 100000;
 
   double start = MPI_Wtime();
   double parallel_result = getParallelIntegral(a_b, points, f5);
@@ -150,6 +154,7 @@ TEST(Monte_Carlo_MPI, Test_Function_5) {
 
     std::cout << "S: " << stime << " P: " << ptime
               << " Speedup: " << stime / ptime << std::endl;
+    ASSERT_NEAR(reference_result, parallel_result, 1);
   }
 }
 
