@@ -11,7 +11,6 @@ TEST(alg_Seidel, constnum3) {
   std::vector<double> b;
   double eps = 0.01;
   int n = 3;
-  double diag = randomValue(101, 150);
   std::vector<double> buff_to_send;
   buff_to_send.resize(n * n);
   b.resize(n);

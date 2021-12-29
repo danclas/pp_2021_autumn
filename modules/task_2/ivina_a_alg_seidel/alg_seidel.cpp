@@ -93,7 +93,6 @@ std::vector<double> parallSeidel(const std::vector<std::vector<double>> &a,
   };
   if (is_diagonal()) {
     double fullSum = 0;
-    int num = (n / size) * (size - 1) + ((n - (n / size) * size) - 1);
     do {
       p = x;
       double norm = 0;
