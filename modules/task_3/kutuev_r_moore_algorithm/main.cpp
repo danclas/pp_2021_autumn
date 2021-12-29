@@ -30,39 +30,62 @@ TEST(Moore_algorithm, Moore_parallel_ok) {
   ASSERT_NO_THROW(moore_parallel(graph, vertex));
 }
 
-TEST(Moore_algorithm, Graph_3) {
+TEST(Moore_algorithm, Graph_400) {
   int ProcRank;
-  int vertex = 3;
+  int vertex = 400;
+  double t1, t2, t3, t4;
   std::vector<int> graph(vertex * vertex);
   MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
   if (ProcRank == 0) {
     graph = random(vertex);
   }
   MPI_Bcast(graph.data(), vertex * vertex, MPI_INT, 0, MPI_COMM_WORLD);
+  t1 = MPI_Wtime();
   std::vector<int> global_marks = moore_parallel(graph, vertex);
-
+  MPI_Barrier(MPI_COMM_WORLD);
   if (ProcRank == 0) {
+    t2 = MPI_Wtime();
     std::vector<int> marks(vertex);
+    t3 = MPI_Wtime();
     marks = moore_algorithm(graph, vertex);
+    t4 = MPI_Wtime();
+    printf("%lf\n", t2 - t1);
+    fflush(stdout);
+    printf("%lf\n", t4 - t3);
+    fflush(stdout);
+    printf("%lf\n", (t4 - t3) / (t2 - t1));
+    fflush(stdout);
     for (int i = 0; i < vertex; i++) {
       ASSERT_EQ(global_marks[i], marks[i]);
     }
   }
 }
 
-TEST(Moore_algorithm, Graph_100) {
+TEST(Moore_algorithm, Graph_600) {
   int ProcRank;
-  int vertex = 100;
+  int vertex = 600;
+  double t1, t2, t3, t4;
   std::vector<int> graph(vertex * vertex);
   MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
   if (ProcRank == 0) {
     graph = random(vertex);
   }
   MPI_Bcast(graph.data(), vertex * vertex, MPI_INT, 0, MPI_COMM_WORLD);
+  t1 = MPI_Wtime();
   std::vector<int> global_marks = moore_parallel(graph, vertex);
+  MPI_Barrier(MPI_COMM_WORLD);
   if (ProcRank == 0) {
+    t2 = MPI_Wtime();
     std::vector<int> marks(vertex);
+    t3 = MPI_Wtime();
     marks = moore_algorithm(graph, vertex);
+    t4 = MPI_Wtime();
+    printf("%lf\n", t2 - t1);
+    fflush(stdout);
+    printf("%lf\n", t4 - t3);
+    fflush(stdout);
+    printf("%lf\n", (t4 - t3) / (t2 - t1));
+    fflush(stdout);
     for (int i = 0; i < vertex; i++) {
       ASSERT_EQ(global_marks[i], marks[i]);
     }
