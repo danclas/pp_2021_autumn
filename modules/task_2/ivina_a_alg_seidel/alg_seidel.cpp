@@ -91,34 +91,33 @@ std::vector<double> parallSeidel(const std::vector<std::vector<double>> &a,
     }
     return is_diag;
   };
-
   if (is_diagonal()) {
     double fullSum = 0;
     int num = (n / size) * (size - 1) + ((n - (n / size) * size) - 1);
     do {
       p = x;
       double norm = 0;
-      for (int i = rank; i < n; i += size) {
-        double sum = 0;
-        for (int j = 0; j < n; j++) {
-          if (j != i) {
-            sum += (a[i][j] * x[j]);
+      if (rank != 0) {
+        for (int i = 0; i < n; i++) {
+          double sum = 0;
+          for (int j = 0; j < n; j++) {
+            if (j != i) {
+              sum += (a[i][j] * x[j]);
+            }
           }
-        }
-        x[i] = (b[i] - sum) / a[i][i];
-        norm += (x[i] - p[i]) * (x[i] - p[i]);
-        if (rank == 0) {
-          for (int j = 0; j < num; j++) {
-            double buff[2];
-            MPI_Recv(buff, 2, MPI_DOUBLE, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD,
-                     MPI_STATUSES_IGNORE);
-            x[static_cast<size_t>(buff[0])] = buff[1];
-          }
-        } else {
+          x[i] = (b[i] - sum) / a[i][i];
+          norm += (x[i] - p[i]) * (x[i] - p[i]);
           double buff[2];
           buff[0] = i;
           buff[1] = x[i];
           MPI_Send(buff, 2, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
+        }
+      } else {
+        for (int j = 0; j < n * (size - 1); j++) {
+          double buff[2];
+          MPI_Recv(buff, 2, MPI_DOUBLE, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD,
+                   MPI_STATUSES_IGNORE);
+          x[static_cast<size_t>(buff[0])] = buff[1];
         }
       }
       MPI_Reduce(&norm, &fullSum, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);

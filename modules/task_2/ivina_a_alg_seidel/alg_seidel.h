@@ -2,10 +2,7 @@
 #ifndef MODULES_TASK_2_IVINA_A_ALG_SEIDEL_ALG_SEIDEL_H_
 #define MODULES_TASK_2_IVINA_A_ALG_SEIDEL_ALG_SEIDEL_H_
 
-#include <mpi.h>
 #include <vector>
-#include <random>
-#include <stdio.h>
 
 double randomValue(int min, int max);
 std::vector<double> seqSeidel(const std::vector<std::vector<double>> &a, const std::vector<double> &b, double eps);
