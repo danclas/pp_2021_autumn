@@ -1,0 +1,8 @@
+//  Copyright 2021 Butescu Vladimir
+#ifndef MODULES_TASK_2_BUTESCU_V_LINE_TOPOLOGY_BUTESCU_V_LINE_TOPOLOGY_H_
+#define MODULES_TASK_2_BUTESCU_V_LINE_TOPOLOGY_BUTESCU_V_LINE_TOPOLOGY_H_
+#include <mpi.h>
+
+MPI_Comm create_line_topology(MPI_Comm comm, int ProcNum);
+
+#endif  // MODULES_TASK_2_BUTESCU_V_LINE_TOPOLOGY_BUTESCU_V_LINE_TOPOLOGY_H_
