@@ -46,8 +46,7 @@ threeRes calc(double a, double b, double x, double (*function)(double x, double 
 
         if (M > 0) {
             m = r * M;
-        }
-        else {
+        } else {
             m = 1;
         }
 
@@ -113,8 +112,7 @@ threeRes parallelOptimization(double a1, double b1, double a2,
         int iteration;
         if (std::abs(a1 - b1) <= 0.0001 || std::abs(a2 - b2) <= 0.0001) {
             iteration = size + 1;
-        }
-        else {
+        } else {
             iteration = size;
         }
 
@@ -165,8 +163,7 @@ threeRes parallelOptimization(double a1, double b1, double a2,
 
             if (M > 0) {
                 m = r * M;
-            }
-            else {
+            } else {
                 m = 1;
             }
 
@@ -209,16 +206,14 @@ threeRes parallelOptimization(double a1, double b1, double a2,
             double flag = eps * 0.001;
             MPI_Send(&flag, 1, MPI_DOUBLE, i + 1, 1, MPI_COMM_WORLD);
         }
-    }
-    else {
+    } else {
         bool flag = false;
         while (!flag) {
             double x;
             MPI_Recv(&x, 1, MPI_DOUBLE, 0, 1, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
             if (x == eps * 0.001) {
                 flag = true;
-            }
-            else {
+            } else {
                 result = calc(a2, b2, x, function, eps_one, iterations_max_one);
                 MPI_Send(&result, 3, MPI_DOUBLE, 0, 1, MPI_COMM_WORLD);
             }
@@ -227,7 +222,8 @@ threeRes parallelOptimization(double a1, double b1, double a2,
     return result_global;
 }
 
-threeRes sequentialOptimization(double a1, double b1, double a2, double b2, double (*function)(double x, double y), double eps, int iterations_max,
+threeRes sequentialOptimization(double a1, double b1, double a2, double b2,
+    double (*function)(double x, double y), double eps, int iterations_max,
     double eps_one,
     int iterations_max_one, double r) {
     threeRes result_global = { 0, 0, 0 };
@@ -268,8 +264,7 @@ threeRes sequentialOptimization(double a1, double b1, double a2, double b2, doub
 
         if (M > 0) {
             m = r * M;
-        }
-        else {
+        } else {
             m = 1;
         }
 
