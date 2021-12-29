@@ -4,7 +4,6 @@
 #include <random>
 #include "../../../modules/task_1/ivina_a_vector_out_of_order/vector_out_of_order.h"
 
-
 std::vector<int> randomValues(int len) {
   std::vector<int> vec;
   std::random_device rd;
