@@ -14,7 +14,7 @@ int randomValue(int min, int max) {
 }
 
 std::vector<std::vector<int>> par_shortestPathFaster(
-    const std::vector<std::vector<std::pair<int, int>>> graph, const int S,
+    const std::vector<std::vector<std::pair<int, int>>> &graph, const int S,
     const int V) {
   int size, rank;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -23,9 +23,6 @@ std::vector<std::vector<int>> par_shortestPathFaster(
   std::vector<int> res(V + 1);
   std::vector<bool> Ver_queue(V + 1);
 
-  for (int i = 0; i <= V; i++) {
-    res[i] = INT_MAX;
-  }
   res[S] = 0;
 
   std::queue<int> vertexQ;
@@ -42,7 +39,7 @@ std::vector<std::vector<int>> par_shortestPathFaster(
       vertexQ.pop();
       Ver_queue[up] = false;
 
-      for (int i = 0; i < graph[up].size(); i++) {
+      for (auto i = 0; i < graph[up].size(); i++) {
         int currentVer = graph[up][i].first;
         int weight = graph[up][i].second;
         if (res[currentVer] > res[up] + weight) {

@@ -18,7 +18,7 @@ TEST(alg_moore, vertex_num_10) {
       temp.resize(i + 1);
       a = randomValue(1, 10);
       b = randomValue(1, 10);
-      for (const auto j : temp) {
+      for (const auto &j : temp) {
         while ((j.first == a && j.second == b) ||
                (j.first == b && j.second == a) || (a == b)) {
           a = randomValue(1, 10);
@@ -40,8 +40,8 @@ TEST(alg_moore, vertex_num_10) {
   };
   std::vector<vertex> to_send;
   if (rank == 0) {
-    for (int i = 0; i < graph.size(); ++i) {
-      for (const auto n : graph[i]) {
+    for (auto i = 0; i < graph.size(); ++i) {
+      for (const auto &n : graph[i]) {
         to_send.push_back({i, n.first, n.second});
       }
     }
@@ -74,7 +74,7 @@ TEST(alg_moore, vertex_num_10) {
   if (rank == 0) {
     if (result.empty() != false) {
       const auto expected = result[0];
-      for (const auto evaluated : result) {
+      for (const auto &evaluated : result) {
         EXPECT_EQ(expected, evaluated);
       }
     }
@@ -95,7 +95,7 @@ TEST(alg_moore, vertex_num_20) {
       temp.resize(i + 1);
       a = randomValue(1, 20);
       b = randomValue(1, 20);
-      for (const auto j : temp) {
+      for (const auto &j : temp) {
         while ((j.first == a && j.second == b) ||
                (j.first == b && j.second == a) || (a == b)) {
           a = randomValue(1, 20);
@@ -117,8 +117,8 @@ TEST(alg_moore, vertex_num_20) {
   };
   std::vector<vertex> to_send;
   if (rank == 0) {
-    for (int i = 0; i < graph.size(); ++i) {
-      for (const auto n : graph[i]) {
+    for (auto i = 0; i < graph.size(); ++i) {
+      for (const auto &n : graph[i]) {
         to_send.push_back({i, n.first, n.second});
       }
     }
@@ -151,7 +151,7 @@ TEST(alg_moore, vertex_num_20) {
   if (rank == 0) {
     if (result.empty() != false) {
       const auto expected = result[0];
-      for (const auto evaluated : result) {
+      for (const auto &evaluated : result) {
         EXPECT_EQ(expected, evaluated);
       }
     }
@@ -181,8 +181,8 @@ TEST(alg_moore, vertex_num_2) {
   };
   std::vector<vertex> to_send;
   if (rank == 0) {
-    for (int i = 0; i < graph.size(); ++i) {
-      for (const auto n : graph[i]) {
+    for (auto i = 0; i < graph.size(); ++i) {
+      for (const auto &n : graph[i]) {
         to_send.push_back({i, n.first, n.second});
       }
     }
@@ -215,7 +215,7 @@ TEST(alg_moore, vertex_num_2) {
   if (rank == 0) {
     if (result.empty() != false) {
       const auto expected = result[0];
-      for (const auto evaluated : result) {
+      for (const auto &evaluated : result) {
         EXPECT_EQ(expected, evaluated);
       }
     }
@@ -236,7 +236,7 @@ TEST(alg_moore, vertex_num_30) {
       temp.resize(i + 1);
       a = randomValue(1, 30);
       b = randomValue(1, 30);
-      for (const auto j : temp) {
+      for (const auto &j : temp) {
         while ((j.first == a && j.second == b) ||
                (j.first == b && j.second == a) || (a == b)) {
           a = randomValue(1, 30);
@@ -258,8 +258,8 @@ TEST(alg_moore, vertex_num_30) {
   };
   std::vector<vertex> to_send;
   if (rank == 0) {
-    for (int i = 0; i < graph.size(); ++i) {
-      for (const auto n : graph[i]) {
+    for (auto i = 0; i < graph.size(); ++i) {
+      for (const auto &n : graph[i]) {
         to_send.push_back({i, n.first, n.second});
       }
     }
@@ -292,7 +292,7 @@ TEST(alg_moore, vertex_num_30) {
   if (rank == 0) {
     if (result.empty() != false) {
       const auto expected = result[0];
-      for (const auto evaluated : result) {
+      for (const auto &evaluated : result) {
         EXPECT_EQ(expected, evaluated);
       }
     }
@@ -313,7 +313,7 @@ TEST(alg_moore, vertex_num_50) {
       temp.resize(i + 1);
       a = randomValue(1, 50);
       b = randomValue(1, 50);
-      for (const auto j : temp) {
+      for (const auto &j : temp) {
         while ((j.first == a && j.second == b) ||
                (j.first == b && j.second == a) || (a == b)) {
           a = randomValue(1, 50);
@@ -335,8 +335,8 @@ TEST(alg_moore, vertex_num_50) {
   };
   std::vector<vertex> to_send;
   if (rank == 0) {
-    for (int i = 0; i < graph.size(); ++i) {
-      for (const auto n : graph[i]) {
+    for (auto i = 0; i < graph.size(); ++i) {
+      for (const auto &n : graph[i]) {
         to_send.push_back({i, n.first, n.second});
       }
     }
@@ -369,7 +369,7 @@ TEST(alg_moore, vertex_num_50) {
   if (rank == 0) {
     if (result.empty() != false) {
       const auto expected = result[0];
-      for (const auto evaluated : result) {
+      for (const auto &evaluated : result) {
         EXPECT_EQ(expected, evaluated);
       }
     }
