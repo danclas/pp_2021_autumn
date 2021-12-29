@@ -145,8 +145,7 @@ Matrix msum(const Matrix& a, const Matrix& b) {
                 res[i][j] = a[i][j] + b[i][j];
             }
         }
-    }
-    else {
+    } else {
         int h;
         MPI_Status* status = new MPI_Status();
         MPI_Recv(&h, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, status);
@@ -225,8 +224,7 @@ Matrix msub(const Matrix& a, const Matrix& b) {
                 res[i][j] = a[i][j] - b[i][j];
             }
         }
-    }
-    else {
+    } else {
         int h;
         MPI_Status* status = new MPI_Status();
         MPI_Recv(&h, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, status);
