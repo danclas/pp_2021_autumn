@@ -32,7 +32,6 @@ TEST(Parallel_Operations_MPI, TEST_BASIC_MARKING_IMAGE_SIZE_5x5_TRUE) {
     int sizeY = 5;
     int size = sizeX * sizeY;
     std::vector<int> data(size);
-    std::vector<int> result(size);
 
     data = {
         0, 1, 0, 0, 1,
@@ -42,21 +41,12 @@ TEST(Parallel_Operations_MPI, TEST_BASIC_MARKING_IMAGE_SIZE_5x5_TRUE) {
         0, 1, 0, 0, 1
     };
 
-    result = {
-        0, 1, 0, 0, 1,
-        0, 1, 1, 1, 1,
-        0, 0, 0, 0, 0,
-        0, 0, 0, 0, 2,
-        0, 3, 0, 0, 2
-    };
+    std::pair<std::vector<int>, int> resultSecond = basic_marking_binary_image(data, sizeX, sizeY);
 
-    std::vector<int> resultSecond = set_mark(
-            basic_marking_binary_image(data, sizeX, sizeY).first,
-            sizeX,
-            sizeY);
 
-    for (int i = 0; i < size; i++)
-        ASSERT_EQ(result[i], resultSecond[i]);
+    if (commRank == 0) {
+        ASSERT_EQ(resultSecond.second, 3);
+    }
 }
 
 TEST(Parallel_Operations_MPI, TEST_TIME_BASIC_MARKING_IMAGE_SIZE_10x10) {

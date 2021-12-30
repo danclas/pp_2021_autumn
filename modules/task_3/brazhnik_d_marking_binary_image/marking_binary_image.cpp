@@ -32,12 +32,14 @@ step_first(const std::vector<int>& data, int w, int h, int startMarked) {
                 int left, top;
                 if (index < w) {
                     left = 0;
-                } else {
+                }
+                else {
                     left = copyData[index - w];
                 }
                 if ((index < 1) || ((index - 1) / w != x)) {
                     top = 0;
-                } else {
+                }
+                else {
                     top = copyData[index - 1];
                 }
                 if ((left == 0) && (top == 0)) {
@@ -53,7 +55,8 @@ step_first(const std::vector<int>& data, int w, int h, int startMarked) {
                 if ((left != 0) && (top != 0)) {
                     if (left == top) {
                         copyData[index] = left;
-                    } else {
+                    }
+                    else {
                         int maxFS;
                         if (left > top)
                             maxFS = left;
@@ -82,78 +85,29 @@ step_first(const std::vector<int>& data, int w, int h, int startMarked) {
             index++;
         }
     }
-    return {copyData, {nonoverlapping, markMax}};
+    return { copyData, {nonoverlapping, markMax} };
 }
 
 std::vector<int> step_second(std::vector<int> tmpMap, int w, int h, std::vector<int> nonoverlapping) {
     int size = w * h;
-    int realSize = size - 1;
-
+    //std::cout << "ASize: " << size << "\n";
     std::vector<int> result(size);
-    int resCountPix = size;
+    //std::cout << "BSize: " << size << "\n";
 
-    int left = tmpMap[size - w];
-    int top = tmpMap[size - 2];
-
-    if ((left == 0) && (top == 0)) {
-        resCountPix--;
-        result[realSize] = tmpMap[resCountPix];
-    }
-    if ((left != 0) && (top == 0)) {
-        result[realSize] = left;
-    }
-    if ((left == 0) && (top != 0)) {
-        result[realSize] = top;
-    }
-    if ((left != 0) && (top != 0)) {
-        if (left < top) {
-            result[realSize] = left;
-        } else {
-            result[realSize] = top;
-        }
-    }
-
-    for (int i = 0; i < resCountPix; i++) {
-        int curPix = tmpMap[i];
-        if (curPix != 0) {
-            if (nonoverlapping[curPix] == curPix) {
-                result[i] = curPix;
-            } else {
-                while (nonoverlapping[curPix] != curPix) {
-                    curPix = nonoverlapping[curPix];
+    int i = 0;
+    for (i = 0; i < size; i++) {
+        if (tmpMap.size() < i) {
+            int curPix = tmpMap[i];
+            if (curPix != 0) {
+                if (nonoverlapping[curPix] == curPix) {
+                    result[i] = curPix;
                 }
-                result[i] = curPix;
-            }
-        }
-    }
-    return result;
-}
-
-std::vector<int> set_mark(const std::vector<int>& data, int w, int h) {
-    int size = w * h;
-    int center = size / 2 + 1;
-    int markMax = 0;
-
-    std::vector<int> result(size);
-    std::vector<int> badLabels(center);
-    std::vector<int> correctlyLabels(center);
-
-    for (int i = 0; i < size; i++) {
-        int pixel = data[i];
-        if (pixel != 0) {
-            int idx = -1;
-            for (int k = 1; badLabels[k] != 0; k++)
-                if (badLabels[k] == pixel) {
-                    idx = k;
-                    break;
+                else {
+                    while (nonoverlapping[curPix] != curPix) {
+                        curPix = nonoverlapping[curPix];
+                    }
+                    result[i] = curPix;
                 }
-            if (idx == -1) {
-                markMax++;
-                badLabels[markMax] = pixel;
-                correctlyLabels[markMax] = markMax;
-                result[i] = correctlyLabels[markMax];
-            } else {
-                result[i] = correctlyLabels[idx];
             }
         }
     }
@@ -163,7 +117,6 @@ std::vector<int> set_mark(const std::vector<int>& data, int w, int h) {
 std::pair<std::vector<int>, int> basic_marking_binary_image(const std::vector<int>& data, int w, int h) {
     std::pair<std::vector<int>, std::pair<std::vector<int>, int>> firstStep = step_first(data, w, h);
     std::vector<int> secondStep = step_second(firstStep.first, w, h, firstStep.second.first);
-
     std::pair<std::vector<int>, int> result = std::make_pair(secondStep, firstStep.second.second);
 
     return result;
@@ -186,8 +139,9 @@ std::pair<std::vector<int>, int> parallel_marking_binary_image(const std::vector
 
     if (sizeBlock == 0 || countProc < sizeBlock) {
         if (commRank == 0) {
-           return basic_marking_binary_image(data, w, h);
-        } else {
+            return basic_marking_binary_image(data, w, h);
+        }
+        else {
             return std::make_pair(result, 0);
         }
     }
@@ -204,7 +158,8 @@ std::pair<std::vector<int>, int> parallel_marking_binary_image(const std::vector
     std::vector<int> localData(sizeBlock + elementsRemaining);
     if (commRank == 0) {
         localData = std::vector<int>(data.cbegin(), data.cbegin() + sizeBlock + elementsRemaining);
-    } else {
+    }
+    else {
         MPI_Status status;
         MPI_Recv(localData.data(), sizeBlock, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
     }
@@ -214,7 +169,8 @@ std::pair<std::vector<int>, int> parallel_marking_binary_image(const std::vector
     if (commRank == 0) {
         tmpW = (elementsRemaining + sizeBlock) / w;
         tmpH = sizeBlock * commRank;
-    } else {
+    }
+    else {
         tmpW = sizeBlock / w;
         tmpH = elementsRemaining + sizeBlock * commRank;
     }
@@ -237,53 +193,25 @@ std::pair<std::vector<int>, int> parallel_marking_binary_image(const std::vector
         recvCounts[proc] = sizeBlock;
     }
 
-    int sendCount = 0;
-    if (commRank == 0)
-        sendCount = sizeBlock + elementsRemaining;
-    else
-        sendCount = sizeBlock;
-
     std::vector<int> globalRastoyanie(size);
-    MPI_Gatherv(rastoyanie.data(), sendCount, MPI_INT, globalRastoyanie.data(), recvCounts.data(),
-        displs.data(), MPI_INT, 0, MPI_COMM_WORLD);
-
     std::vector<int> globalMap(size);
-    MPI_Gatherv(map.data(), sendCount, MPI_INT, globalMap.data(), recvCounts.data(),
-        displs.data(), MPI_INT, 0, MPI_COMM_WORLD);
+    if (commRank == 0) {
+        MPI_Gatherv(rastoyanie.data(), sizeBlock + elementsRemaining, MPI_INT,
+            globalRastoyanie.data(), recvCounts.data(), displs.data(), MPI_INT, 0, MPI_COMM_WORLD);
+        MPI_Gatherv(map.data(), sizeBlock + elementsRemaining, MPI_INT, globalMap.data(), recvCounts.data(),
+            displs.data(), MPI_INT, 0, MPI_COMM_WORLD);
+    }
+    else {
+        MPI_Gatherv(rastoyanie.data(), sizeBlock, MPI_INT, globalRastoyanie.data(), recvCounts.data(),
+            displs.data(), MPI_INT, 0, MPI_COMM_WORLD);
+        MPI_Gatherv(map.data(), sizeBlock, MPI_INT, globalMap.data(), recvCounts.data(),
+            displs.data(), MPI_INT, 0, MPI_COMM_WORLD);
+    }
 
     int globalMarkCount = 0;
     MPI_Reduce(&localMarkCount, &globalMarkCount, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
     if (commRank == 0) {
-        for (int i = 1; i < countProc; i++) {
-            int beginOffsetTop = elementsRemaining + sizeBlock * i;
-            int secondOffsetLeft = beginOffsetTop - w;
-
-            for (int offset = 0; offset < w; offset++) {
-                int left = globalMap[secondOffsetLeft + offset];
-                int top = globalMap[beginOffsetTop + offset];
-
-                if ((left != 0) && (top != 0)) {
-                    int rastoyanieLeft = globalRastoyanie[left];
-                    int rastoyanieTop = globalRastoyanie[top];
-
-                    if (rastoyanieLeft != rastoyanieTop) {
-                        int maxLT = std::max(left, top);
-                        while (globalRastoyanie[maxLT] != maxLT) {
-                            maxLT = globalRastoyanie[maxLT];
-                        }
-                        int minLT = std::min(left, top);
-                        while (globalRastoyanie[minLT] != minLT) {
-                            minLT = globalRastoyanie[minLT];
-                        }
-                        if (maxLT != minLT) {
-                            globalRastoyanie[maxLT] = minLT;
-                            globalMarkCount--;
-                        }
-                    }
-                }
-            }
-        }
         result = step_second(globalMap, w, h, globalRastoyanie);
     }
     return { result, globalMarkCount };
