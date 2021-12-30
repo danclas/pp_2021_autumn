@@ -3,6 +3,7 @@
 #include "../../../modules/task_2/lukashuk_d_gaus_horizon/gauss_horizontal.h"
 #include <gtest-mpi-listener.hpp>
 
+
 TEST(Test_Gauss_Horizontal, Test1_size_3) {
   int ProcRank, ProcCount;
   MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);

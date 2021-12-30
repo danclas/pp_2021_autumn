@@ -19,6 +19,8 @@ std::vector<double> getRandomMatrix(int m, int n, int proc_rank,
   return matrix;
 }
 
+
+
 std::vector<double> seqGauss(const std::vector<double>& matrix, int rows,
                              int cols) {
   if (rows < 0 || cols < 0) {
@@ -28,7 +30,7 @@ std::vector<double> seqGauss(const std::vector<double>& matrix, int rows,
   for (int i = 0; i < rows; i++) {
     for (int j = i + 1; j < rows; j++) {
       double coeff = n[i * cols + i] / n[j * cols + i];
-      for (int k = i; k < cols; k++)
+      for (int k = 0; k < cols; k++)
         n[j * cols + k] = n[j * cols + k] * coeff - n[i * cols + k];
     }
   }
