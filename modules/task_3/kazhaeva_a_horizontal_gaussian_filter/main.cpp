@@ -6,18 +6,20 @@
 TEST(Parallel_Operations_MPI, Test_1) {
   int currentProcess;
   MPI_Comm_rank(MPI_COMM_WORLD, &currentProcess);
-  int height = 100;
-  int weight = 100;
+  int height = 4;
+  int weight = 4;
   std::vector<float> matrix;
   std::vector<float> img(height * weight);
   Kernell(&matrix, 3.0f);
   if (currentProcess == 0)
     img = RandomImg(weight, height);
   MPI_Bcast(img.data(), weight * height, MPI_FLOAT, 0, MPI_COMM_WORLD);
+
   std::vector<float> globalMatrix = Parallel(matrix, img, weight, height);
+
   if (currentProcess == 0) {
-    std::vector<float> referenceMatrix;
-    referenceMatrix = Sequential(matrix, img, weight, height);
+    std::vector<float> referenceMatrix = Sequential(matrix,
+      img, weight, height);
     ASSERT_EQ(globalMatrix, referenceMatrix);
   }
 }

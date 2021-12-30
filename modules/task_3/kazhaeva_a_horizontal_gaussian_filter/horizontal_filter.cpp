@@ -94,6 +94,7 @@ std::vector<float> Parallel(const std::vector<float>& matrix,
     }
     t++;
   }
+
   if (rank == 0) {
     for (int i = 0; i < displs[rank + 1]; i++)
       for (int j = 0; j < weight; j++)
@@ -114,6 +115,7 @@ std::vector<float> Parallel(const std::vector<float>& matrix,
   } else {
     MPI_Send(temp.data(), temp.size(), MPI_FLOAT, 0, 0, MPI_COMM_WORLD);
   }
+
   return res;
 }
 
