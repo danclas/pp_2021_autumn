@@ -47,7 +47,7 @@ TEST(Monte_Carlo_MPI, dimension_is_2) {
 
     // std::cout << "Par: " << par_time << "\nSeq: " << seq_time << '\n';
 
-    ASSERT_NEAR(par, seq, 1e-6);
+    ASSERT_NEAR(par, seq, 1);
   }
 }
 
@@ -79,7 +79,7 @@ TEST(Monte_Carlo_MPI, dimension_is_3) {
 
     // std::cout << "Par: " << par_time << "\nSeq: " << seq_time << '\n';
 
-    ASSERT_NEAR(par, seq, 1e-6);
+    ASSERT_NEAR(par, seq, 1);
   }
 }
 
@@ -111,7 +111,7 @@ TEST(Monte_Carlo_MPI, dimension_is_4) {
 
     // std::cout << "Par: " << par_time << "\nSeq: " << seq_time << '\n';
 
-    ASSERT_NEAR(par, seq, 1e-6);
+    ASSERT_NEAR(par, seq, 1);
   }
 }
 
@@ -143,7 +143,7 @@ TEST(Monte_Carlo_MPI, dimension_is_4_with_more_points) {
 
     // std::cout << "Par: " << par_time << "\nSeq: " << seq_time << '\n';
 
-    ASSERT_NEAR(par, seq, 1e-6);
+    ASSERT_NEAR(par, seq, 1);
   }
 }
 
@@ -175,7 +175,7 @@ TEST(Monte_Carlo_MPI, dimension_is_5) {
 
     // std::cout << "Par: " << par_time << "\nSeq: " << seq_time << '\n';
 
-    ASSERT_NEAR(par, seq, 1e-6);
+    ASSERT_NEAR(par, seq, 1);
   }
 }
 
@@ -207,7 +207,7 @@ TEST(Monte_Carlo_MPI, dimension_is_5_with_more_points) {
 
     // std::cout << "Par: " << par_time << "\nSeq: " << seq_time << '\n';
 
-    ASSERT_NEAR(par, seq, 1e-6);
+    ASSERT_NEAR(par, seq, 1);
   }
 }
 
