@@ -41,7 +41,7 @@ TEST(alg_Seidel, constnum3) {
   if (rank == 0) {
     std::vector<double> seq_res = seqSeidel(a, b, eps);
     for (int i = 0; i < n; i++) {
-      ASSERT_EQ(seq_res[i], res[i]);
+      ASSERT_NEAR(seq_res[i], res[i], eps);
     }
   }
 }
@@ -92,7 +92,7 @@ TEST(alg_Seidel, randnum3) {
   if (rank == 0) {
     std::vector<double> seq_res = seqSeidel(a, b, eps);
     for (int i = 0; i < n; i++) {
-      ASSERT_EQ(seq_res[i], res[i]);
+      ASSERT_NEAR(seq_res[i], res[i], eps);
     }
   }
 }
@@ -143,7 +143,7 @@ TEST(alg_Seidel, randnum1) {
   if (rank == 0) {
     std::vector<double> seq_res = seqSeidel(a, b, eps);
     for (int i = 0; i < n; i++) {
-      ASSERT_EQ(seq_res[i], res[i]);
+      ASSERT_NEAR(seq_res[i], res[i], eps);
     }
   }
 }
@@ -194,7 +194,7 @@ TEST(alg_Seidel, randnum10) {
   if (rank == 0) {
     std::vector<double> seq_res = seqSeidel(a, b, eps);
     for (int i = 0; i < n; i++) {
-      ASSERT_EQ(seq_res[i], res[i]);
+      ASSERT_NEAR(seq_res[i], res[i], eps);
     }
   }
 }
@@ -245,7 +245,7 @@ TEST(alg_Seidel, randnum50) {
   if (rank == 0) {
     std::vector<double> seq_res = seqSeidel(a, b, eps);
     for (int i = 0; i < n; i++) {
-      ASSERT_EQ(seq_res[i], res[i]);
+      ASSERT_NEAR(seq_res[i], res[i], eps);
     }
   }
 }

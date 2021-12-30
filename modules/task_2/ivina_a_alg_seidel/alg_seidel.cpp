@@ -111,7 +111,7 @@ std::vector<double> parallSeidel(const std::vector<std::vector<double>> &a,
             buff[0] = i;
             buff[1] = x[i];
             MPI_Send(buff, 2, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
-			}
+          }
         }
       } else {
         for (int j = 0; j < n * (size - 1); j++) {
@@ -127,3 +127,4 @@ std::vector<double> parallSeidel(const std::vector<std::vector<double>> &a,
   }
   return x;
 }
+
