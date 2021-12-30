@@ -6,6 +6,7 @@
 #include <gtest-mpi-listener.hpp>
 #include "../../../modules/task_3/kulikov_i_horizontal_linear_filtering/linear_filtering_gauss_kernel.h"
 
+
 TEST(MPIHorisontalLinearFilterGauss, Sigma1) {
     const int sz = 100;
     int rank;
