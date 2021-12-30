@@ -18,7 +18,7 @@ std::vector<int> getRandomPositiveVector(int size) {
 
 int getParallelAverage(std::vector<int> parall_vec, int size) {
     int ProcRank, ProcNum, sum_all;
-    float Paverage;
+    double Paverage;
 
     if (size <= 0) {
         return 0;
@@ -26,6 +26,13 @@ int getParallelAverage(std::vector<int> parall_vec, int size) {
 
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+
+    int real_size = size;
+    int add = ProcNum - size % ProcNum;
+    for (int i = 0; i < add; i++) {
+        parall_vec.push_back(0);
+        size++;
+    }
 
 
     int partSize = size / ProcNum;
@@ -50,13 +57,13 @@ int getParallelAverage(std::vector<int> parall_vec, int size) {
 
     MPI_Reduce(&sum, &sum_all, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
-    Paverage = static_cast<float>(sum_all) / size;
+    Paverage = static_cast<double>(sum_all) / real_size;
     return Paverage;
 }
 
 int getSequentialAverage(std::vector<int> sequent_vec) {
     int size = sequent_vec.size(), sum_all = 0;
-    float Saverage = 0;
+    double Saverage = 0;
 
     if (size <= 0) {
         return 0;
@@ -66,6 +73,6 @@ int getSequentialAverage(std::vector<int> sequent_vec) {
         sum_all += sequent_vec[i];
     }
 
-    Saverage = static_cast<float>(sum_all) / size;
+    Saverage = static_cast<double>(sum_all) / size;
     return Saverage;
 }
