@@ -6,6 +6,7 @@
 #include <iostream>
 #include "../../../modules/task_3/kulikov_i_horizontal_linear_filtering/linear_filtering_gauss_kernel.h"
 
+
 double* get_random_img(int sz) {
     std::random_device dev;
     std::mt19937 gen(dev());
