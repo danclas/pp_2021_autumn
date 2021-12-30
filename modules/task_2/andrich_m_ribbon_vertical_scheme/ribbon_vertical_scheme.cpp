@@ -44,7 +44,6 @@ void ParallelMatrixMultiplication(const int* A, const int ARows,
   if (ACols != BRows) {
     throw -1;
   }
-  // double start = MPI_Wtime();
   int world_size, rank;
   MPI_Comm_size(MPI_COMM_WORLD, &world_size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -62,11 +61,6 @@ void ParallelMatrixMultiplication(const int* A, const int ARows,
     ribbon = new int[ARows * ribbon_width];
   }
   local_vector = initEmptyMatrix(ARows);
-  // double end = MPI_Wtime();
-  // if (rank == 0) {
-  //  std::cout << "Current time variables: " << end - start << std::endl;
-  //}
-  // start = MPI_Wtime();
   if (rank == 0) {
     for (int i = 0; i < ARows; i++) {
       MPI_Scatter(A + remainder + i * ACols, ribbon_width, MPI_INT,
@@ -83,19 +77,6 @@ void ParallelMatrixMultiplication(const int* A, const int ARows,
                   MPI_COMM_WORLD);
     }
   }
-  // end = MPI_Wtime();
-  // if (rank == 0) {
-  //  std::cout << "Current time scatter: " << end - start << std::endl;
-  //}
-  // printf("Rank %d\n", rank);
-  // for (int i = 0; i < ARows; i++) {
-  //  for (int j = 0; j < ribbon_width + temp; j++) {
-  //    printf("%d ", ribbon[j + i * (ribbon_width + temp)]);
-  //  }
-  //  printf("\n");
-  //}
-  // fflush(stdout);
-  // start = MPI_Wtime();
   if (rank == 0) {
     SequentialMatrixMultiplication(ribbon, ARows, new_width, B, new_width,
                                    local_vector);
@@ -106,21 +87,5 @@ void ParallelMatrixMultiplication(const int* A, const int ARows,
     SequentialMatrixMultiplication(ribbon, ARows, ribbon_width, new_B,
                                    ribbon_width, local_vector);
   }
-  // end = MPI_Wtime();
-  // std::cout << "Rank: " << rank << " Current time calc local: " << end -
-  // start
-  //          << std::endl;
-
-  // printf("Result: Rank %d\n", rank);
-  // for (int i = 0; i < ARows; i++) {
-  //    printf("%d ", local_vector[i]);
-  //  printf("\n");
-  //}
-  // fflush(stdout);
-  // start = MPI_Wtime();
   MPI_Reduce(local_vector, C, ARows, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-  // end = MPI_Wtime();
-  // if (rank == 0) {
-  //  std::cout << "Current time reduce: " << end - start << std::endl;
-  //}
 }
