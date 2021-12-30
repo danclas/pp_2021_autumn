@@ -2,12 +2,12 @@
 #ifndef MODULES_TASK_2_KHARUNOVA_A_PRODUCER_CONSUMER_PRODUCER_CONSUMER_H_
 #define MODULES_TASK_2_KHARUNOVA_A_PRODUCER_CONSUMER_PRODUCER_CONSUMER_H_
 
-void waiting(double seconds);
-
-int process(int elements);
+int process(int enterings);
 
 void producer();
 
 void consumer();
+
+void waiting();
 
 #endif  // MODULES_TASK_2_KHARUNOVA_A_PRODUCER_CONSUMER_PRODUCER_CONSUMER_H_

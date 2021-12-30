@@ -5,36 +5,36 @@
 
 #include <gtest-mpi-listener.hpp>
 
-TEST(Test_Producer_Consumer, Test_1) {
+TEST(Test_Producer_Consumer, 1_consumer_entering) {
   int size, rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
 
   double start;
-  int count;
-  int first = 2;
-  int second = 2;
+  int count, consumerEnterings = 1, producerEnterings = 2;
+  int enteringCons = consumerEnterings * ((size - 1) / 2);
+  int enteringProd = producerEnterings * (size / 2);
 
   if (rank == 0) {
-    int value = second * (size / 2) + first * ((size - 1) / 2);
+    int enterings = enteringCons + enteringProd;
     start = MPI_Wtime();
-    count = process(value);
+    count = process(enterings);
   }
 
   if (rank != 0) {
     if (rank % 2 == 0) {
-      for (int i = 0; i < first; i++) {
+      for (int i = 0; i < consumerEnterings; i++) {
         consumer();
       }
     } else {
-      for (int i = 0; i < second; i++) {
+      for (int i = 0; i < producerEnterings; i++) {
         producer();
       }
     }
   }
 
   if (rank == 0) {
-    int assert_value = second * (size / 2) - first * ((size - 1) / 2);
+    int assert_value = enteringProd - enteringCons;
     double end = MPI_Wtime();
     double time = end - start;
     std::cout << time << std::endl;
@@ -43,37 +43,36 @@ TEST(Test_Producer_Consumer, Test_1) {
   MPI_Barrier(MPI_COMM_WORLD);
 }
 
-TEST(Test_Producer_Consumer, Test_2) {
+TEST(Test_Producer_Consumer, 2_consumer_enterings) {
   int size, rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
 
   double start;
-  int count;
-  int first = 4;
-  int second = 4;
+  int count, consumerEnterings = 2, producerEnterings = 4;
+  int enteringCons = consumerEnterings * ((size - 1) / 2);
+  int enteringProd = producerEnterings * (size / 2);
 
-  MPI_Barrier(MPI_COMM_WORLD);
   if (rank == 0) {
-    int value = second * (size / 2) + first * ((size - 1) / 2);
+    int enterings = enteringProd + enteringCons;
     start = MPI_Wtime();
-    count = process(value);
+    count = process(enterings);
   }
 
   if (rank != 0) {
     if (rank % 2 == 0) {
-      for (int i = 0; i < first; i++) {
+      for (int i = 0; i < consumerEnterings; i++) {
         consumer();
       }
     } else {
-      for (int i = 0; i < second; i++) {
+      for (int i = 0; i < producerEnterings; i++) {
         producer();
       }
     }
   }
 
   if (rank == 0) {
-    int assert_value = second * (size / 2) - first * ((size - 1) / 2);
+    int assert_value = enteringProd - enteringCons;
     double end = MPI_Wtime();
     double time = end - start;
     std::cout << time << std::endl;
@@ -82,35 +81,35 @@ TEST(Test_Producer_Consumer, Test_2) {
   MPI_Barrier(MPI_COMM_WORLD);
 }
 
-TEST(Test_Producer_Consumer, Test_3) {
+TEST(Test_Producer_Consumer, 4_consumer_enterings) {
   int size, rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
 
   double start;
-  int count;
-  int first = 2;
-  int second = 4;
+  int count, consumerEnterings = 4, producerEnterings = 4;
+  int enteringCons = consumerEnterings * ((size - 1) / 2);
+  int enteringProd = producerEnterings * (size / 2);
 
   if (rank == 0) {
-    int value = second * (size / 2) + first * ((size - 1) / 2);
+    int enterings = enteringProd + enteringCons;
     start = MPI_Wtime();
-    count = process(value);
+    count = process(enterings);
   }
 
   if (rank != 0) {
     if (rank % 2 == 0) {
-      for (int i = 0; i < first; i++) {
+      for (int i = 0; i < consumerEnterings; i++) {
         consumer();
       }
     } else {
-      for (int i = 0; i < second; i++) {
+      for (int i = 0; i < producerEnterings; i++) {
         producer();
       }
     }
   }
   if (rank == 0) {
-    int assert_value = second * (size / 2) - first * ((size - 1) / 2);
+    int assert_value = enteringProd - enteringCons;
     double end = MPI_Wtime();
     double time = end - start;
     std::cout << time << std::endl;
@@ -119,35 +118,35 @@ TEST(Test_Producer_Consumer, Test_3) {
   MPI_Barrier(MPI_COMM_WORLD);
 }
 
-TEST(Test_Producer_Consumer, Test_4) {
+TEST(Test_Producer_Consumer, 5_consumers_enterings) {
   int size, rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
 
   double start;
-  int count;
-  int first = 5;
-  int second = 10;
+  int count, consumerEnterings = 5, producerEnterings = 20;
+  int enteringCons = consumerEnterings * ((size - 1) / 2);
+  int enteringProd = producerEnterings * (size / 2);
 
   if (rank == 0) {
-    int value = second * (size / 2) + first * ((size - 1) / 2);
+    int enterings = enteringProd + enteringCons;
     start = MPI_Wtime();
-    count = process(value);
+    count = process(enterings);
   }
 
   if (rank != 0) {
     if (rank % 2 == 0) {
-      for (int i = 0; i < first; i++) {
+      for (int i = 0; i < consumerEnterings; i++) {
         consumer();
       }
     } else {
-      for (int i = 0; i < second; i++) {
+      for (int i = 0; i < producerEnterings; i++) {
         producer();
       }
     }
   }
   if (rank == 0) {
-    int assert_value = second * (size / 2) - first * ((size - 1) / 2);
+    int assert_value = enteringProd - enteringCons;
     double end = MPI_Wtime();
     double time = end - start;
     std::cout << time << std::endl;
@@ -156,35 +155,35 @@ TEST(Test_Producer_Consumer, Test_4) {
   MPI_Barrier(MPI_COMM_WORLD);
 }
 
-TEST(Test_Producer_Consumer, Test_5) {
+TEST(Test_Producer_Consumer, 20_consumer_enterings) {
   int size, rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
 
   double start;
-  int count;
-  int first = 20;
-  int second = 20;
+  int count, consumerEnterings = 20, producerEnterings = 20;
+  int enteringCons = consumerEnterings * ((size - 1) / 2);
+  int enteringProd = producerEnterings * (size / 2);
 
   if (rank == 0) {
-    int value = second * (size / 2) + first * ((size - 1) / 2);
+    int enterings = enteringProd + enteringCons;
     start = MPI_Wtime();
-    count = process(value);
+    count = process(enterings);
   }
 
   if (rank != 0) {
     if (rank % 2 == 0) {
-      for (int i = 0; i < first; i++) {
+      for (int i = 0; i < consumerEnterings; i++) {
         consumer();
       }
     } else {
-      for (int i = 0; i < second; i++) {
+      for (int i = 0; i < producerEnterings; i++) {
         producer();
       }
     }
   }
   if (rank == 0) {
-    int assert_value = second * (size / 2) - first * ((size - 1) / 2);
+    int assert_value = enteringProd - enteringCons;
     double end = MPI_Wtime();
     double time = end - start;
     std::cout << time << std::endl;
