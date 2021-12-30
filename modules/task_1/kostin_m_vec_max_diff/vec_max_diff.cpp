@@ -17,7 +17,7 @@ std::vector<int> getRandomVector(int sz) {
 int getSequentialMaxDiff(std::vector<int> vec) {
   int max_diff = -1;
   if (vec.size() > 1) {
-    for (int i = 0; i < vec.size() - 1; i++) {
+    for (int i = 0; i < static_cast<int>(vec.size() - 1); i++) {
       if (abs(vec[i] - vec[i + 1]) > max_diff) {
         max_diff = abs(vec[i] - vec[i + 1]);
       }
