@@ -39,7 +39,7 @@ std::vector<std::vector<int>> par_shortestPathFaster(
       vertexQ.pop();
       Ver_queue[up] = false;
 
-      for (auto i = 0; i < graph[up].size(); i++) {
+      for (decltype(auto) i = 0; i < graph[up].size(); i++) {
         int currentVer = graph[up][i].first;
         int weight = graph[up][i].second;
         if (res[currentVer] > res[up] + weight) {

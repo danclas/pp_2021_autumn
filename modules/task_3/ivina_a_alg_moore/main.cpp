@@ -40,7 +40,7 @@ TEST(alg_moore, vertex_num_10) {
   };
   std::vector<vertex> to_send;
   if (rank == 0) {
-    for (auto i = 0; i < graph.size(); ++i) {
+    for (decltype(auto) i = 0; i < graph.size(); ++i) {
       for (const auto &n : graph[i]) {
         to_send.push_back({i, n.first, n.second});
       }
@@ -117,7 +117,7 @@ TEST(alg_moore, vertex_num_20) {
   };
   std::vector<vertex> to_send;
   if (rank == 0) {
-    for (auto i = 0; i < graph.size(); ++i) {
+    for (decltype(auto) i = 0; i < graph.size(); ++i) {
       for (const auto &n : graph[i]) {
         to_send.push_back({i, n.first, n.second});
       }
@@ -181,7 +181,7 @@ TEST(alg_moore, vertex_num_2) {
   };
   std::vector<vertex> to_send;
   if (rank == 0) {
-    for (auto i = 0; i < graph.size(); ++i) {
+    for (decltype(auto) i = 0; i < graph.size(); ++i) {
       for (const auto &n : graph[i]) {
         to_send.push_back({i, n.first, n.second});
       }
@@ -258,7 +258,7 @@ TEST(alg_moore, vertex_num_30) {
   };
   std::vector<vertex> to_send;
   if (rank == 0) {
-    for (auto i = 0; i < graph.size(); ++i) {
+    for (decltype(auto) i = 0; i < graph.size(); ++i) {
       for (const auto &n : graph[i]) {
         to_send.push_back({i, n.first, n.second});
       }
@@ -335,7 +335,7 @@ TEST(alg_moore, vertex_num_50) {
   };
   std::vector<vertex> to_send;
   if (rank == 0) {
-    for (auto i = 0; i < graph.size(); ++i) {
+    for (decltype(auto) i = 0; i < graph.size(); ++i) {
       for (const auto &n : graph[i]) {
         to_send.push_back({i, n.first, n.second});
       }
