@@ -5,6 +5,7 @@
 
 
 
+
 double func_1(std::vector<double> v) {
   return 7 * v[0] * v[0] + 6 * v[1] * v[1] * v[1];
 }
