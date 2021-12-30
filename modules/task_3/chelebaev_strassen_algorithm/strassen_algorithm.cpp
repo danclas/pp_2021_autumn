@@ -23,9 +23,9 @@ Matrix createRandomMatrix(int n, int m, double max_number) {
 
 Matrix sequentialMulti(const Matrix& a, const Matrix& b) {
     Matrix res(a.size(), std::vector<double>(b[0].size()));
-    for (int i = 0; i < a.size(); i++) {
-        for (int j = 0; j < b[0].size(); j++) {
-            for (int k = 0; k < a[0].size(); k++) {
+    for (size_t i = 0; i < a.size(); i++) {
+        for (size_t j = 0; j < b[0].size(); j++) {
+            for (size_t k = 0; k < a[0].size(); k++) {
                 res[i][j] += a[i][k] * b[k][j];
             }
         }
@@ -62,10 +62,10 @@ Matrix parallelMulti(const Matrix& a, const Matrix& b) {
 
         std::vector<Matrix> all;
         all = divide(a);
-        a11 = std::move(all[0]), a12 = std::move(all[1]), a21 = std::move(all[2]), a22 = std::move(all[3]);
+        a11 = all[0], a12 = all[1], a21 = all[2], a22 = all[3];
 
         all = divide(b);
-        b11 = std::move(all[0]), b12 = std::move(all[1]), b21 = std::move(all[2]), b22 = std::move(all[3]);
+        b11 = all[0], b12 = all[1], b21 = all[2], b22 = all[3];
     }
 
     Matrix p1, p2, p3, p4, p5, p6, p7;
@@ -145,25 +145,25 @@ Matrix msum(const Matrix& a, const Matrix& b) {
             }
         }
     } else {
-        int h;
-        MPI_Status* status = new MPI_Status();
-        MPI_Recv(&h, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, status);
-        ca.assign(h, std::vector<double>(n));
-        cb.assign(h, std::vector<double>(n));
-        for (int i = 0; i < h; i++) {
+        int ck;
+        MPI_Status Status;
+        MPI_Recv(&ck, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &Status);
+        ca.assign(ck, std::vector<double>(n));
+        cb.assign(ck, std::vector<double>(n));
+        for (int i = 0; i < ck; i++) {
             MPI_Recv(ca[i].data(), n,
-                MPI_DOUBLE, 0, i + 1, MPI_COMM_WORLD, status);
+                MPI_DOUBLE, 0, i + 1, MPI_COMM_WORLD, &Status);
             MPI_Recv(cb[i].data(), n,
-                MPI_DOUBLE, 0, i + 1, MPI_COMM_WORLD, status);
+                MPI_DOUBLE, 0, i + 1, MPI_COMM_WORLD, &Status);
         }
-        res.assign(h, std::vector<double>(n));
-        for (int i = 0; i < h; i++) {
+        res.assign(ck, std::vector<double>(n));
+        for (int i = 0; i < ck; i++) {
             for (int j = 0; j < n; j++) {
                 res[i][j] = ca[i][j] + cb[i][j];
             }
         }
-        MPI_Send(&h, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
-        for (int i = 0; i < h; i++) {
+        MPI_Send(&ck, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+        for (int i = 0; i < ck; i++) {
             MPI_Send(res[i].data(), n, MPI_DOUBLE, 0, i + 1, MPI_COMM_WORLD);
         }
     }
@@ -171,16 +171,16 @@ Matrix msum(const Matrix& a, const Matrix& b) {
     if (my_rank == 0) {
         result.assign(n, std::vector<double>(n));
         int j = 0;
-        for (int i = 0; i < res.size(); i++, j++) {
+        for (size_t i = 0; i < res.size(); i++, j++) {
             result[j] = std::move(res[i]);
         }
         for (int i = 1; i < tasks; i++) {
-            int h;
-            MPI_Status* status = new MPI_Status();
-            MPI_Recv(&h, 1, MPI_INT, i, 0, MPI_COMM_WORLD, status);
-            for (int c = 0; c < h; c++, j++) {
+            int ck;
+            MPI_Status Status;
+            MPI_Recv(&ck, 1, MPI_INT, i, 0, MPI_COMM_WORLD, &Status);
+            for (int c = 0; c < ck; c++, j++) {
                 MPI_Recv(result[j].data(), n, MPI_DOUBLE, i,
-                    c + 1, MPI_COMM_WORLD, status);
+                    c + 1, MPI_COMM_WORLD, &Status);
             }
         }
     }
@@ -223,26 +223,27 @@ Matrix msub(const Matrix& a, const Matrix& b) {
                 res[i][j] = a[i][j] - b[i][j];
             }
         }
-    } else {
-        int h;
-        MPI_Status* status = new MPI_Status();
-        MPI_Recv(&h, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, status);
-        ca.assign(h, std::vector<double>(n));
-        cb.assign(h, std::vector<double>(n));
-        for (int i = 0; i < h; i++) {
+    }
+    else {
+        int ck;
+        MPI_Status Status;
+        MPI_Recv(&ck, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &Status);
+        ca.assign(ck, std::vector<double>(n));
+        cb.assign(ck, std::vector<double>(n));
+        for (int i = 0; i < ck; i++) {
             MPI_Recv(ca[i].data(), n,
-                MPI_DOUBLE, 0, i + 1, MPI_COMM_WORLD, status);
+                MPI_DOUBLE, 0, i + 1, MPI_COMM_WORLD, &Status);
             MPI_Recv(cb[i].data(), n,
-                MPI_DOUBLE, 0, i + 1, MPI_COMM_WORLD, status);
+                MPI_DOUBLE, 0, i + 1, MPI_COMM_WORLD, &Status);
         }
-        res.assign(h, std::vector<double>(n));
-        for (int i = 0; i < h; i++) {
+        res.assign(ck, std::vector<double>(n));
+        for (int i = 0; i < ck; i++) {
             for (int j = 0; j < n; j++) {
                 res[i][j] = ca[i][j] - cb[i][j];
             }
         }
-        MPI_Send(&h, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
-        for (int i = 0; i < h; i++) {
+        MPI_Send(&ck, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+        for (int i = 0; i < ck; i++) {
             MPI_Send(res[i].data(), n, MPI_DOUBLE, 0, i + 1, MPI_COMM_WORLD);
         }
     }
@@ -250,16 +251,16 @@ Matrix msub(const Matrix& a, const Matrix& b) {
     if (my_rank == 0) {
         result.assign(n, std::vector<double>(n));
         int j = 0;
-        for (int i = 0; i < res.size(); i++, j++) {
+        for (size_t i = 0; i < res.size(); i++, j++) {
             result[j] = std::move(res[i]);
         }
         for (int i = 1; i < tasks; i++) {
-            int h = 0;
-            MPI_Status* status = new MPI_Status();
-            MPI_Recv(&h, 1, MPI_INT, i, 0, MPI_COMM_WORLD, status);
-            for (int c = 0; c < h; c++, j++) {
+            int ck;
+            MPI_Status Status;
+            MPI_Recv(&ck, 1, MPI_INT, i, 0, MPI_COMM_WORLD, &Status);
+            for (int c = 0; c < ck; c++, j++) {
                 MPI_Recv(result[j].data(), n, MPI_DOUBLE, i,
-                    c + 1, MPI_COMM_WORLD, status);
+                    c + 1, MPI_COMM_WORLD, &Status);
             }
         }
     }
@@ -271,11 +272,11 @@ bool areEqual(const Matrix& a, const Matrix& b, double delta) {
     if (a.size() != b.size()) {
         return false;
     }
-    for (int i = 0; i < a.size(); i++) {
+    for (size_t i = 0; i < a.size(); i++) {
         if (a[i].size() != b[i].size()) {
             return false;
         }
-        for (int j = 0; j < a[i].size(); j++) {
+        for (size_t j = 0; j < a[i].size(); j++) {
             if (std::abs(a[i][j] - b[i][j]) > delta) {
                 return false;
             }
