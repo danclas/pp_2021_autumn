@@ -22,10 +22,13 @@ TEST(Parallel_Operations_MPI, test_sequential_size_8) {
 TEST(Parallel_Operations_MPI, test_sequential_and_parallel_size_16) {
   int rank;
   double s, f, t_seq, t_par;
-  int size = 16;
+  int _size, size = 16;
   int* vec = 0;
   int* _vec = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &_size);
+  size = size / _size;
+  size = size * _size;
   if (rank == 0) {
     vec = new int[size];
     _vec = new int[size];
@@ -52,13 +55,16 @@ TEST(Parallel_Operations_MPI, test_sequential_and_parallel_size_16) {
   }
 }
 
-TEST(Parallel_Operations_MPI, test_sequential_and_parallel_size_128) {
+TEST(Parallel_Operations_MPI, test_sequential_and_parallel_size_111) {
   int rank;
   double s, f, t_seq, t_par;
-  int size = 128;
+  int _size, size = 128;
   int* vec = 0;
   int* _vec = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &_size);
+  size = size / _size;
+  size = size * _size;
   if (rank == 0) {
     vec = new int[size];
     _vec = new int[size];
@@ -88,10 +94,13 @@ TEST(Parallel_Operations_MPI, test_sequential_and_parallel_size_128) {
 TEST(Parallel_Operations_MPI, test_sequential_and_parallel_size_512) {
   int rank;
   double s, f, t_seq, t_par;
-  int size = 512;
+  int _size, size = 512;
   int* vec = 0;
   int* _vec = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &_size);
+  size = size / _size;
+  size = size * _size;
   if (rank == 0) {
     vec = new int[size];
     _vec = new int[size];
@@ -118,13 +127,16 @@ TEST(Parallel_Operations_MPI, test_sequential_and_parallel_size_512) {
   }
 }
 
-TEST(Parallel_Operations_MPI, test_sequential_and_parallel_size_2048) {
+TEST(Parallel_Operations_MPI, test_sequential_and_parallel_size_2000) {
   int rank;
   double s, f, t_seq, t_par;
-  int size = 2048;
+  int _size, size = 2000;
   int* vec = 0;
   int* _vec = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &_size);
+  size = size / _size;
+  size = size * _size;
   if (rank == 0) {
     vec = new int[size];
     _vec = new int[size];
