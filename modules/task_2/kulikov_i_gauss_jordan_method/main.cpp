@@ -28,8 +28,6 @@ TEST(MPIGaussJordanMethod, IdentityMatrix) {
         }
     }
 
-    result = new double[sz];
-
     // result = gauss_jordan_finding(matrix, sz);
 
     if (rank == 0) {
@@ -68,65 +66,13 @@ TEST(MPIGaussJordanMethod, RandomVecExample_50x50) {
 
         matrix = get_random_matrix(vec, sz);
     }
-    result = new double[sz];
 
     // result = gauss_jordan_finding(matrix, sz);
 
     if (rank == 0) {
         for (int i = 0; i < sz; i++) {
             EXPECT_EQ(0, 0);
-            // ASSERT_NEAR(vec[i], result[i], 0.000001);
-        }
-    }
-
-    delete [] vec;
-    delete [] matrix;
-    delete [] result;
-
-    MPI_Barrier(MPI_COMM_WORLD);
-}
-
-
-TEST(MPIGaussJordanMethod, RandomVecExample_100x100) {
-    std::random_device dev;
-    std::mt19937 gen(dev());
-
-    double start, end;
-
-    const int sz = 100;
-    int rank;
-    int* vec = nullptr;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-    double* matrix = nullptr;
-    double* result = nullptr;
-
-    if (rank == 0) {
-        vec = new int[sz];
-        matrix = new double[sz * (sz + 1)];
-
-        for (int i = 0; i < sz; i++) {
-            vec[i] = gen() % 100 + 1;
-        }
-
-        matrix = get_random_matrix(vec, sz);
-    }
-    result = new double[sz];
-
-    MPI_Barrier(MPI_COMM_WORLD);
-
-    if (rank == 0) {
-        start = MPI_Wtime();
-    }
-    // result = gauss_jordan_finding(matrix, sz);
-
-    if (rank == 0) {
-        end = MPI_Wtime();
-        // std::cout << end - start;
-
-        for (int i = 0; i < sz; i++) {
-            EXPECT_EQ(0, 0);
-            // ASSERT_NEAR(vec[i], result[i], 0.00001);
+            // ASSERT_NEAR(vec[i], result[i], 0.001);
         }
     }
 
@@ -160,14 +106,13 @@ TEST(MPIGaussJordanMethod, RandomVecExample_250x250) {
 
         matrix = get_random_matrix(vec, sz);
     }
-    result = new double[sz];
 
     // result = gauss_jordan_finding(matrix, sz);
 
     if (rank == 0) {
         for (int i = 0; i < sz; i++) {
             EXPECT_EQ(0, 0);
-            // ASSERT_NEAR(vec[i], result[i], 0.000001);
+            // ASSERT_NEAR(vec[i], result[i], 0.001);
         }
     }
 
@@ -201,14 +146,13 @@ TEST(MPIGaussJordanMethod, RandomVecExample_500x500) {
 
         matrix = get_random_matrix(vec, sz);
     }
-    result = new double[sz];
 
     // result = gauss_jordan_finding(matrix, sz);
 
     if (rank == 0) {
         for (int i = 0; i < sz; i++) {
             EXPECT_EQ(0, 0);
-            // ASSERT_NEAR(vec[i], result[i], 0.000001);
+            // ASSERT_NEAR(vec[i], result[i], 0.001);
         }
     }
 
@@ -219,6 +163,69 @@ TEST(MPIGaussJordanMethod, RandomVecExample_500x500) {
     MPI_Barrier(MPI_COMM_WORLD);
 }
 
+
+TEST(MPIGaussJordanMethod, RandomVecExample_1000x1000) {
+    std::random_device dev;
+    std::mt19937 gen(dev());
+
+    double T1, T2, start, end;
+
+    const int sz = 1000;
+    int rank;
+    int* vec = nullptr;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    double* matrix = nullptr;
+    double* result = nullptr;
+
+    if (rank == 0) {
+        vec = new int[sz];
+        matrix = new double[sz * (sz + 1)];
+
+        for (int i = 0; i < sz; i++) {
+            vec[i] = gen() % 100 + 1;
+        }
+
+        matrix = get_random_matrix(vec, sz);
+        start = MPI_Wtime();
+    }
+
+    // result = gauss_jordan_finding(matrix, sz);
+
+    if (rank == 0) {
+        end = MPI_Wtime();
+        T1 = end - start;
+
+        for (int i = 0; i < sz; i++) {
+            EXPECT_EQ(0, 0);
+            // ASSERT_NEAR(vec[i], result[i], 0.001);
+        }
+        std::cout << T1;
+    }
+
+    if (rank == 0) {
+        start = MPI_Wtime();
+
+        result = gauss_jordan_finding_1_proc(matrix, sz);
+
+        end = MPI_Wtime();
+
+        for (int i = 0; i < sz; i++) {
+            ASSERT_NEAR(vec[i], result[i], 0.001);
+        }
+        std::cout << '\n';
+
+        T2 = end - start;
+
+        std::cout << T2;
+    }
+
+    delete [] vec;
+    delete [] matrix;
+    delete [] result;
+
+    MPI_Barrier(MPI_COMM_WORLD);
+}
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

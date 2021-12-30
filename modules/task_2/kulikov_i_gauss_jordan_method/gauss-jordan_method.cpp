@@ -4,7 +4,6 @@
 #include <iostream>
 #include "../../../modules/task_2/kulikov_i_gauss_jordan_method/gauss-jordan_method.h"
 
-
 double* get_random_matrix(int* num_vec, int sz) {
     std::random_device dev;
     std::mt19937 gen(dev());
@@ -21,9 +20,8 @@ double* get_random_matrix(int* num_vec, int sz) {
     return out_matrix;
 }
 
-
-void division_in_str(double* strings, double* subtrahend,
-int num, int sz, int part) {
+void division_in_str(double* strings, double* subtrahend, int num,
+int sz, int part) {
     for (int i = 0; i < part; i++) {
         double coeff = strings[i * (sz + 1) + num] / subtrahend[num];
         for (int j = 0; j < sz + 1; j ++) {
@@ -32,11 +30,8 @@ int num, int sz, int part) {
     }
 }
 
-
 double* gauss_jordan_finding(double* matrix, int sz) {
     int root = 0, rank = 0, commSize = 0;
-
-    // sz -= 1;
 
     MPI_Comm_size(MPI_COMM_WORLD, &commSize);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -113,11 +108,11 @@ double* gauss_jordan_finding(double* matrix, int sz) {
 
     if (rank == root) {
         for (int i = 0; i < sz; i++) {
-            if (matrix[(i + 1) * (sz + 1) - 1] == 0) {
-                res[i] = 0;
-            } else {
+            if (matrix[(i + 1) * (sz + 1) - 1] != 0) {
                 res[i] = matrix[(i + 1) * (sz + 1) - 1]
                 / matrix[i * (sz + 1) + i];
+            } else {
+                res[i] = 0;
             }
         }
     }
@@ -126,6 +121,31 @@ double* gauss_jordan_finding(double* matrix, int sz) {
     delete [] matrix_displs;
     delete [] buffer;
     delete [] subtrahend;
+
+    return res;
+}
+
+
+double* gauss_jordan_finding_1_proc(double* matrix, int sz) {
+    double* subtrahend = new double[sz + 1];
+
+    for (int i = 0; i < sz; i++) {
+        std::copy(matrix + (i * (sz + 1)), matrix + (i + 1) * (sz + 1),
+        subtrahend);
+        double coeff = matrix[i * (sz + 1) + i] / subtrahend[i];
+
+        for (int j = 0; j < sz + 1; j ++) {
+            matrix[i * (sz + 1) + j] -= coeff * subtrahend[j];
+        }
+
+        std::copy(subtrahend, subtrahend + sz + 1, matrix + (i * (sz + 1)));
+    }
+
+    double* res = new double[sz];
+
+    for (int i = 0; i < sz; i++) {
+        res[i] = matrix[(i + 1) * (sz + 1) - 1] / matrix[i * (sz + 1) + i];
+    }
 
     return res;
 }
