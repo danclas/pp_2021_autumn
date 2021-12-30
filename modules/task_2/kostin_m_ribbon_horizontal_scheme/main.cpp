@@ -69,19 +69,37 @@ TEST(Parallel_Operations, sequential_and_parallel_are_equal) {
   }
 }
 
-TEST(Parallel_Operations, can_multiply_big_matrices) {
+TEST(Parallel_Operations, can_multiply_300x100_on_100x400) {
   std::vector<int> A = getRandomMatrix(300, 100);
   std::vector<int> B = getRandomMatrix(100, 400);
 
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  std::vector<int> C_parallel = ParallelMatrixMultiplication(A, 300, 100,
-    B, 100, 400);
+  std::vector<int> C_parallel =
+      ParallelMatrixMultiplication(A, 300, 100, B, 100, 400);
 
   if (rank == 0) {
     std::vector<int> C_sequential(300 * 400);
     C_sequential = SequentialMatrixMultiplication(A, 300, 100, B, 100, 400);
+
+    EXPECT_EQ(C_sequential, C_parallel);
+  }
+}
+
+TEST(Parallel_Operations, can_multiply_33x12_on_12x35) {
+  std::vector<int> A = getRandomMatrix(33, 12);
+  std::vector<int> B = getRandomMatrix(12, 35);
+
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+  std::vector<int> C_parallel = ParallelMatrixMultiplication(A, 33, 12,
+    B, 12, 35);
+
+  if (rank == 0) {
+    std::vector<int> C_sequential(33 * 35);
+    C_sequential = SequentialMatrixMultiplication(A, 33, 12, B, 12, 35);
 
     EXPECT_EQ(C_sequential, C_parallel);
   }
