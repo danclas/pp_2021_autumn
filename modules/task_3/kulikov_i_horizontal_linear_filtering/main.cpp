@@ -32,6 +32,7 @@ TEST(MPIHorisontalLinearFilterGauss, Sigma1) {
     delete[] out_img;
 }
 
+
 TEST(MPIHorisontalLinearFilterGauss, Sigma0_5) {
     const int sz = 100;
     int rank;
