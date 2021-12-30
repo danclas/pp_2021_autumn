@@ -223,8 +223,7 @@ Matrix msub(const Matrix& a, const Matrix& b) {
                 res[i][j] = a[i][j] - b[i][j];
             }
         }
-    }
-    else {
+    } else {
         int ck;
         MPI_Status Status;
         MPI_Recv(&ck, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &Status);
