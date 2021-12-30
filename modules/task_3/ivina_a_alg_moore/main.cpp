@@ -4,6 +4,7 @@
 #include "./alg_moore.h"
 #include <gtest-mpi-listener.hpp>
 
+
 TEST(alg_moore, vertex_num_10) {
   int rank;
   int Vertex = 10;
