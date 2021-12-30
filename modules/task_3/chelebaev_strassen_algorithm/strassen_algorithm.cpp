@@ -4,6 +4,7 @@
 #include <iostream>
 #include <random>
 #include <cmath>
+#include <ctime>
 #include "../chelebaev_strassen_algorithm/strassen_algorithm.h"
 
 Matrix createRandomMatrix(int n, int m, double max_number) {
@@ -21,6 +22,8 @@ Matrix createRandomMatrix(int n, int m, double max_number) {
 
 
 Matrix sequentialMulti(const Matrix& a, const Matrix& b) {
+    //double stime;
+    //clock_t start = clock();
     Matrix res(a.size(), std::vector<double>(b[0].size()));
     for (std::size_t i = 0; i < a.size(); i++) {
         for (std::size_t j = 0; j < b[0].size(); j++) {
@@ -29,10 +32,14 @@ Matrix sequentialMulti(const Matrix& a, const Matrix& b) {
             }
         }
     }
+    //stime = (clock() - start) / (double)CLOCKS_PER_SEC;
+    //std::cout << "Sequential time: " << stime << std::endl;
     return res;
 }
 
 Matrix parallelMulti(const Matrix& a, const Matrix& b) {
+    //double ptime;
+    //clock_t start = clock();
     int tasks, my_rank;
     MPI_Comm_size(MPI_COMM_WORLD, &tasks);
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
@@ -82,6 +89,8 @@ Matrix parallelMulti(const Matrix& a, const Matrix& b) {
     Matrix c21 = msum(p2, p4);
     Matrix c22 = msum(msub(p1, p2), msum(p3, p6));
 
+    //ptime = (clock() - start) / (double)CLOCKS_PER_SEC;
+    //std::cout << "Parallel time: " << ptime << std::endl;
     return connect(c11, c12, c21, c22);
 }
 
