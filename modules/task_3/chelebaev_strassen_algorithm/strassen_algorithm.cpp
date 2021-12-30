@@ -22,8 +22,6 @@ Matrix createRandomMatrix(int n, int m, double max_number) {
 
 
 Matrix sequentialMulti(const Matrix& a, const Matrix& b) {
-    //double stime;
-    //clock_t start = clock();
     Matrix res(a.size(), std::vector<double>(b[0].size()));
     for (std::size_t i = 0; i < a.size(); i++) {
         for (std::size_t j = 0; j < b[0].size(); j++) {
@@ -32,14 +30,10 @@ Matrix sequentialMulti(const Matrix& a, const Matrix& b) {
             }
         }
     }
-    //stime = (clock() - start) / (double)CLOCKS_PER_SEC;
-    //std::cout << "Sequential time: " << stime << std::endl;
     return res;
 }
 
 Matrix parallelMulti(const Matrix& a, const Matrix& b) {
-    //double ptime;
-    //clock_t start = clock();
     int tasks, my_rank;
     MPI_Comm_size(MPI_COMM_WORLD, &tasks);
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
@@ -89,8 +83,6 @@ Matrix parallelMulti(const Matrix& a, const Matrix& b) {
     Matrix c21 = msum(p2, p4);
     Matrix c22 = msum(msub(p1, p2), msum(p3, p6));
 
-    //ptime = (clock() - start) / (double)CLOCKS_PER_SEC;
-    //std::cout << "Parallel time: " << ptime << std::endl;
     return connect(c11, c12, c21, c22);
 }
 
@@ -127,14 +119,13 @@ Matrix msum(const Matrix& a, const Matrix& b) {
         n = static_cast<int>(a.size());
     }
     MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    Matrix cur_a, cur_b, res;
+    Matrix ca, cb, res;
     if (my_rank == 0) {
         int k = static_cast<int>(a.size() / tasks);
         int rem = static_cast<int>(a.size() % tasks);
         int ck = k;
         if (my_rank < rem)
             ck++;
-        // reserving for zero process
         int j = ck;
         for (int i = 1; i < tasks; i++) {
             int ck = k;
@@ -158,18 +149,18 @@ Matrix msum(const Matrix& a, const Matrix& b) {
         int h;
         MPI_Status* status = new MPI_Status();
         MPI_Recv(&h, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, status);
-        cur_a.assign(h, std::vector<double>(n));
-        cur_b.assign(h, std::vector<double>(n));
+        ca.assign(h, std::vector<double>(n));
+        cb.assign(h, std::vector<double>(n));
         for (int i = 0; i < h; i++) {
-            MPI_Recv(cur_a[i].data(), n,
+            MPI_Recv(ca[i].data(), n,
                 MPI_DOUBLE, 0, i + 1, MPI_COMM_WORLD, status);
-            MPI_Recv(cur_b[i].data(), n,
+            MPI_Recv(cb[i].data(), n,
                 MPI_DOUBLE, 0, i + 1, MPI_COMM_WORLD, status);
         }
         res.assign(h, std::vector<double>(n));
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < n; j++) {
-                res[i][j] = cur_a[i][j] + cur_b[i][j];
+                res[i][j] = ca[i][j] + cb[i][j];
             }
         }
         MPI_Send(&h, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
@@ -207,7 +198,7 @@ Matrix msub(const Matrix& a, const Matrix& b) {
         n = static_cast<int>(a.size());
     }
     MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    Matrix cur_a, cur_b, res;
+    Matrix ca, cb, res;
     if (my_rank == 0) {
         int k = static_cast<int>(a.size() / tasks);
         int rem = static_cast<int>(a.size() % tasks);
@@ -237,18 +228,18 @@ Matrix msub(const Matrix& a, const Matrix& b) {
         int h;
         MPI_Status* status = new MPI_Status();
         MPI_Recv(&h, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, status);
-        cur_a.assign(h, std::vector<double>(n));
-        cur_b.assign(h, std::vector<double>(n));
+        ca.assign(h, std::vector<double>(n));
+        cb.assign(h, std::vector<double>(n));
         for (int i = 0; i < h; i++) {
-            MPI_Recv(cur_a[i].data(), n,
+            MPI_Recv(ca[i].data(), n,
                 MPI_DOUBLE, 0, i + 1, MPI_COMM_WORLD, status);
-            MPI_Recv(cur_b[i].data(), n,
+            MPI_Recv(cb[i].data(), n,
                 MPI_DOUBLE, 0, i + 1, MPI_COMM_WORLD, status);
         }
         res.assign(h, std::vector<double>(n));
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < n; j++) {
-                res[i][j] = cur_a[i][j] - cur_b[i][j];
+                res[i][j] = ca[i][j] - cb[i][j];
             }
         }
         MPI_Send(&h, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);

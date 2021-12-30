@@ -4,63 +4,6 @@
 #include "../chelebaev_strassen_algorithm/strassen_algorithm.h"
 #include <gtest-mpi-listener.hpp>
 
-/*TEST(Multiply, test1) {
-    int tasks, my_rank;
-    MPI_Comm_size(MPI_COMM_WORLD, &tasks);
-    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
-    Matrix a, b;
-    if (my_rank == 0) {
-        int n = 2, m = 2;
-        double max_num = 10.0;
-        a = createRandomMatrix(n, m, max_num);
-        b = createRandomMatrix(n, m, max_num);
-    }
-    Matrix res = parallelMulti(a, b);
-    if (my_rank == 0) {
-        double delta = 0.1;
-        Matrix seq = sequentialMulti(a, b);
-        ASSERT_TRUE(areEqual(seq, res, delta));
-    }
-}
-
-TEST(Multiply, test2) {
-    int tasks, my_rank;
-    MPI_Comm_size(MPI_COMM_WORLD, &tasks);
-    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
-    Matrix a, b;
-    if (my_rank == 0) {
-        int n = 4, m = 4;
-        double max_num = 10.0;
-        a = createRandomMatrix(n, m, max_num);
-        b = createRandomMatrix(n, m, max_num);
-    }
-    Matrix res = parallelMulti(a, b);
-    if (my_rank == 0) {
-        double delta = 0.1;
-        Matrix seq = sequentialMulti(a, b);
-        ASSERT_TRUE(areEqual(seq, res, delta));
-    }
-}
-
-TEST(Multiply, test3) {
-    int tasks, my_rank;
-    MPI_Comm_size(MPI_COMM_WORLD, &tasks);
-    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
-    Matrix a, b;
-    if (my_rank == 0) {
-        int n = 8, m = 8;
-        double max_num = 10.0;
-        a = createRandomMatrix(n, m, max_num);
-        b = createRandomMatrix(n, m, max_num);
-    }
-    Matrix res = parallelMulti(a, b);
-    if (my_rank == 0) {
-        double delta = 0.1;
-        Matrix seq = sequentialMulti(a, b);
-        ASSERT_TRUE(areEqual(seq, res, delta));
-    }
-}*/
-
 TEST(Multiply, Matrix16) {
     int tasks, my_rank;
     MPI_Comm_size(MPI_COMM_WORLD, &tasks);
@@ -94,13 +37,12 @@ TEST(Multiply, Matrix32) {
     }
     clock_t startp = clock();
     Matrix res = parallelMulti(a, b);
-    ptime = (clock() - startp) / (double)CLOCKS_PER_SEC;
-    //std::cout << "Parallel time: " << ptime << std::endl;
+    ptime = (clock() - startp) / static_cast<double>(CLOCKS_PER_SEC);
     if (my_rank == 0) {
         double delta = 0.1;
         clock_t starts = clock();
         Matrix seq = sequentialMulti(a, b);
-        stime = (clock() - starts) / (double)CLOCKS_PER_SEC;
+        stime = (clock() - starts) / static_cast<double>(CLOCKS_PER_SEC);
         std::cout << "Sequential time: " << stime << std::endl;
         std::cout << "Parallel time: " << ptime << std::endl;
         ASSERT_TRUE(areEqual(seq, res, delta));
@@ -121,13 +63,12 @@ TEST(Multiply, Matrix64) {
     }
     clock_t startp = clock();
     Matrix res = parallelMulti(a, b);
-    ptime = (clock() - startp) / (double)CLOCKS_PER_SEC;
-    //std::cout << "Parallel time: " << ptime << std::endl;
+    ptime = (clock() - startp) / static_cast<double>(CLOCKS_PER_SEC);
     if (my_rank == 0) {
         double delta = 0.1;
         clock_t starts = clock();
         Matrix seq = sequentialMulti(a, b);
-        stime = (clock() - starts) / (double)CLOCKS_PER_SEC;
+        stime = (clock() - starts) / static_cast<double>(CLOCKS_PER_SEC);
         std::cout << "Sequential time: " << stime << std::endl;
         std::cout << "Parallel time: " << ptime << std::endl;
         ASSERT_TRUE(areEqual(seq, res, delta));
@@ -148,13 +89,12 @@ TEST(Multiply, Matrix128) {
     }
     clock_t startp = clock();
     Matrix res = parallelMulti(a, b);
-    ptime = (clock() - startp) / (double)CLOCKS_PER_SEC;
-    //std::cout << "Parallel time: " << ptime << std::endl;
+    ptime = (clock() - startp) / static_cast<double>(CLOCKS_PER_SEC);
     if (my_rank == 0) {
         double delta = 0.1;
         clock_t starts = clock();
         Matrix seq = sequentialMulti(a, b);
-        stime = (clock() - starts) / (double)CLOCKS_PER_SEC;
+        stime = (clock() - starts) / static_cast<double>(CLOCKS_PER_SEC);
         std::cout << "Sequential time: " << stime << std::endl;
         std::cout << "Parallel time: " << ptime << std::endl;
         ASSERT_TRUE(areEqual(seq, res, delta));
