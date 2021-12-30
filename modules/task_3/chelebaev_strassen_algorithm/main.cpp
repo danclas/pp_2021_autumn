@@ -4,17 +4,17 @@
 #include "../chelebaev_strassen_algorithm/strassen_algorithm.h"
 #include <gtest-mpi-listener.hpp>
 
-TEST(Multiply, Matrix16) {
+/*TEST(Multiply, Matrix16) {
     int tasks, my_rank;
     MPI_Comm_size(MPI_COMM_WORLD, &tasks);
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
     Matrix a, b;
     double stime, ptime;
     if (my_rank == 0) {
-        int h = 16, w = 16;
+        int n = 16, m = 16;
         double max_num = 10.0;
-        a = createRandomMatrix(h, w, max_num);
-        b = createRandomMatrix(h, w, max_num);
+        a = createRandomMatrix(n, m, max_num);
+        b = createRandomMatrix(n, m, max_num);
     }
     clock_t startp = clock();
     Matrix res = parallelMulti(a, b);
@@ -80,7 +80,7 @@ TEST(Multiply, Matrix64) {
         std::cout << "Parallel time: " << ptime << std::endl;
         ASSERT_TRUE(areEqual(seq, res, delta));
     }
-}
+}*/
 
 TEST(Multiply, Matrix128) {
     int tasks, my_rank;
@@ -133,6 +133,110 @@ TEST(Multiply, Matrix256) {
         ASSERT_TRUE(areEqual(seq, res, delta));
     }
 }
+
+TEST(Multiply, Matrix512) {
+    int tasks, my_rank;
+    MPI_Comm_size(MPI_COMM_WORLD, &tasks);
+    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+    Matrix a, b;
+    double stime, ptime;
+    if (my_rank == 0) {
+        int n = 512, m = 512;
+        double max_num = 100.0;
+        a = createRandomMatrix(n, m, max_num);
+        b = createRandomMatrix(n, m, max_num);
+    }
+    clock_t startp = clock();
+    Matrix res = parallelMulti(a, b);
+    ptime = (clock() - startp) / static_cast<double>(CLOCKS_PER_SEC);
+    if (my_rank == 0) {
+        double delta = 0.1;
+        clock_t starts = clock();
+        Matrix seq = sequentialMulti(a, b);
+        stime = (clock() - starts) / static_cast<double>(CLOCKS_PER_SEC);
+        std::cout << "Sequential time: " << stime << std::endl;
+        std::cout << "Parallel time: " << ptime << std::endl;
+        ASSERT_TRUE(areEqual(seq, res, delta));
+    }
+}
+
+TEST(Multiply, Matrix1024) {
+    int tasks, my_rank;
+    MPI_Comm_size(MPI_COMM_WORLD, &tasks);
+    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+    Matrix a, b;
+    double stime, ptime;
+    if (my_rank == 0) {
+        int n = 1024, m = 1024;
+        double max_num = 100.0;
+        a = createRandomMatrix(n, m, max_num);
+        b = createRandomMatrix(n, m, max_num);
+    }
+    clock_t startp = clock();
+    Matrix res = parallelMulti(a, b);
+    ptime = (clock() - startp) / static_cast<double>(CLOCKS_PER_SEC);
+    if (my_rank == 0) {
+        double delta = 0.1;
+        clock_t starts = clock();
+        Matrix seq = sequentialMulti(a, b);
+        stime = (clock() - starts) / static_cast<double>(CLOCKS_PER_SEC);
+        std::cout << "Sequential time: " << stime << std::endl;
+        std::cout << "Parallel time: " << ptime << std::endl;
+        ASSERT_TRUE(areEqual(seq, res, delta));
+    }
+}
+
+TEST(Multiply, Matrix2048) {
+    int tasks, my_rank;
+    MPI_Comm_size(MPI_COMM_WORLD, &tasks);
+    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+    Matrix a, b;
+    double stime, ptime;
+    if (my_rank == 0) {
+        int n = 2048, m = 2048;
+        double max_num = 100.0;
+        a = createRandomMatrix(n, m, max_num);
+        b = createRandomMatrix(n, m, max_num);
+    }
+    clock_t startp = clock();
+    Matrix res = parallelMulti(a, b);
+    ptime = (clock() - startp) / static_cast<double>(CLOCKS_PER_SEC);
+    if (my_rank == 0) {
+        double delta = 0.5;
+        clock_t starts = clock();
+        Matrix seq = sequentialMulti(a, b);
+        stime = (clock() - starts) / static_cast<double>(CLOCKS_PER_SEC);
+        std::cout << "Sequential time: " << stime << std::endl;
+        std::cout << "Parallel time: " << ptime << std::endl;
+        ASSERT_TRUE(areEqual(seq, res, delta));
+    }
+}
+
+/*TEST(Multiply, Matrix2048) {
+    int tasks, my_rank;
+    MPI_Comm_size(MPI_COMM_WORLD, &tasks);
+    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+    Matrix a, b;
+    double stime, ptime;
+    if (my_rank == 0) {
+        int n = 2048, m = 2048;
+        double max_num = 100.0;
+        a = createRandomMatrix(n, m, max_num);
+        b = createRandomMatrix(n, m, max_num);
+    }
+    clock_t startp = clock();
+    Matrix res = parallelMulti(a, b);
+    ptime = (clock() - startp) / static_cast<double>(CLOCKS_PER_SEC);
+    if (my_rank == 0) {
+        double delta = 0.1;
+        clock_t starts = clock();
+        Matrix seq = sequentialMulti(a, b);
+        stime = (clock() - starts) / static_cast<double>(CLOCKS_PER_SEC);
+        std::cout << "Sequential time: " << stime << std::endl;
+        std::cout << "Parallel time: " << ptime << std::endl;
+        ASSERT_TRUE(areEqual(seq, res, delta));
+    }
+}*/
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

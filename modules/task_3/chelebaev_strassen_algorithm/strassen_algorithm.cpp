@@ -23,9 +23,9 @@ Matrix createRandomMatrix(int n, int m, double max_number) {
 
 Matrix sequentialMulti(const Matrix& a, const Matrix& b) {
     Matrix res(a.size(), std::vector<double>(b[0].size()));
-    for (std::size_t i = 0; i < a.size(); i++) {
-        for (std::size_t j = 0; j < b[0].size(); j++) {
-            for (std::size_t k = 0; k < a[0].size(); k++) {
+    for (int i = 0; i < a.size(); i++) {
+        for (int j = 0; j < b[0].size(); j++) {
+            for (int k = 0; k < a[0].size(); k++) {
                 res[i][j] += a[i][k] * b[k][j];
             }
         }
@@ -38,12 +38,12 @@ Matrix parallelMulti(const Matrix& a, const Matrix& b) {
     MPI_Comm_size(MPI_COMM_WORLD, &tasks);
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 
-    int n = static_cast<int>(a.size());
+    int n = a.size();
     MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    if (n <= 2 && my_rank == 0) {
+    if (n <= 256 && my_rank == 0) {
         return sequentialMulti(a, b);
     }
-    if (n <= 2) {
+    if (n <= 256) {
         return Matrix();
     }
     Matrix a11, a12, a21, a22;
@@ -59,9 +59,7 @@ Matrix parallelMulti(const Matrix& a, const Matrix& b) {
         b12 = Matrix(n, std::vector<double>(n));
         b21 = Matrix(n, std::vector<double>(n));
         b22 = Matrix(n, std::vector<double>(n));
-    }
 
-    if (my_rank == 0) {
         std::vector<Matrix> all;
         all = divide(a);
         a11 = std::move(all[0]), a12 = std::move(all[1]), a21 = std::move(all[2]), a22 = std::move(all[3]);
@@ -69,6 +67,7 @@ Matrix parallelMulti(const Matrix& a, const Matrix& b) {
         all = divide(b);
         b11 = std::move(all[0]), b12 = std::move(all[1]), b21 = std::move(all[2]), b22 = std::move(all[3]);
     }
+
     Matrix p1, p2, p3, p4, p5, p6, p7;
     p1 = parallelMulti(msum(a11, a22), msum(b11, b22));
     p2 = parallelMulti(msum(a21, a22), b11);
@@ -87,7 +86,7 @@ Matrix parallelMulti(const Matrix& a, const Matrix& b) {
 }
 
 std::vector<Matrix> divide(const Matrix& a) {
-    int n = static_cast<int>(a.size() / 2);
+    int n = a.size() / 2;
     std::vector<Matrix> result(4, Matrix(n));
     for (int i = 0; i < n; i++) {
         result[0][i] = { a[i].begin(), a[i].begin() + n };
@@ -99,7 +98,7 @@ std::vector<Matrix> divide(const Matrix& a) {
 }
 
 Matrix connect(const Matrix& a, const Matrix& b, const Matrix& c, const Matrix& d) {
-    int n = static_cast<int>(a.size());
+    int n = a.size();
     Matrix result(n * 2, std::vector<double>(n * 2));
     for (int i = 0; i < n; i++) {
         result[i] = a[i];
@@ -116,13 +115,13 @@ Matrix msum(const Matrix& a, const Matrix& b) {
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
     int n = 0;
     if (my_rank == 0) {
-        n = static_cast<int>(a.size());
+        n = a.size();
     }
     MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
     Matrix ca, cb, res;
     if (my_rank == 0) {
-        int k = static_cast<int>(a.size() / tasks);
-        int rem = static_cast<int>(a.size() % tasks);
+        int k = a.size() / tasks;
+        int rem = a.size() % tasks;
         int ck = k;
         if (my_rank < rem)
             ck++;
@@ -172,7 +171,7 @@ Matrix msum(const Matrix& a, const Matrix& b) {
     if (my_rank == 0) {
         result.assign(n, std::vector<double>(n));
         int j = 0;
-        for (std::size_t i = 0; i < res.size(); i++, j++) {
+        for (int i = 0; i < res.size(); i++, j++) {
             result[j] = std::move(res[i]);
         }
         for (int i = 1; i < tasks; i++) {
@@ -195,13 +194,13 @@ Matrix msub(const Matrix& a, const Matrix& b) {
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
     int n = 0;
     if (my_rank == 0) {
-        n = static_cast<int>(a.size());
+        n = a.size();
     }
     MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
     Matrix ca, cb, res;
     if (my_rank == 0) {
-        int k = static_cast<int>(a.size() / tasks);
-        int rem = static_cast<int>(a.size() % tasks);
+        int k = a.size() / tasks;
+        int rem = a.size() % tasks;
         int ck = k;
         if (my_rank < rem)
             ck++;
@@ -251,7 +250,7 @@ Matrix msub(const Matrix& a, const Matrix& b) {
     if (my_rank == 0) {
         result.assign(n, std::vector<double>(n));
         int j = 0;
-        for (std::size_t i = 0; i < res.size(); i++, j++) {
+        for (int i = 0; i < res.size(); i++, j++) {
             result[j] = std::move(res[i]);
         }
         for (int i = 1; i < tasks; i++) {
@@ -272,11 +271,11 @@ bool areEqual(const Matrix& a, const Matrix& b, double delta) {
     if (a.size() != b.size()) {
         return false;
     }
-    for (std::size_t i = 0; i < a.size(); i++) {
+    for (int i = 0; i < a.size(); i++) {
         if (a[i].size() != b[i].size()) {
             return false;
         }
-        for (std::size_t j = 0; j < a[i].size(); j++) {
+        for (int j = 0; j < a[i].size(); j++) {
             if (std::abs(a[i][j] - b[i][j]) > delta) {
                 return false;
             }
