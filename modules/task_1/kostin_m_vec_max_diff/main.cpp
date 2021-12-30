@@ -4,7 +4,6 @@
 #include <gtest-mpi-listener.hpp>
 #include "./vec_max_diff.h"
 
-
 TEST(Sequential_Operations, can_get_diff_with_positive_elements) {
   std::vector<int> vec = {1, 2, 3, 5, 6};
 
@@ -43,13 +42,61 @@ TEST(Parallel_operations_MPI, sequential_and_parallel_are_equal) {
   }
 }
 
-TEST(Parallel_operations_MPI, sequential_and_parallel_are_equal_on_big_vector) {
+TEST(Parallel_operations_MPI, parallel_diff_on_25) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  std::vector<int> vec;
+
+  if (rank == 0) {
+    vec = getRandomVector(25);
+  }
+
+  int p_max = getParallelMaxDiff(vec);
+
+  if (rank == 0) {
+    EXPECT_EQ(getSequentialMaxDiff(vec), p_max);
+  }
+}
+
+TEST(Parallel_operations_MPI, parallel_diff_on_50) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  std::vector<int> vec;
+
+  if (rank == 0) {
+    vec = getRandomVector(50);
+  }
+
+  int p_max = getParallelMaxDiff(vec);
+
+  if (rank == 0) {
+    EXPECT_EQ(getSequentialMaxDiff(vec), p_max);
+  }
+}
+
+TEST(Parallel_operations_MPI, sequential_and_parallel_are_equal_on_111) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   std::vector<int> vec;
 
   if (rank == 0) {
     vec = getRandomVector(111);
+  }
+
+  int p_max = getParallelMaxDiff(vec);
+
+  if (rank == 0) {
+    EXPECT_EQ(getSequentialMaxDiff(vec), p_max);
+  }
+}
+
+TEST(Parallel_operations_MPI, parallel_diff_on_150) {
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  std::vector<int> vec;
+
+  if (rank == 0) {
+    vec = getRandomVector(150);
   }
 
   int p_max = getParallelMaxDiff(vec);
