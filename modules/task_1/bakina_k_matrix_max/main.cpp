@@ -8,27 +8,20 @@ TEST(parallel_search_check, all_elements_equal) {
     int procRank = 0;
     const int row_count = 5;
     const int column_count = 10;
-    int** matrix = nullptr;
+    std::vector<std::vector<int>> matrix;
     int element = 1;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
     if (procRank == 0) {
-        matrix = new int*[row_count];
-        for (int i = 0; i < row_count; i++) {
-            matrix[i] = new int[column_count];
-        }
+        matrix.resize(row_count);
         for (int i = 0; i < row_count; i++) {
             for (int j = 0; j < column_count; j++) {
-                matrix[i][j] = element;
+                matrix[i].push_back(element);
             }
         }
     }
-    int verifiable_max = parallel_search_max_el(matrix, row_count, column_count);
+    int verifiable_max = parallel_search_max_el(&matrix, row_count, column_count);
     if (procRank == 0) {
-        for (int i = 0; i < row_count; i++) {
-            delete[] matrix[i];
-        }
-        delete[] matrix;
         ASSERT_EQ(element, verifiable_max);
     }
 }
@@ -37,27 +30,20 @@ TEST(parallel_search_check, different_increasing_elements) {
     int procRank = 0;
     const int row_count = 7;
     const int column_count = 15;
-    int** matrix = nullptr;
+    std::vector<std::vector<int>> matrix;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
     if (procRank == 0) {
-        matrix = new int*[row_count];
-        for (int i = 0; i < row_count; i++) {
-            matrix[i] = new int[column_count];
-        }
+        matrix.resize(row_count);
         for (int i = 0; i < row_count; i++) {
             for (int j = 0; j < column_count; j++) {
-                matrix[i][j] = i* column_count +j;
+                matrix[i].push_back(i* column_count +j);
             }
         }
     }
-    int verifiable_max = parallel_search_max_el(matrix, row_count, column_count);
+    int verifiable_max = parallel_search_max_el(&matrix, row_count, column_count);
     if (procRank == 0) {
         int referenceAlternations = matrix[row_count - 1][column_count - 1];
-        for (int i = 0; i < row_count; i++) {
-            delete[] matrix[i];
-        }
-        delete[] matrix;
         ASSERT_EQ(referenceAlternations, verifiable_max);
     }
 }
@@ -66,27 +52,20 @@ TEST(parallel_search_check, different_decreasing_elements) {
     int procRank = 0;
     const int row_count = 11;
     const int column_count = 4;
-    int** matrix = nullptr;
+    std::vector<std::vector<int>> matrix;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
     if (procRank == 0) {
-        matrix = new int* [row_count];
-        for (int i = 0; i < row_count; i++) {
-            matrix[i] = new int[column_count];
-        }
+        matrix.resize(row_count);
         for (int i = 0; i < row_count; i++) {
             for (int j = 0; j < column_count; j++) {
-                matrix[i][j] = (row_count - i) * 10 + (column_count - j);
+                matrix[i].push_back((row_count - i) * 10 + (column_count - j));
             }
         }
     }
-    int verifiable_max = parallel_search_max_el(matrix, row_count, column_count);
+    int verifiable_max = parallel_search_max_el(&matrix, row_count, column_count);
     if (procRank == 0) {
         int referenceAlternations = matrix[0][0];
-        for (int i = 0; i < row_count; i++) {
-            delete[] matrix[i];
-        }
-        delete[] matrix;
         ASSERT_EQ(referenceAlternations, verifiable_max);
     }
 }
@@ -95,23 +74,20 @@ TEST(parallel_search_check, random_elements_matrix_size_3000) {
     int procRank = 0;
     const int row_count = 150;
     const int column_count = 20;
-    int** matrix = nullptr;
+    std::vector<std::vector<int>> matrix;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
     if (procRank == 0) {
-        matrix = new int* [row_count];
-        for (int i = 0; i < row_count; i++) {
-            matrix[i] = new int[column_count];
-        }
+        matrix.resize(row_count);
         for (int i = 0; i < row_count; i++) {
             for (int j = 0; j < column_count; j++) {
-                matrix[i][j] = (row_count - i) * 10 + (column_count - j);
+                matrix[i].push_back((row_count - i) * 10 + (column_count - j));
             }
         }
-        get_random_matrix(matrix, row_count, column_count);
+        get_random_matrix(&matrix, row_count, column_count);
     }
 
-    int verifiable_max = parallel_search_max_el(matrix, row_count, column_count);
+    int verifiable_max = parallel_search_max_el(&matrix, row_count, column_count);
     if (procRank == 0) {
         int referenceAlternations = matrix[0][0];
         for (int i = 0; i < row_count; i++) {
@@ -120,10 +96,6 @@ TEST(parallel_search_check, random_elements_matrix_size_3000) {
                     referenceAlternations = matrix[i][j];
             }
         }
-        for (int i = 0; i < row_count; i++) {
-            delete[] matrix[i];
-        }
-        delete[] matrix;
         ASSERT_EQ(referenceAlternations, verifiable_max);
     }
 }
@@ -132,22 +104,19 @@ TEST(parallel_search_check, random_elements_matrix_size_200) {
     int procRank = 0;
     const int row_count = 10;
     const int column_count = 20;
-    int** matrix = nullptr;
+    std::vector<std::vector<int>> matrix;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
     if (procRank == 0) {
-        matrix = new int* [row_count];
-        for (int i = 0; i < row_count; i++) {
-            matrix[i] = new int[column_count];
-        }
+        matrix.resize(row_count);
         for (int i = 0; i < row_count; i++) {
             for (int j = 0; j < column_count; j++) {
-                matrix[i][j] = (row_count - i) * 10 + (column_count - j);
+                matrix[i].push_back((row_count - i) * 10 + (column_count - j));
             }
         }
-        get_random_matrix(matrix, row_count, column_count);
+        get_random_matrix(&matrix, row_count, column_count);
     }
-    int verifiable_max = parallel_search_max_el(matrix, row_count, column_count);
+    int verifiable_max = parallel_search_max_el(&matrix, row_count, column_count);
     if (procRank == 0) {
         int referenceAlternations = matrix[0][0];
         for (int i = 0; i < row_count; i++) {
@@ -156,10 +125,6 @@ TEST(parallel_search_check, random_elements_matrix_size_200) {
                     referenceAlternations = matrix[i][j];
             }
         }
-        for (int i = 0; i < row_count; i++) {
-            delete[] matrix[i];
-        }
-        delete[] matrix;
         ASSERT_EQ(referenceAlternations, verifiable_max);
     }
 }
