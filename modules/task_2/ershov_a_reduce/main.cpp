@@ -1,6 +1,6 @@
 // Copyright 2021 Ershov Alexey
 #include <gtest/gtest.h>
-// #include <time.h>
+#include <time.h>
 
 #include <gtest-mpi-listener.hpp>
 
@@ -11,36 +11,24 @@ TEST(reduse_test, test_BIG_FLOAT_MAX) {
   int size;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
+  const int n = 1000;
 
-  float* data = getRandomVector<float>(10000);
+  float* data = getRandomVector<float>(n);
 
   float* res = nullptr;
   float* myRes = nullptr;
 
   if (rank == 0) {
-    res = new float[10000];
-    myRes = new float[10000];
+    res = new float[n];
+    myRes = new float[n];
   }
 
-  // double start = MPI_Wtime();
+  reduce(data, myRes, n, MPI_FLOAT, MPI_MAX, 0, MPI_COMM_WORLD);
 
-  reduce(data, myRes, 10000, MPI_FLOAT, MPI_MAX, 0, MPI_COMM_WORLD);
-
-  // double end = MPI_Wtime();
-
-  /*std::cout << "Time of reduce work: " << (end - start) << " sec " << std::endl;*/
-
-  // double start2 = MPI_Wtime();
-
-  MPI_Reduce(data, res, 10000, MPI_FLOAT, MPI_MAX, 0, MPI_COMM_WORLD);
-
-  // double end2 = MPI_Wtime();
-
-  /*std::cout << "Time of MPI_reduce work : " << (end2 - start2) << " sec "
-            << std::endl;*/
+  MPI_Reduce(data, res, n, MPI_FLOAT, MPI_MAX, 0, MPI_COMM_WORLD);
 
   if (rank == 0) {
-    for (size_t i = 0; i < 10000; ++i) {
+    for (size_t i = 0; i < n; ++i) {
       ASSERT_EQ(myRes[i], res[i]);
     }
   }
